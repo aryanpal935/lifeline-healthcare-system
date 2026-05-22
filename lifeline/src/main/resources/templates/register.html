@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lifeline — Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+  <style>
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       TOKENS
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    :root {
+      --c-teal:        #0bbfb8;
+      --c-teal-dim:    #09a09a;
+      --c-teal-glow:   rgba(11,191,184,0.18);
+      --c-teal-xlight: rgba(11,191,184,0.07);
+      --c-navy:        #071525;
+      --c-navy2:       #0c1f33;
+      --c-white:       #ffffff;
+      --c-offwhite:    #f4f8fb;
+      --c-slate:       #8aa0b4;
+      --c-border:      rgba(255,255,255,0.09);
+      --c-border-focus:rgba(11,191,184,0.6);
+      --c-red:         #f05252;
+      --c-red-dim:     rgba(240,82,82,0.12);
+      --c-green:       #10b981;
+      --c-green-dim:   rgba(16,185,129,0.12);
+      --radius-card:   28px;
+      --radius-input:  14px;
+      --shadow-card:   0 40px 100px rgba(0,0,0,0.55), 0 0 0 1px rgba(11,191,184,0.12);
+      --font-display:  'Playfair Display', Georgia, serif;
+      --font-body:     'DM Sans', sans-serif;
+      --transition:    0.22s cubic-bezier(.4,0,.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      background: var(--c-navy);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-body);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       ATMOSPHERIC BACKGROUND
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      overflow: hidden;
+    }
+
+    /* Animated mesh blobs */
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.18;
+      animation: blobDrift 18s ease-in-out infinite alternate;
+    }
+    .blob-1 {
+      width: 520px; height: 520px; top: -140px; left: -100px;
+      background: radial-gradient(circle, #0bbfb8, #0369a1);
+      animation-duration: 20s;
+    }
+    .blob-2 {
+      width: 380px; height: 380px; bottom: -80px; right: -60px;
+      background: radial-gradient(circle, #06b6d4, #0bbfb8);
+      animation-duration: 15s; animation-delay: -5s;
+    }
+    .blob-3 {
+      width: 260px; height: 260px; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      background: radial-gradient(circle, #0bbfb8, transparent);
+      opacity: 0.08;
+      animation-duration: 25s; animation-delay: -10s;
+    }
+    @keyframes blobDrift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(40px, 30px) scale(1.08); }
+    }
+    .blob-1 { animation-name: blobDrift1; }
+    @keyframes blobDrift1 {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(60px, 40px) scale(1.1); }
+    }
+
+    /* Dot-grid overlay */
+    .dot-grid {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(11,191,184,0.12) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    /* ECG canvas */
+    #ecg-canvas {
+      position: fixed; inset: 0; z-index: 2; pointer-events: none;
+      width: 100%; height: 100%;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       CARD LAYOUT
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .card {
+      position: relative; z-index: 10;
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      width: min(860px, 95vw);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      animation: rise 0.75s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes rise {
+      from { opacity:0; transform: translateY(48px) scale(0.96); }
+      to   { opacity:1; transform: translateY(0)    scale(1); }
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       LEFT PANEL
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .panel-l {
+      background: linear-gradient(160deg, #0d2137 0%, #071525 100%);
+      border-right: 1px solid var(--c-border);
+      padding: 44px 30px;
+      display: flex; flex-direction: column; gap: 0;
+      position: relative; overflow: hidden;
+    }
+
+    /* Corner accent */
+    .panel-l::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--c-teal), transparent);
+    }
+    .panel-l::after {
+      content: '';
+      position: absolute; bottom: -60px; right: -60px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(11,191,184,0.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Brand */
+    .brand { margin-bottom: 48px; }
+    .brand-icon {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--c-teal), #06b6d4);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      margin-bottom: 18px;
+      box-shadow: 0 0 0 8px rgba(11,191,184,0.10), 0 8px 24px rgba(11,191,184,0.25);
+      animation: pulse 2.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 8px rgba(11,191,184,0.10), 0 8px 24px rgba(11,191,184,0.25); }
+      50%      { box-shadow: 0 0 0 14px rgba(11,191,184,0.05), 0 8px 32px rgba(11,191,184,0.40); }
+    }
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 30px; font-weight: 800;
+      color: var(--c-white); letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+    .brand-sub {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--c-teal);
+    }
+
+    /* Feature cards */
+    .features { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .feat {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.055);
+      transition: background var(--transition), border-color var(--transition);
+      cursor: default;
+    }
+    .feat:hover {
+      background: rgba(11,191,184,0.07);
+      border-color: rgba(11,191,184,0.18);
+    }
+    .feat-ico {
+      width: 34px; height: 34px; flex-shrink: 0;
+      background: rgba(11,191,184,0.10);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .feat-info { display: flex; flex-direction: column; gap: 1px; }
+    .feat-title {
+      font-size: 12.5px; font-weight: 600;
+      color: rgba(255,255,255,0.80);
+    }
+    .feat-desc {
+      font-size: 10.5px; font-weight: 400;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* Stats row */
+    .stats {
+      display: flex; gap: 0;
+      border: 1px solid var(--c-border);
+      border-radius: 12px; overflow: hidden;
+      margin-top: 28px;
+    }
+    .stat {
+      flex: 1; padding: 12px 10px; text-align: center;
+      border-right: 1px solid var(--c-border);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 700;
+      color: var(--c-teal); display: block;
+    }
+    .stat-lbl {
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: rgba(255,255,255,0.30);
+    }
+
+    .panel-l-foot {
+      margin-top: 20px;
+      font-size: 9.5px; color: rgba(255,255,255,0.18);
+      text-align: center;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       RIGHT PANEL
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .panel-r {
+      background: var(--c-white);
+      padding: 44px 40px 32px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+
+    /* Header */
+    .form-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px;
+      background: rgba(11,191,184,0.08);
+      border: 1px solid rgba(11,191,184,0.20);
+      border-radius: 100px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--c-teal-dim);
+      margin-bottom: 12px;
+    }
+    .form-badge::before {
+      content: '';
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--c-teal);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
+
+    .form-title {
+      font-family: var(--font-display);
+      font-size: 28px; font-weight: 800;
+      color: var(--c-navy); line-height: 1.15;
+      margin-bottom: 4px;
+    }
+    .form-sub {
+      font-size: 13px; font-weight: 400;
+      color: #64748b; margin-bottom: 24px;
+    }
+
+    /* Alerts */
+    .alert {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 11px 14px; border-radius: 10px;
+      font-size: 13px; font-weight: 500;
+      margin-bottom: 16px; line-height: 1.4;
+    }
+    .alert-success {
+      background: var(--c-green-dim); color: #065f46;
+      border: 1px solid rgba(16,185,129,0.25);
+    }
+    .alert-error {
+      background: var(--c-red-dim); color: #991b1b;
+      border: 1px solid rgba(240,82,82,0.25);
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       FORM FIELDS — TOP-LABEL PATTERN
+       Labels are ABOVE inputs, always visible.
+       No floating. No sibling-selector tricks.
+       Zero ambiguity. Bulletproof.
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .field { margin-bottom: 16px; }
+
+    .field-label {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .field-label span {
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.6px; text-transform: uppercase;
+      color: #475569;
+    }
+    .field-inline-err {
+      font-size: 11px; font-weight: 600;
+      color: var(--c-red);
+      opacity: 0; transform: translateY(-4px);
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .field-inline-err.show {
+      opacity: 1; transform: translateY(0);
+    }
+
+    /* Input wrapper — holds icon + input + status icon */
+    .input-wrap {
+      position: relative; display: flex; align-items: center;
+    }
+    .input-ico {
+      position: absolute; left: 14px;
+      font-size: 15px; line-height: 1;
+      pointer-events: none; z-index: 1;
+      transition: opacity var(--transition);
+      opacity: 0.45;
+    }
+    .input-wrap:focus-within .input-ico { opacity: 1; }
+
+    .field input {
+      width: 100%;
+      height: 50px;
+      padding: 0 44px 0 42px;   /* symmetric: icon left, status icon right */
+      border: 1.5px solid #e2e8f0;
+      border-radius: var(--radius-input);
+      background: var(--c-offwhite);
+      font-family: var(--font-body);
+      font-size: 14.5px; font-weight: 500;
+      color: #1e293b;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+      -webkit-appearance: none;
+    }
+    .field input::placeholder {
+      color: #b0bec5;
+      font-weight: 400;
+    }
+    .field input:focus {
+      border-color: var(--c-teal);
+      background: #fff;
+      box-shadow: 0 0 0 4px var(--c-teal-glow);
+    }
+    .field input.is-invalid {
+      border-color: var(--c-red);
+      background: #fffafa;
+      box-shadow: 0 0 0 4px var(--c-red-dim);
+    }
+    .field input.is-valid {
+      border-color: var(--c-green);
+      background: #f0fdf8;
+      box-shadow: 0 0 0 4px var(--c-green-dim);
+    }
+
+    /* Status icon — right side of input */
+    .status-ico {
+      position: absolute; right: 14px;
+      font-size: 14px; pointer-events: none;
+      opacity: 0; transition: opacity var(--transition);
+    }
+    .field input.is-valid   ~ .status-ico { opacity: 1; }
+    .field input.is-invalid ~ .status-ico { opacity: 1; }
+
+    /* Password toggle */
+    .pw-btn {
+      position: absolute; right: 14px;
+      background: none; border: none;
+      cursor: pointer; padding: 6px;
+      font-size: 16px; line-height: 1;
+      color: #94a3b8; border-radius: 7px;
+      transition: color var(--transition), background var(--transition);
+    }
+    .pw-btn:hover { color: var(--c-teal-dim); background: rgba(11,191,184,0.08); }
+    .pw-btn:focus-visible { outline: 2px solid var(--c-teal); outline-offset: 2px; }
+
+    /* When password field: status icon moves left of toggle */
+    #pwWrap .status-ico { right: 44px; }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       PASSWORD STRENGTH
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .strength-row {
+      display: flex; align-items: center; gap: 10px;
+      margin-top: 8px;
+    }
+    .strength-bars { display: flex; gap: 4px; flex: 1; }
+    .sbar {
+      flex: 1; height: 3px; border-radius: 999px;
+      background: #e2e8f0;
+      transition: background 0.3s ease;
+    }
+    .strength-label {
+      font-size: 11px; font-weight: 700;
+      color: #94a3b8; white-space: nowrap;
+      transition: color 0.3s;
+      min-width: 54px; text-align: right;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       TERMS CHECKBOX
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .terms-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin: 6px 0 20px;
+    }
+    .terms-row input[type="checkbox"] {
+      width: 16px; height: 16px; flex-shrink: 0;
+      accent-color: var(--c-teal);
+      cursor: pointer; margin-top: 1px;
+    }
+    .terms-row label {
+      font-size: 12px; font-weight: 500; color: #64748b;
+      line-height: 1.5; cursor: pointer;
+    }
+    .terms-row a {
+      color: var(--c-teal-dim); font-weight: 700;
+      text-decoration: none;
+    }
+    .terms-row a:hover { text-decoration: underline; }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       SUBMIT BUTTON
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .btn-submit {
+      width: 100%; height: 52px;
+      border: none; border-radius: var(--radius-input);
+      background: linear-gradient(135deg, #0bbfb8 0%, #0891b2 100%);
+      font-family: var(--font-body);
+      font-size: 15px; font-weight: 700;
+      color: #fff; letter-spacing: 0.3px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 4px 16px rgba(11,191,184,0.30);
+      transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+    }
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(11,191,184,0.40);
+    }
+    .btn-submit:active:not(:disabled) { transform: translateY(0); }
+    .btn-submit:focus-visible { outline: 3px solid var(--c-teal); outline-offset: 3px; }
+    .btn-submit:disabled { opacity: 0.70; cursor: not-allowed; }
+
+    /* Arrow icon */
+    .btn-arrow {
+      width: 22px; height: 22px;
+      background: rgba(255,255,255,0.20);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      transition: transform var(--transition);
+    }
+    .btn-submit:hover:not(:disabled) .btn-arrow { transform: translateX(3px); }
+
+    /* Spinner */
+    .btn-spinner {
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.35);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-submit.loading .btn-spinner { display: block; }
+    .btn-submit.loading .btn-text,
+    .btn-submit.loading .btn-arrow   { display: none; }
+
+    /* Ripple */
+    .ripple {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.22);
+      transform: scale(0);
+      animation: rippleAnim 0.6s linear forwards;
+      pointer-events: none;
+    }
+    @keyframes rippleAnim { to { transform: scale(5); opacity: 0; } }
+
+    /* Divider */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 16px 0 12px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: #e2e8f0;
+    }
+    .divider span {
+      font-size: 11px; font-weight: 600; color: #94a3b8;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    /* Footer */
+    .form-foot {
+      text-align: center;
+      font-size: 13px; font-weight: 500; color: #64748b;
+    }
+    .form-foot a {
+      font-weight: 700; color: var(--c-teal-dim);
+      text-decoration: none; border-radius: 4px;
+      padding: 1px 4px;
+      transition: background var(--transition);
+    }
+    .form-foot a:hover { background: rgba(11,191,184,0.08); }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       RESPONSIVE
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    @media (max-width: 700px) {
+      body { align-items: flex-start; overflow-y: auto; padding: 20px 0 40px; }
+      .card { grid-template-columns: 1fr; width: 92vw; }
+      .panel-l { padding: 28px 24px 24px; }
+      .stats { display: none; }
+      .features { flex-direction: row; flex-wrap: wrap; }
+      .feat { flex: 1 1 calc(50% - 5px); }
+      #ecg-canvas, .dot-grid { display: none; }
+      .panel-r { padding: 28px 24px 24px; }
+      .form-title { font-size: 24px; }
+    }
+    @media (max-width: 420px) {
+      .panel-r { padding: 24px 18px 20px; }
+      .feat { flex: 1 1 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background atmosphere -->
+<div class="bg-layer">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+<div class="dot-grid"></div>
+<canvas id="ecg-canvas"></canvas>
+
+<!-- ━━━━━━━━━━━━━━━━━ CARD ━━━━━━━━━━━━━━━━━ -->
+<div class="card" role="main">
+
+  <!-- LEFT PANEL -->
+  <aside class="panel-l" aria-label="Lifeline features">
+
+    <div class="brand">
+      <div class="brand-icon">❤️</div>
+      <div class="brand-name">Lifeline</div>
+      <div class="brand-sub">Digital Health Assistant</div>
+    </div>
+
+    <ul class="features" role="list">
+      <li class="feat">
+        <div class="feat-ico">📋</div>
+        <div class="feat-info">
+          <span class="feat-title">Health Records</span>
+          <span class="feat-desc">Track all your medical history</span>
+        </div>
+      </li>
+      <li class="feat">
+        <div class="feat-ico">💊</div>
+        <div class="feat-info">
+          <span class="feat-title">Medicine Reminders</span>
+          <span class="feat-desc">Never miss a dose again</span>
+        </div>
+      </li>
+      <li class="feat">
+        <div class="feat-ico">📊</div>
+        <div class="feat-info">
+          <span class="feat-title">Vitals & Analytics</span>
+          <span class="feat-desc">Understand your health trends</span>
+        </div>
+      </li>
+      <li class="feat">
+        <div class="feat-ico">🔒</div>
+        <div class="feat-info">
+          <span class="feat-title">Private & Secure</span>
+          <span class="feat-desc">HIPAA-grade data protection</span>
+        </div>
+      </li>
+    </ul>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-num">50K+</span>
+        <span class="stat-lbl">Users</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">4.9★</span>
+        <span class="stat-lbl">Rating</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">99%</span>
+        <span class="stat-lbl">Uptime</span>
+      </div>
+    </div>
+
+    <div class="panel-l-foot">© 2025 Lifeline Health · All rights reserved</div>
+  </aside>
+
+  <!-- RIGHT PANEL -->
+  <section class="panel-r">
+
+    <div class="form-badge">New Account</div>
+    <h1 class="form-title">Create your<br>health profile</h1>
+    <p class="form-sub">Join thousands who trust Lifeline with their health.</p>
+
+    <!-- Thymeleaf server alerts -->
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+    <div class="alert alert-error"   th:if="${error}"   th:text="${error}"></div>
+
+    <form id="regForm" action="/register" method="post" novalidate autocomplete="on">
+
+      <!-- ── FULL NAME ── -->
+      <div class="field" id="f-name">
+        <div class="field-label">
+          <span>Full Name</span>
+          <span class="field-inline-err" id="nameErr" role="alert"></span>
+        </div>
+        <div class="input-wrap">
+          <span class="input-ico" aria-hidden="true">👤</span>
+          <input
+            type="text" id="name" name="name"
+            placeholder="e.g. Priya Sharma"
+            autocomplete="name"
+            required aria-required="true"
+            aria-describedby="nameErr"
+          />
+          <span class="status-ico" aria-hidden="true" id="nameStatusIco"></span>
+        </div>
+      </div>
+
+      <!-- ── EMAIL ── -->
+      <div class="field" id="f-email">
+        <div class="field-label">
+          <span>Email Address</span>
+          <span class="field-inline-err" id="emailErr" role="alert"></span>
+        </div>
+        <div class="input-wrap">
+          <span class="input-ico" aria-hidden="true">✉️</span>
+          <input
+            type="email" id="email" name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required aria-required="true"
+            aria-describedby="emailErr"
+          />
+          <span class="status-ico" aria-hidden="true" id="emailStatusIco"></span>
+        </div>
+      </div>
+
+      <!-- ── PASSWORD ── -->
+      <div class="field" id="f-password">
+        <div class="field-label">
+          <span>Password</span>
+          <span class="field-inline-err" id="pwErr" role="alert"></span>
+        </div>
+        <div class="input-wrap" id="pwWrap">
+          <span class="input-ico" aria-hidden="true">🔒</span>
+          <input
+            type="password" id="password" name="password"
+            placeholder="Min. 6 characters"
+            autocomplete="new-password"
+            required aria-required="true"
+            aria-describedby="pwErr"
+          />
+          <span class="status-ico" aria-hidden="true" id="pwStatusIco"></span>
+          <button type="button" class="pw-btn" id="pwToggle"
+                  aria-label="Show password">👁️</button>
+        </div>
+        <!-- Strength meter -->
+        <div class="strength-row">
+          <div class="strength-bars">
+            <div class="sbar" id="sb1"></div>
+            <div class="sbar" id="sb2"></div>
+            <div class="sbar" id="sb3"></div>
+            <div class="sbar" id="sb4"></div>
+          </div>
+          <div class="strength-label" id="strLabel">Strength</div>
+        </div>
+      </div>
+
+      <!-- Terms -->
+      <div class="terms-row">
+        <input type="checkbox" id="terms" name="terms" required/>
+        <label for="terms">
+          I agree to the <a href="/terms">Terms of Service</a> and
+          <a href="/privacy">Privacy Policy</a>
+        </label>
+      </div>
+
+      <button class="btn-submit" type="submit" id="submitBtn">
+        <span class="btn-text">Create My Account</span>
+        <span class="btn-arrow" aria-hidden="true">→</span>
+        <div class="btn-spinner" aria-hidden="true"></div>
+      </button>
+
+    </form>
+
+    <div class="divider"><span>or</span></div>
+
+    <div class="form-foot">
+      Already have an account? <a href="/login">Sign In →</a>
+    </div>
+
+  </section>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SCRIPTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<script>
+/* ─── ECG BACKGROUND ─────────────────────────────── */
+(function () {
+  const cv = document.getElementById('ecg-canvas');
+  if (!cv || window.innerWidth <= 700) return;
+  const ctx = cv.getContext('2d');
+  let W, H;
+
+  function resize() {
+    W = cv.width  = window.innerWidth;
+    H = cv.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function ecgY(t) {
+    t = ((t % 1) + 1) % 1;
+    if (t < 0.10) return 0;
+    if (t < 0.15) return -0.08 * Math.sin((t - 0.10) / 0.05 * Math.PI);
+    if (t < 0.22) return 0;
+    if (t < 0.24) return -0.15;
+    if (t < 0.26) return 1.0;
+    if (t < 0.28) return -0.25;
+    if (t < 0.30) return 0;
+    if (t < 0.45) return 0.18 * Math.sin((t - 0.30) / 0.15 * Math.PI);
+    return 0;
+  }
+
+  const LINES = 3;
+  const PTS   = 600;
+  const phases  = [0, 0.33, 0.67];
+  const speeds  = [0.0022, 0.0018, 0.0026];
+  const colors  = ['11,191,184', '6,182,212', '56,189,248'];
+  const buffers = Array.from({ length: LINES }, () => new Float32Array(PTS));
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const rowH = H / LINES;
+
+    for (let r = 0; r < LINES; r++) {
+      // shift buffer
+      buffers[r].copyWithin(0, 1);
+      buffers[r][PTS - 1] = ecgY(phases[r]);
+      phases[r] += speeds[r];
+
+      const midY = rowH * r + rowH * 0.5;
+      const amp  = rowH * 0.28;
+      const col  = colors[r];
+
+      // Build path
+      const path = new Path2D();
+      for (let i = 0; i < PTS; i++) {
+        const x = (i / (PTS - 1)) * W;
+        const y = midY - buffers[r][i] * amp;
+        i === 0 ? path.moveTo(x, y) : path.lineTo(x, y);
+      }
+
+      // Glow layer
+      ctx.save();
+      ctx.shadowColor = `rgba(${col},0.9)`; ctx.shadowBlur = 22;
+      const gA = ctx.createLinearGradient(0, 0, W, 0);
+      gA.addColorStop(0,    `rgba(${col},0)`);
+      gA.addColorStop(0.25, `rgba(${col},0.3)`);
+      gA.addColorStop(0.75, `rgba(${col},0.7)`);
+      gA.addColorStop(1,    `rgba(${col},0.9)`);
+      ctx.strokeStyle = gA; ctx.lineWidth = 5;
+      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.stroke(path); ctx.restore();
+
+      // Crisp top line
+      const gB = ctx.createLinearGradient(0, 0, W, 0);
+      gB.addColorStop(0,   `rgba(${col},0)`);
+      gB.addColorStop(0.4, `rgba(${col},0.6)`);
+      gB.addColorStop(1,   `rgba(255,255,255,0.95)`);
+      ctx.strokeStyle = gB; ctx.lineWidth = 1.5;
+      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.stroke(path);
+
+      // Tip dot
+      const tx = W - 2;
+      const ty = midY - buffers[r][PTS - 1] * amp;
+      ctx.save();
+      ctx.shadowColor = `rgba(${col},1)`; ctx.shadowBlur = 20;
+      ctx.beginPath(); ctx.arc(tx, ty, 6, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${col},0.25)`; ctx.fill(); ctx.restore();
+      ctx.beginPath(); ctx.arc(tx, ty, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff'; ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ─── PASSWORD SHOW / HIDE ───────────────────────── */
+const pwInput  = document.getElementById('password');
+const pwToggle = document.getElementById('pwToggle');
+pwToggle.addEventListener('click', () => {
+  const vis = pwInput.type === 'password';
+  pwInput.type = vis ? 'text' : 'password';
+  pwToggle.textContent = vis ? '🙈' : '👁️';
+  pwToggle.setAttribute('aria-label', vis ? 'Hide password' : 'Show password');
+});
+
+/* ─── PASSWORD STRENGTH ──────────────────────────── */
+const sbars    = [1,2,3,4].map(n => document.getElementById('sb' + n));
+const strLabel = document.getElementById('strLabel');
+const levels   = [
+  { txt: 'Too Weak', color: '#f05252' },
+  { txt: 'Weak',     color: '#fb923c' },
+  { txt: 'Medium',   color: '#facc15' },
+  { txt: 'Strong',   color: '#10b981' },
+];
+function updateStrength(val) {
+  let s = 0;
+  if (val.length >= 6)  s++;
+  if (val.length >= 10) s++;
+  if (/[A-Z]/.test(val) && /[0-9]/.test(val)) s++;
+  if (/[^A-Za-z0-9]/.test(val)) s++;
+  sbars.forEach((b, i) => b.style.background = i < s ? levels[s - 1].color : '#e2e8f0');
+  if (s > 0) { strLabel.textContent = levels[s-1].txt; strLabel.style.color = levels[s-1].color; }
+  else        { strLabel.textContent = 'Strength';       strLabel.style.color = '#94a3b8'; }
+}
+pwInput.addEventListener('input', () => updateStrength(pwInput.value));
+
+/* ─── VALIDATION HELPERS ─────────────────────────── */
+function markValid(input, errEl, icoEl) {
+  input.classList.remove('is-invalid'); input.classList.add('is-valid');
+  errEl.textContent = ''; errEl.classList.remove('show');
+  if (icoEl) icoEl.textContent = '✅';
+}
+function markInvalid(input, errEl, icoEl, msg) {
+  input.classList.add('is-invalid'); input.classList.remove('is-valid');
+  errEl.textContent = msg; errEl.classList.add('show');
+  if (icoEl) icoEl.textContent = '❌';
+}
+function clearMark(input, errEl, icoEl) {
+  input.classList.remove('is-invalid', 'is-valid');
+  errEl.textContent = ''; errEl.classList.remove('show');
+  if (icoEl) icoEl.textContent = '';
+}
+
+const nameInput  = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const nameErr    = document.getElementById('nameErr');
+const emailErr   = document.getElementById('emailErr');
+const pwErr      = document.getElementById('pwErr');
+const nameIco    = document.getElementById('nameStatusIco');
+const emailIco   = document.getElementById('emailStatusIco');
+const pwIco      = document.getElementById('pwStatusIco');
+
+function validateName() {
+  const v = nameInput.value.trim();
+  if (!v)        { markInvalid(nameInput, nameErr, nameIco, 'Name is required'); return false; }
+  if (v.length < 2){ markInvalid(nameInput, nameErr, nameIco, 'At least 2 characters'); return false; }
+  markValid(nameInput, nameErr, nameIco); return true;
+}
+function validateEmail() {
+  const v = emailInput.value.trim();
+  if (!v)                              { markInvalid(emailInput, emailErr, emailIco, 'Email is required'); return false; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { markInvalid(emailInput, emailErr, emailIco, 'Enter a valid email'); return false; }
+  markValid(emailInput, emailErr, emailIco); return true;
+}
+function validatePw() {
+  const v = pwInput.value;
+  if (!v)           { markInvalid(pwInput, pwErr, pwIco, 'Password is required'); return false; }
+  if (v.length < 6) { markInvalid(pwInput, pwErr, pwIco, 'Min. 6 characters'); return false; }
+  markValid(pwInput, pwErr, pwIco); return true;
+}
+
+/* Live feedback on blur */
+nameInput.addEventListener('blur',  validateName);
+emailInput.addEventListener('blur', validateEmail);
+pwInput.addEventListener('blur',    validatePw);
+
+/* Clear error on input (only if currently invalid) */
+nameInput.addEventListener('input',  () => { if (nameInput.classList.contains('is-invalid') && nameInput.value.trim().length >= 2) clearMark(nameInput, nameErr, nameIco); });
+emailInput.addEventListener('input', () => { if (emailInput.classList.contains('is-invalid') && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) clearMark(emailInput, emailErr, emailIco); });
+pwInput.addEventListener('input',    () => { if (pwInput.classList.contains('is-invalid') && pwInput.value.length >= 6) clearMark(pwInput, pwErr, pwIco); });
+
+/* ─── FORM SUBMIT ────────────────────────────────── */
+const form      = document.getElementById('regForm');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', (e) => {
+  const ok = [validateName(), validateEmail(), validatePw()].every(Boolean);
+  const termsChecked = document.getElementById('terms').checked;
+  if (!ok || !termsChecked) { e.preventDefault(); return; }
+  submitBtn.classList.add('loading');
+  submitBtn.disabled = true;
+});
+
+/* Ripple on click */
+submitBtn.addEventListener('click', function (e) {
+  const s = document.createElement('span');
+  const d = Math.max(this.offsetWidth, this.offsetHeight);
+  const r = this.getBoundingClientRect();
+  s.className = 'ripple';
+  s.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;
+  this.appendChild(s);
+  setTimeout(() => s.remove(), 650);
+});
+</script>
+</body>
+</html>
