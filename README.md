@@ -1,48 +1,49 @@
 # Lifeline Healthcare System
 
-A modern healthcare management system built using **Spring Boot**, **MySQL**, **Spring Security**, and **Thymeleaf**.  
-This project helps manage patient health records, authentication, dashboards, and healthcare-related data efficiently.
+A modern healthcare management system built using **Spring Boot**, **MySQL**, **Spring Security**, and **Thymeleaf**.
+
+This project helps manage patient health records, authentication, dashboards, BMI analysis, and healthcare-related data efficiently through a clean and responsive web interface.
 
 ---
 
-# Features
+## Features
 
 - User Registration & Login
 - Secure Authentication using Spring Security
-- Dashboard for Health Records
+- Dashboard for Health Record Analytics
 - BMI Calculation & Category Detection
-- Add / Manage Health Records
-- Role-Based Structure
-- Responsive UI Design
+- Add & Manage Health Records
+- Responsive User Interface
 - MySQL Database Integration
+- MVC Architecture Implementation
 
 ---
 
-# Tech Stack
+## Tech Stack
 
-## Backend
+### Backend
 - Java
 - Spring Boot
 - Spring Security
 - Spring Data JPA
 
-## Frontend
+### Frontend
 - HTML
 - CSS
 - Thymeleaf
 - JavaScript
 
-## Database
+### Database
 - MySQL
 
-## Tools & Version Control
+### Tools & Version Control
 - Git
 - GitHub
 - VS Code
 
 ---
 
-# Project Structure
+## Project Structure
 
 ```bash
 src/main/java/com/lifeline/lifeline
@@ -57,41 +58,56 @@ src/main/java/com/lifeline/lifeline
 
 ---
 
-# Modules
+## Modules
 
-## Authentication Module
-- User Login
+### Authentication Module
 - User Registration
-- Secure Password Handling
+- Secure Login System
+- Password Protection using Spring Security
 
-## Dashboard Module
-- Health Statistics
-- BMI Information
-- Latest Record Display
+### Dashboard Module
+- Health Statistics Overview
+- BMI Information & Category Detection
+- Latest Health Record Display
 
-## Health Record Module
+### Health Record Module
 - Add Health Records
 - Store Patient Information
 - Display Medical Data
+- Record Management System
 
 ---
 
-# Screenshots
+## Workflow
 
-## Login Page
-(Add Screenshot Here)
-
-## Dashboard
-(Add Screenshot Here)
-
-## Add Record Page
-(Add Screenshot Here)
+1. User registers or logs into the system
+2. Spring Security authenticates the user
+3. User accesses the healthcare dashboard
+4. Health records are stored in MySQL database
+5. Dashboard displays analytics and BMI details
+6. Users can manage and track health information
 
 ---
 
-# Installation & Setup
+## Screenshots
 
-## Clone Repository
+### Login Page
+![Login Page](lifeline/screenshots/login-page.png)
+
+### Register Page
+![Register Page](lifeline/screenshots/register-page.png)
+
+### Dashboard
+![Dashboard](lifeline/screenshots/dashboard.png)
+
+### Add Record Page
+![Add Record Page](lifeline/screenshots/add-record.png)
+
+---
+
+## Installation & Setup
+
+### Clone Repository
 
 ```bash
 git clone https://github.com/aryanpal935/lifeline-healthcare-system.git
@@ -99,7 +115,7 @@ git clone https://github.com/aryanpal935/lifeline-healthcare-system.git
 
 ---
 
-## Open Project
+### Open Project
 
 Open the project in:
 - VS Code
@@ -108,7 +124,7 @@ Open the project in:
 
 ---
 
-## Configure Database
+### Configure Database
 
 Update your `application.properties` file:
 
@@ -120,7 +136,7 @@ spring.datasource.password=your_password
 
 ---
 
-## Run Project
+### Run Project
 
 Using Maven:
 
@@ -133,7 +149,7 @@ Or run:
 
 ---
 
-# Future Improvements
+## Future Improvements
 
 - Appointment Booking System
 - Doctor Portal
@@ -141,31 +157,33 @@ Or run:
 - Email Notifications
 - Report Generation
 - Admin Dashboard
-- API Integration
+- REST API Integration
 
 ---
 
-# Learning Goals
+## Learning Goals
 
 This project was developed to improve understanding of:
+
 - Backend Development
 - Spring Boot Architecture
 - Authentication & Security
 - Database Integration
-- MVC Pattern
+- MVC Design Pattern
 - Git & GitHub Workflow
+- Layered Application Architecture
 
 ---
 
-# Author
+## Author
 
-## Aryan Virendra Pal
+### Aryan Virendra Pal
 
-GitHub:
+GitHub:  
 https://github.com/aryanpal935
 
 ---
 
-# License
+## License
 
 This project is developed for learning and educational purposes.
