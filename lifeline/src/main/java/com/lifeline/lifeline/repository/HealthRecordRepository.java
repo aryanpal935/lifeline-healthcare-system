@@ -1,18 +1,13 @@
 package com.lifeline.lifeline.repository;
 
-import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.lifeline.lifeline.entity.HealthRecord;
 import com.lifeline.lifeline.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface HealthRecordRepository
-        extends JpaRepository<HealthRecord, Long> {
+import java.util.List;
 
-    // Latest health record
-    HealthRecord findTopByUserOrderByCreatedAtDesc(User user);
+public interface HealthRecordRepository extends JpaRepository<HealthRecord, Long> {
 
-    // All records of a user
-    List<HealthRecord> findByUser(User user);
+    List<HealthRecord> findByUserOrderByCreatedAtDesc(User user);
+
 }

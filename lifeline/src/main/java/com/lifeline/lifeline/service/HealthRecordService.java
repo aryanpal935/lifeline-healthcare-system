@@ -15,55 +15,56 @@ public class HealthRecordService {
     @Autowired
     private HealthRecordRepository healthRecordRepository;
 
-    // Save record
+    // SAVE RECORD
     public void saveRecord(HealthRecord healthRecord) {
         healthRecordRepository.save(healthRecord);
     }
 
-    // Latest record
-    public HealthRecord getLatestRecord(User user) {
-        return healthRecordRepository
-                .findTopByUserOrderByCreatedAtDesc(user);
+    // GET ALL RECORDS OF USER
+    public List<HealthRecord> getRecordsByUser(User user) {
+        return healthRecordRepository.findByUserOrderByCreatedAtDesc(user);
     }
 
-    // Count total records
+    // GET LATEST RECORD
+    public HealthRecord getLatestRecord(User user) {
+
+        List<HealthRecord> records =
+                healthRecordRepository.findByUserOrderByCreatedAtDesc(user);
+
+        if (records.isEmpty()) {
+            return null;
+        }
+
+        return records.get(0);
+    }
+
+    // COUNT RECORDS
     public long countRecords(User user) {
         return healthRecordRepository
-                .findByUser(user)
+                .findByUserOrderByCreatedAtDesc(user)
                 .size();
     }
 
-    // Get all records
-    public List<HealthRecord> getRecordsByUser(User user) {
-        return healthRecordRepository.findByUser(user);
-    }
-
-    // Calculate BMI
-    public double calculateBMI(HealthRecord record) {
-
-        if (record == null || record.getHeight() <= 0) {
-            return 0;
-        }
-
-        double heightInMeters = record.getHeight() / 100.0;
-
-        return record.getWeight()
-                / (heightInMeters * heightInMeters);
-    }
-
-    // BMI category
-    public String getBMICategory(double bmi) {
+    // BMI CATEGORY
+    public String getBmiCategory(double bmi) {
 
         if (bmi < 18.5) {
             return "Underweight";
         }
+
         else if (bmi < 25) {
             return "Normal Weight";
         }
+
         else if (bmi < 30) {
             return "Overweight";
         }
 
         return "Obese";
     }
+
+    public void deleteRecord(Long id) {
+    healthRecordRepository.deleteById(id);
+}
+
 }

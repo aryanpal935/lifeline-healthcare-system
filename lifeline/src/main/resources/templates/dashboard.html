@@ -42,7 +42,7 @@
 
     .app { position: relative; z-index: 10; display: grid; grid-template-columns: var(--sidebar-w) 1fr; grid-template-rows: var(--topbar-h) 1fr; height: 100vh; }
 
-    /* SIDEBAR */
+    /* ── SIDEBAR ── */
     .sidebar { grid-row: 1 / 3; background: linear-gradient(180deg, #0d2137 0%, #071525 100%); border-right: 1px solid var(--c-border); display: flex; flex-direction: column; padding: 24px 0 20px; position: relative; overflow: hidden; }
     .sidebar::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--c-teal), transparent); }
     .sidebar-brand { padding: 0 22px 24px; border-bottom: 1px solid var(--c-border); margin-bottom: 14px; }
@@ -64,14 +64,14 @@
     .logout-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border-radius: 11px; background: none; border: 1px solid rgba(240,82,82,0.18); color: rgba(240,82,82,0.60); font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; transition: all var(--transition); }
     .logout-btn:hover { background: rgba(240,82,82,0.07); color: var(--c-red); border-color: rgba(240,82,82,0.35); }
 
-    /* TOPBAR */
+    /* ── TOPBAR ── */
     .topbar { background: rgba(7,21,37,0.92); border-bottom: 1px solid var(--c-border); backdrop-filter: blur(20px); display: flex; align-items: center; padding: 0 28px; gap: 16px; }
     .topbar-greeting { flex: 1; }
     .topbar-hello { font-size: 11.5px; color: var(--c-slate); }
     .topbar-name { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--c-white); letter-spacing: -0.3px; }
     .topbar-date { font-size: 11.5px; color: var(--c-slate); background: rgba(255,255,255,0.04); border: 1px solid var(--c-border); padding: 5px 13px; border-radius: 8px; }
 
-    /* MAIN */
+    /* ── MAIN ── */
     .main { overflow-y: auto; overflow-x: hidden; padding: 24px 28px 32px; scrollbar-width: thin; scrollbar-color: rgba(11,191,184,0.20) transparent; }
     .main::-webkit-scrollbar { width: 4px; }
     .main::-webkit-scrollbar-thumb { background: rgba(11,191,184,0.20); border-radius: 4px; }
@@ -186,9 +186,12 @@
     .emg-call:hover { background: rgba(11,191,184,0.10); border-color: rgba(11,191,184,0.25); color: var(--c-teal); }
     .emg-empty { text-align: center; padding: 24px; color: var(--c-slate); font-size: 13px; }
 
-    /* ADD BUTTON */
+    /* ADD / ACTION BUTTONS */
     .add-btn { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 10px; background: rgba(11,191,184,0.05); border: 1px dashed rgba(11,191,184,0.28); border-radius: 11px; cursor: pointer; font-family: var(--font-body); font-size: 12px; font-weight: 700; color: rgba(11,191,184,0.75); transition: all var(--transition); margin-top: 8px; text-decoration: none; }
     .add-btn:hover { background: rgba(11,191,184,0.10); border-color: rgba(11,191,184,0.45); border-style: solid; color: var(--c-teal); }
+    .add-btn.solid { background: rgba(11,191,184,0.10); border-style: solid; border-color: rgba(11,191,184,0.35); color: var(--c-teal); }
+    .add-btn.solid:hover { background: rgba(11,191,184,0.18); border-color: rgba(11,191,184,0.6); }
+    .btn-row { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
 
     /* ANIMATIONS */
     .fade-up { animation: fadeUp 0.5s cubic-bezier(.22,1,.36,1) both; }
@@ -216,20 +219,12 @@
     </div>
 
     <div class="sidebar-user">
-      <!--
-        DYNAMIC: Show first 2 letters of user's name as avatar initials.
-        Falls back to single letter if name is only 1 char.
-      -->
       <div class="user-avatar"
            th:text="${#strings.length(user.name) >= 2}
                      ? ${#strings.toUpperCase(#strings.substring(user.name, 0, 2))}
-                     : ${#strings.toUpperCase(user.name)}">
-        AR
-      </div>
+                     : ${#strings.toUpperCase(user.name)}">AR</div>
       <div>
-        <!-- DYNAMIC: Real user name from session/model -->
         <div class="user-name"  th:text="${user.name}">User Name</div>
-        <!-- DYNAMIC: Real user email from session/model -->
         <div class="user-email" th:text="${user.email}">user@email.com</div>
       </div>
     </div>
@@ -238,7 +233,7 @@
     <a class="nav-item active" th:href="@{/dashboard}">
       <span class="nav-icon">🏠</span> Dashboard
     </a>
-    <a class="nav-item" th:href="@{/health-records}">
+    <a class="nav-item" th:href="@{/records}">
       <span class="nav-icon">📋</span> Health Records
     </a>
     <a class="nav-item" th:href="@{/medicines}">
@@ -270,7 +265,6 @@
   <header class="topbar">
     <div class="topbar-greeting">
       <div class="topbar-hello" id="greeting">Welcome back 👋</div>
-      <!-- DYNAMIC: Real user name in topbar heading -->
       <div class="topbar-name" th:text="${user.name}">User Name</div>
     </div>
     <div class="topbar-date" id="topbarDate"></div>
@@ -279,29 +273,19 @@
   <!-- ══ MAIN ══ -->
   <main class="main">
 
-    <!-- ── STAT CARDS ── -->
+    <!-- STAT CARDS -->
     <div class="section-title">Overview</div>
     <div class="stats-grid" style="margin-bottom:12px;">
-
-      <!-- DYNAMIC: Real appointment count from model -->
       <div class="stat-card c-teal fade-up d1">
         <div class="stat-icon">📅</div>
         <div class="stat-val" th:text="${appointmentCount} ?: '0'">0</div>
         <div class="stat-label">Appointments</div>
       </div>
-
-      <!-- DYNAMIC: Real medicine count from model -->
       <div class="stat-card c-blue fade-up d2">
         <div class="stat-icon">💊</div>
         <div class="stat-val" th:text="${medicineCount} ?: '0'">0</div>
         <div class="stat-label">Active Medicines</div>
       </div>
-
-      <!--
-        DYNAMIC BMI STAT CARD — uses latestRecord (not healthRecord).
-        Formula: weight(kg) / (height(m))^2
-        Safety: shows '—' when latestRecord is null (first-time user).
-      -->
       <div class="stat-card c-green fade-up d3">
         <div class="stat-icon">⚖️</div>
         <div class="stat-val">
@@ -314,17 +298,14 @@
         </div>
         <div class="stat-label">BMI Score</div>
       </div>
-
-      <!-- DYNAMIC: Real health record count from model -->
       <div class="stat-card c-amber fade-up d4">
         <div class="stat-icon">📋</div>
         <div class="stat-val" th:text="${recordCount} ?: '0'">0</div>
         <div class="stat-label">Health Records</div>
       </div>
-
     </div>
 
-    <!-- ── MAIN GRID ── -->
+    <!-- MAIN GRID -->
     <div class="main-grid">
 
       <!-- ════ LEFT COLUMN ════ -->
@@ -337,37 +318,23 @@
             <a class="card-action" th:href="@{/appointments/new}">+ Book New</a>
           </div>
           <div class="appt-list">
-
-            <!-- SAFETY: shown only when list is null or empty -->
             <div class="appt-empty"
                  th:if="${appointments == null or #lists.isEmpty(appointments)}">
               No upcoming appointments. Book one now!
             </div>
-
-            <!-- DYNAMIC: iterate real appointment objects -->
-            <div class="appt-item"
-                 th:each="appt : ${appointments}">
+            <div class="appt-item" th:each="appt : ${appointments}">
               <div class="appt-date-box">
-                <!-- DYNAMIC: day number extracted from appointmentDate -->
-                <div class="appt-day"
-                     th:text="${#temporals.day(appt.appointmentDate)}">01</div>
-                <!-- DYNAMIC: short month name from appointmentDate -->
-                <div class="appt-mon"
-                     th:text="${#temporals.monthNameShort(appt.appointmentDate)}">Jan</div>
+                <div class="appt-day" th:text="${#temporals.day(appt.appointmentDate)}">01</div>
+                <div class="appt-mon" th:text="${#temporals.monthNameShort(appt.appointmentDate)}">Jan</div>
               </div>
               <div class="appt-info">
-                <!-- DYNAMIC: doctor name from appointment object -->
                 <div class="appt-doc"  th:text="${appt.doctorName}">Doctor Name</div>
-                <!-- DYNAMIC: formatted full date -->
-                <div class="appt-meta"
-                     th:text="${#temporals.format(appt.appointmentDate, 'dd MMM yyyy')}">Date</div>
+                <div class="appt-meta" th:text="${#temporals.format(appt.appointmentDate, 'dd MMM yyyy')}">Date</div>
               </div>
-              <!-- DYNAMIC: status with matching CSS class (CONFIRMED / PENDING / CANCELLED) -->
               <span class="appt-status"
                     th:classappend="'status-' + ${appt.status}"
                     th:text="${appt.status}">Status</span>
             </div>
-
           </div>
           <a th:href="@{/appointments/new}" class="add-btn">＋ Schedule Appointment</a>
         </div>
@@ -379,27 +346,18 @@
             <a class="card-action" th:href="@{/medicines/new}">+ Add</a>
           </div>
           <div class="medicine-list">
-
-            <!-- SAFETY: shown only when medicine list is null or empty -->
             <div class="med-empty"
                  th:if="${medicines == null or #lists.isEmpty(medicines)}">
               No medicines added yet.
             </div>
-
-            <!-- DYNAMIC: iterate real medicine objects -->
-            <div class="medicine-item"
-                 th:each="med : ${medicines}">
+            <div class="medicine-item" th:each="med : ${medicines}">
               <div class="med-dot"></div>
               <div class="med-info">
-                <!-- DYNAMIC: medicine name -->
                 <div class="med-name" th:text="${med.medicineName}">Medicine Name</div>
-                <!-- DYNAMIC: dosage (e.g. "500mg") -->
                 <div class="med-dose" th:text="${med.dosage}">Dosage</div>
               </div>
-              <!-- DYNAMIC: timing (e.g. "Morning", "After meals") -->
               <span class="med-time" th:text="${med.timing}">Timing</span>
             </div>
-
           </div>
           <a th:href="@{/medicines/new}" class="add-btn">＋ Add Medicine</a>
         </div>
@@ -409,37 +367,20 @@
       <!-- ════ RIGHT COLUMN ════ -->
       <div style="display:flex;flex-direction:column;gap:12px;">
 
-        <!-- ══════════════════════════════════════════════
-             BMI CARD
-             SAFETY WRAPPER: entire card body is guarded
-             by th:if="${latestRecord != null}".
-             First-time users see a friendly prompt instead
-             of a crash or blank/broken values.
-        ══════════════════════════════════════════════ -->
+        <!-- BMI CARD -->
         <div class="glass-card fade-up d5">
           <div class="card-header">
             <div class="card-title">⚖️ BMI</div>
             <a class="card-action" th:href="@{/bmi}">Recalculate</a>
           </div>
-
-          <!-- NO RECORD STATE: shown to first-time users -->
           <div class="bmi-no-data" th:unless="${latestRecord != null}">
             No health data yet.<br/>
-            <a th:href="@{/health/add}"
-               style="color:var(--c-teal);font-weight:700;">Add your records →</a>
+            <a th:href="@{/health/add}" style="color:var(--c-teal);font-weight:700;">Add your records →</a>
           </div>
-
-          <!--
-            RECORD EXISTS STATE
-            DYNAMIC BMI: weight(kg) / (height(m))²
-            bmiDashOffset controls how much of the SVG ring is filled.
-            Clamp BMI to 0–40 range, then map to dasharray 314.16.
-          -->
           <div class="bmi-inner" th:if="${latestRecord != null}">
             <div class="bmi-ring-wrap">
               <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="60" cy="60" r="50"
-                        stroke="rgba(255,255,255,0.06)" stroke-width="9"/>
+                <circle cx="60" cy="60" r="50" stroke="rgba(255,255,255,0.06)" stroke-width="9"/>
                 <circle cx="60" cy="60" r="50"
                         stroke="url(#bmiG)" stroke-width="9"
                         stroke-linecap="round"
@@ -454,10 +395,6 @@
                 </defs>
               </svg>
               <div class="bmi-center">
-                <!--
-                  DYNAMIC BMI VALUE — computed inline from latestRecord.
-                  Formula: weight / (height/100)^2, displayed to 2 decimal places.
-                -->
                 <div class="bmi-val-big">
                   <span th:text="${#numbers.formatDecimal(
                                     latestRecord.weight /
@@ -467,48 +404,32 @@
                 <div class="bmi-unit">BMI</div>
               </div>
             </div>
-
-            <!--
-              DYNAMIC BMI CATEGORY — driven by bmiCategory from controller.
-              CSS class switches colour: normal=green, underweight=blue,
-              overweight=amber, obese=red.
-            -->
             <div class="bmi-category"
                  th:classappend="${bmiCategory == 'Normal Weight'} ? 'bmi-normal' :
                                  (${bmiCategory == 'Underweight'}  ? 'bmi-underweight' :
                                  (${bmiCategory == 'Overweight'}   ? 'bmi-overweight'  : 'bmi-obese'))"
                  th:text="'✓ ' + ${bmiCategory}">Category</div>
-
             <div class="bmi-meta-row">
               <div class="bmi-meta">
-                <!-- DYNAMIC: real weight from latestRecord -->
-                <div class="bmi-meta-val"
-                     th:text="${latestRecord.weight} + ' kg'">— kg</div>
+                <div class="bmi-meta-val" th:text="${latestRecord.weight} + ' kg'">— kg</div>
                 <div class="bmi-meta-lbl">Weight</div>
               </div>
               <div class="bmi-meta">
-                <!-- DYNAMIC: real height from latestRecord -->
-                <div class="bmi-meta-val"
-                     th:text="${latestRecord.height} + ' cm'">— cm</div>
+                <div class="bmi-meta-val" th:text="${latestRecord.height} + ' cm'">— cm</div>
                 <div class="bmi-meta-lbl">Height</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- ══════════════════════════════════════════════
-             HEALTH RECORDS CARD
-             SAFETY WRAPPER: all field rendering is inside
-             th:if="${latestRecord != null}".
-             th:unless block shows "No records" message safely.
-        ══════════════════════════════════════════════ -->
+        <!-- HEALTH RECORDS CARD -->
         <div class="glass-card fade-up d6">
           <div class="card-header">
             <div class="card-title">📋 Health Records</div>
-            <a class="card-action" th:href="@{/health-records}">View All</a>
+            <!-- ✅ UPDATED: points to /records -->
+            <a class="card-action" th:href="@{/records}">View All</a>
           </div>
 
-          <!-- NO RECORD STATE: first-time user prompt -->
           <div class="rec-no-data" th:unless="${latestRecord != null}">
             No health records yet.<br/>
             <a th:href="@{/health/add}"
@@ -517,16 +438,8 @@
             </a>
           </div>
 
-          <!-- RECORD EXISTS STATE -->
           <div th:if="${latestRecord != null}">
-
-            <!-- Row 1: Blood Group + Height + Weight + Record ID -->
             <div class="records-grid">
-
-              <!--
-                DYNAMIC BLOOD GROUP
-                Safety: shows '—' if bloodGroup is null or empty string.
-              -->
               <div class="record-chip">
                 <div class="record-ico">🩸</div>
                 <div class="record-val"
@@ -534,40 +447,24 @@
                                ? ${latestRecord.bloodGroup} : '—'">—</div>
                 <div class="record-lbl">Blood Group</div>
               </div>
-
-              <!-- DYNAMIC HEIGHT from latestRecord -->
               <div class="record-chip">
                 <div class="record-ico">📏</div>
-                <div class="record-val"
-                     th:text="${latestRecord.height} + ' cm'">— cm</div>
+                <div class="record-val" th:text="${latestRecord.height} + ' cm'">— cm</div>
                 <div class="record-lbl">Height</div>
               </div>
-
-              <!-- DYNAMIC WEIGHT from latestRecord -->
               <div class="record-chip">
                 <div class="record-ico">⚖️</div>
-                <div class="record-val"
-                     th:text="${latestRecord.weight} + ' kg'">— kg</div>
+                <div class="record-val" th:text="${latestRecord.weight} + ' kg'">— kg</div>
                 <div class="record-lbl">Weight</div>
               </div>
-
-              <!-- DYNAMIC RECORD ID from latestRecord -->
               <div class="record-chip">
                 <div class="record-ico">🧬</div>
-                <div class="record-val"
-                     th:text="${latestRecord.id}">—</div>
+                <div class="record-val" th:text="${latestRecord.id}">—</div>
                 <div class="record-lbl">Record ID</div>
               </div>
-
             </div>
 
-            <!-- Row 2: Vitals — Blood Pressure + Sugar Level + BMI -->
             <div class="vitals-row">
-
-              <!--
-                DYNAMIC BLOOD PRESSURE
-                Safety: shows '—' when field is null or empty.
-              -->
               <div class="vital-chip">
                 <div class="vital-ico">🫀</div>
                 <div class="vital-val"
@@ -575,12 +472,6 @@
                                ? ${latestRecord.bloodPressure} : '—'">—</div>
                 <div class="vital-lbl">Blood Pressure</div>
               </div>
-
-              <!--
-                DYNAMIC SUGAR LEVEL
-                Safety: shows '—' when field is null.
-                Appends unit 'mg/dL' when value exists.
-              -->
               <div class="vital-chip">
                 <div class="vital-ico">🩺</div>
                 <div class="vital-val"
@@ -588,11 +479,6 @@
                                ? (${latestRecord.sugarLevel} + ' mg/dL') : '—'">—</div>
                 <div class="vital-lbl">Sugar Level</div>
               </div>
-
-              <!--
-                DYNAMIC BMI in vitals row — same inline formula.
-                Consistent with stat card and BMI card above.
-              -->
               <div class="vital-chip">
                 <div class="vital-ico">📊</div>
                 <div class="vital-val"
@@ -602,81 +488,60 @@
                                  1, 2)}">—</div>
                 <div class="vital-lbl">BMI</div>
               </div>
-
             </div>
 
-            <!--
-              Row 3: DYNAMIC ALLERGIES
-              SAFETY: entire row only renders if allergies field is non-null and non-empty.
-              Prevents blank chip appearing for users who haven't entered allergies.
-            -->
             <div class="records-grid" style="margin-top:8px;"
                  th:if="${latestRecord.allergies != null and !#strings.isEmpty(latestRecord.allergies)}">
               <div class="record-chip allergy-chip">
                 <div class="record-ico">⚠️</div>
                 <div class="allergy-detail">
-                  <!-- DYNAMIC ALLERGIES VALUE -->
                   <div class="allergy-val" th:text="${latestRecord.allergies}">—</div>
                   <div class="allergy-sub">Allergies</div>
                 </div>
               </div>
             </div>
 
-            <!--
-              Row 4: DYNAMIC NOTES
-              SAFETY: entire row only renders if notes field is non-null and non-empty.
-            -->
             <div class="records-grid" style="margin-top:8px;"
                  th:if="${latestRecord.notes != null and !#strings.isEmpty(latestRecord.notes)}">
               <div class="record-chip allergy-chip">
                 <div class="record-ico">📝</div>
                 <div class="allergy-detail">
-                  <!-- DYNAMIC NOTES VALUE -->
                   <div class="allergy-val" th:text="${latestRecord.notes}">—</div>
                   <div class="allergy-sub">Notes</div>
                 </div>
               </div>
             </div>
+          </div>
 
-          </div><!-- /th:if latestRecord != null -->
-
-          <a th:href="@{/health/add}" class="add-btn">＋ Add / Update Record</a>
+          <!-- ✅ UPDATED: two buttons — View All Records + Add/Update -->
+          <div class="btn-row">
+            <a th:href="@{/records}" class="add-btn solid">📋 View All Records</a>
+            <a th:href="@{/health/add}" class="add-btn">＋ Add / Update Record</a>
+          </div>
         </div>
 
-        <!-- ══════════════════════════════════════════════
-             EMERGENCY CONTACTS
-             SAFETY: list guard with th:if / th:unless.
-        ══════════════════════════════════════════════ -->
+        <!-- EMERGENCY CONTACTS -->
         <div class="glass-card fade-up d7">
           <div class="card-header">
             <div class="card-title">🚨 Emergency Contacts</div>
             <a class="card-action" th:href="@{/emergency-contacts/new}">+ Add</a>
           </div>
           <div class="emergency-list">
-
-            <!-- SAFETY: no contacts state -->
             <div class="emg-empty"
                  th:if="${emergencyContacts == null or #lists.isEmpty(emergencyContacts)}">
               No emergency contacts saved yet.
             </div>
-
-            <!-- DYNAMIC: iterate real emergency contact objects -->
-            <div class="emergency-item"
-                 th:each="contact : ${emergencyContacts}">
+            <div class="emergency-item" th:each="contact : ${emergencyContacts}">
               <div class="emg-icon">🧑</div>
               <div class="emg-info">
-                <!-- DYNAMIC: contact name -->
                 <div class="emg-name" th:text="${contact.contactName}">Name</div>
-                <!-- DYNAMIC: relation type (e.g. "Spouse", "Parent") -->
                 <div class="emg-rel"  th:text="${contact.relationType}">Relation</div>
               </div>
-              <!-- DYNAMIC: tel: link built from contact.phone -->
               <button class="emg-call"
                       th:attr="onclick='window.location.href=\'tel:' + ${contact.phone} + '\''">
                 📞 Call
               </button>
             </div>
-
           </div>
         </div>
 
@@ -693,7 +558,7 @@
     const greet = h < 12 ? 'Good Morning 👋' : h < 17 ? 'Good Afternoon 👋' : 'Good Evening 👋';
     document.getElementById('greeting').textContent = greet;
     document.getElementById('topbarDate').textContent =
-      now.toLocaleDateString('en-IN', {weekday: 'short', day: 'numeric', month: 'long', year: 'numeric'});
+      now.toLocaleDateString('en-IN', {weekday:'short', day:'numeric', month:'long', year:'numeric'});
   })();
 </script>
 </body>

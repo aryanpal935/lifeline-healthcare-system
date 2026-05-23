@@ -1,9 +1,9 @@
 package com.lifeline.lifeline.controller;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,49 +23,72 @@ public class DashboardController {
     private HealthRecordService healthRecordService;
 
     @GetMapping("/dashboard")
-    public String dashboard(
-            Model model,
-            Principal principal
-    ) {
+    public String dashboard(Authentication authentication,
+                            Model model) {
 
-        String email = principal.getName();
+        String email = authentication.getName();
 
-        User user = userRepository
-                .findByEmail(email)
-                .orElse(null);
+        User user = userRepository.findByEmail(email).orElse(null);
 
         if (user == null) {
             return "redirect:/login";
         }
 
-        // Latest record
+        // latest record
         HealthRecord latestRecord =
                 healthRecordService.getLatestRecord(user);
 
-        // Total records
-        long totalRecords =
-                healthRecordService.countRecords(user);
-
-        // All records
+        // all records
         List<HealthRecord> records =
                 healthRecordService.getRecordsByUser(user);
 
-        // BMI
-        double bmi =
-                healthRecordService.calculateBMI(latestRecord);
-
-        // BMI category
-        String bmiCategory =
-                healthRecordService.getBMICategory(bmi);
-
-        // Send data to dashboard
         model.addAttribute("user", user);
         model.addAttribute("latestRecord", latestRecord);
-        model.addAttribute("totalRecords", totalRecords);
         model.addAttribute("records", records);
-        model.addAttribute("bmi", bmi);
-        model.addAttribute("bmiCategory", bmiCategory);
+
+        // total records
+        model.addAttribute(
+                "recordCount",
+                healthRecordService.countRecords(user)
+        );
+
+        // BMI Logic
+        if (latestRecord != null) {
+
+            double heightMeter =
+                    latestRecord.getHeight() / 100.0;
+
+            double bmi =
+                    latestRecord.getWeight()
+                            / (heightMeter * heightMeter);
+
+            String bmiCategory =
+                    healthRecordService.getBmiCategory(bmi);
+
+            model.addAttribute("bmi", bmi);
+            model.addAttribute("bmiCategory", bmiCategory);
+        }
 
         return "dashboard";
+    }
+
+    @GetMapping("/records")
+    public String recordsPage(Authentication authentication,
+                              Model model) {
+
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        List<HealthRecord> records =
+                healthRecordService.getRecordsByUser(user);
+
+        model.addAttribute("records", records);
+
+        return "records";
     }
 }

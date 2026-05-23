@@ -1,10 +1,14 @@
 package com.lifeline.lifeline.controller;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.lifeline.lifeline.entity.HealthRecord;
@@ -21,6 +25,7 @@ public class HealthRecordController {
     @Autowired
     private UserRepository userRepository;
 
+    // SHOW ADD RECORD PAGE
     @GetMapping("/health/add")
     public String showAddRecordPage(Model model) {
 
@@ -29,11 +34,24 @@ public class HealthRecordController {
         return "add-record";
     }
 
+    // SAVE RECORD
     @PostMapping("/health/save")
-    public String saveHealthRecord(
-            HealthRecord healthRecord,
-            Authentication authentication
+    public String saveRecord(
+            @Valid HealthRecord healthRecord,
+            BindingResult result,
+            Authentication authentication,
+            Model model
     ) {
+
+        // VALIDATION CHECK
+        if (result.hasErrors()) {
+
+            System.out.println(result.getAllErrors());
+
+            model.addAttribute("healthRecord", healthRecord);
+
+            return "add-record";
+        }
 
         String email = authentication.getName();
 
@@ -45,6 +63,15 @@ public class HealthRecordController {
 
         healthRecordService.saveRecord(healthRecord);
 
-        return "redirect:/dashboard";
+        return "redirect:/records";
+    }
+
+    // DELETE RECORD
+    @GetMapping("/delete/{id}")
+    public String deleteRecord(@PathVariable Long id) {
+
+        healthRecordService.deleteRecord(id);
+
+        return "redirect:/records";
     }
 }
