@@ -103,6 +103,10 @@ src/main/java/com/lifeline/lifeline
 ### Add Record Page
 ![Add Record Page](lifeline/screenshots/add-record.png)
 
+### Appointment Module Screenshot
+
+![Appointment Module](lifeline/screenshots/appointment-page.png)
+
 ---
 
 ## Installation & Setup
