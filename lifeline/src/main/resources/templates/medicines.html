@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lifeline — Medicine Reminders</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fraunces:wght@700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --teal:        #0ea5a0;
+      --teal-dark:   #0d8c87;
+      --teal-light:  #e0faf6;
+      --teal-glow:   rgba(14,165,160,0.16);
+      --navy:        #0f2234;
+      --text-body:   #1e293b;
+      --text-muted:  #475569;
+      --border:      #cbd5e1;
+      --bg-input:    #f8fafc;
+      --bg-white:    #ffffff;
+      --red:         #dc2626;
+      --red-light:   #fef2f2;
+      --green:       #16a34a;
+      --green-light: #f0fdf4;
+      --amber:       #d97706;
+      --amber-light: #fffbeb;
+      --purple:      #7c3aed;
+      --purple-light:#f5f3ff;
+      --blue:        #2563eb;
+      --blue-light:  #eff6ff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #040f18;
+      font-family: 'Nunito', sans-serif;
+      color: var(--text-body);
+      overflow-x: hidden;
+    }
+
+    /* OPTIMIZED PERFORMANCE ECG LAYOUT */
+    #ecg-bg { position: fixed; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+    .grid-overlay {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(14,165,160,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14,165,160,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .vignette {
+      position: fixed; inset: 0; z-index: 2; pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(4,15,24,0.80) 100%);
+    }
+
+    .app-wrap {
+      position: relative; z-index: 10;
+      max-width: 1140px; margin: 0 auto;
+      padding: 32px 24px 60px;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 36px;
+      animation: fadeDown 0.6s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes fadeDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+    .nav-brand { display: flex; align-items: center; gap: 12px; }
+    .heart-icon {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg,#0ea5a0,#17c98a);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; box-shadow: 0 0 18px rgba(14,165,160,0.4);
+      animation: heartbeat 2.4s ease-in-out infinite;
+    }
+    @keyframes heartbeat {
+      0%,100%{transform:scale(1)} 14%{transform:scale(1.12)} 28%{transform:scale(1)} 42%{transform:scale(1.07)}
+    }
+    .nav-title { font-family: 'Fraunces', serif; font-size: 22px; color: #fff; line-height: 1; }
+    .nav-sub   { font-size: 11px; color: var(--teal); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 16px; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+      cursor: pointer; text-decoration: none; transition: all 0.18s; border: none;
+    }
+    .nav-btn-ghost { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.12); }
+    .nav-btn-ghost:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+    /* PAGE HEADER */
+    .page-header { margin-bottom: 28px; animation: fadeUp 0.6s 0.1s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+    .page-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--teal-dark); background: var(--teal-light);
+      border: 1px solid rgba(14,165,160,0.22); border-radius: 100px;
+      padding: 3px 12px; margin-bottom: 10px;
+    }
+    .page-title    { font-family: 'Fraunces', serif; font-size: 30px; color: #fff; line-height: 1.1; margin-bottom: 4px; }
+    .page-subtitle { font-size: 14px; color: rgba(255,255,255,0.45); font-weight: 600; }
+
+    /* STAT CARDS */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+      margin-bottom: 28px; animation: fadeUp 0.6s 0.15s cubic-bezier(.22,1,.36,1) both;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 16px 18px; backdrop-filter: blur(12px);
+      transition: border-color 0.2s, transform 0.18s;
+    }
+    .stat-card:hover { border-color: rgba(14,165,160,0.3); transform: translateY(-2px); }
+    .stat-icon { font-size: 22px; margin-bottom: 8px; }
+    .stat-val  { font-family: 'Fraunces', serif; font-size: 28px; color: #fff; line-height: 1; margin-bottom: 2px; }
+    .stat-lbl  { font-size: 11.5px; font-weight: 700; color: rgba(255,255,255,0.38); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ALERTS */
+    .alert {
+      padding: 11px 16px; border-radius: 10px; font-size: 13px; font-weight: 700;
+      margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+    }
+    .alert-success { background: var(--green-light); color: var(--green); border: 1.5px solid #bbf7d0; }
+    .alert-error   { background: var(--red-light);   color: var(--red);   border: 1.5px solid #fecaca; }
+
+    /* LAYOUT */
+    .content-grid { display: grid; grid-template-columns: 360px 1fr; gap: 20px; align-items: start; }
+
+    /* FORM CARD */
+    .form-card {
+      background: var(--bg-white); border-radius: 20px; padding: 28px 24px 24px;
+      box-shadow: 0 0 0 1px rgba(14,165,160,0.12), 0 20px 50px rgba(0,0,0,0.4);
+      animation: fadeUp 0.6s 0.2s cubic-bezier(.22,1,.36,1) both;
+      position: sticky; top: 24px;
+    }
+    .card-header { margin-bottom: 20px; }
+    .card-title  { font-family: 'Fraunces', serif; font-size: 19px; color: var(--navy); margin-bottom: 3px; }
+    .card-sub    { font-size: 12.5px; color: var(--text-muted); font-weight: 600; }
+    .cancel-edit-container { text-align: center; margin-top: 12px; }
+    .cancel-edit-link { color: var(--teal); font-size: 13px; font-weight: 700; text-decoration: none; }
+
+    /* FLOATING LABEL FIELDS */
+    .field { position: relative; margin-bottom: 12px; }
+    .field input, .field select {
+      width: 100%; padding: 18px 14px 6px 42px; height: 54px;
+      border: 1.5px solid var(--border); border-radius: 11px;
+      font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600;
+      color: var(--text-body); background: var(--bg-input); outline: none; appearance: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .field input::placeholder { color: transparent; }
+    .field input:focus, .field select:focus {
+      border-color: var(--teal); background: var(--bg-white); box-shadow: 0 0 0 3px var(--teal-glow);
+    }
+    .field input.invalid, .field select.invalid { border-color: var(--red); box-shadow: 0 0 0 3px rgba(220,38,38,0.10); }
+    .field label {
+      position: absolute; left: 42px; top: 50%; transform: translateY(-50%);
+      font-size: 13.5px; font-weight: 600; color: #94a3b8;
+      pointer-events: none; transition: all 0.18s cubic-bezier(.4,0,.2,1);
+    }
+    .field input:focus ~ label,
+    .field input:not(:placeholder-shown) ~ label,
+    .field select:focus ~ label,
+    .field select.filled ~ label,
+    .field input[type="date"]:valid ~ label {
+      top: 9px; transform: translateY(0);
+      font-size: 9.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+      color: var(--teal-dark);
+    }
+    .f-icon {
+      position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+      font-size: 16px; opacity: 0.4; pointer-events: none; transition: opacity 0.2s;
+    }
+    .select-arrow { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); font-size: 10px; color: var(--text-muted); pointer-events: none; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .field.no-icon input, .field.no-icon select { padding-left: 14px; }
+    .field.no-icon label  { left: 14px; }
+
+    /* SUBMIT BTN */
+    .submit-btn {
+      width: 100%; padding: 14px; margin-top: 6px;
+      background: linear-gradient(135deg,#0ea5a0,#0d8c87);
+      border: none; border-radius: 11px;
+      font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800;
+      color: #fff; cursor: pointer; position: relative; overflow: hidden;
+      transition: transform 0.18s, box-shadow 0.18s, opacity 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 50px;
+    }
+    .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(14,165,160,0.4); }
+    .submit-btn:active:not(:disabled){ transform: translateY(0); }
+    .submit-btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+    .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+    .btn-pulse { width:7px; height:7px; background:rgba(255,255,255,0.6); border-radius:50%; animation:blink 1.5s ease-in-out infinite; flex-shrink:0; }
+    @keyframes blink{ 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+    .spinner { width:17px; height:17px; border:2.5px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; display:none; }
+    @keyframes spin{ to{transform:rotate(360deg);} }
+    .submit-btn.loading .spinner   { display:block; }
+    .submit-btn.loading .btn-label { display:none; }
+    .submit-btn.loading .btn-pulse { display:none; }
+    .ripple { position:absolute; border-radius:50%; background:rgba(255,255,255,0.22); transform:scale(0); animation:rippleAnim 0.55s linear; pointer-events:none; }
+    @keyframes rippleAnim{ to{transform:scale(4);opacity:0;} }
+
+    /* TABLE CARD */
+    .table-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px; overflow: hidden; backdrop-filter: blur(12px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      animation: fadeUp 0.6s 0.25s cubic-bezier(.22,1,.36,1) both;
+    }
+    .table-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 22px 16px; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .table-title { font-family: 'Fraunces', serif; font-size: 17px; color: #fff; }
+    .table-count {
+      font-size: 12px; font-weight: 700; color: var(--teal);
+      background: rgba(14,165,160,0.12); border: 1px solid rgba(14,165,160,0.2);
+      border-radius: 100px; padding: 3px 12px;
+    }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 640px; }
+    thead tr { background: rgba(14,165,160,0.07); border-bottom: 1px solid rgba(14,165,160,0.15); }
+    th {
+      padding: 12px 16px; font-size: 11px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.8px; color: var(--teal);
+      text-align: left; white-space: nowrap;
+    }
+    th:first-child { text-align: center; width: 52px; }
+    th:last-child  { text-align: center; width: 160px; }
+    tbody tr { border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.15s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(14,165,160,0.05); }
+    td { padding: 14px 16px; font-size: 13.5px; font-weight: 600; color: rgba(255,255,255,0.82); text-align: left; vertical-align: middle; }
+    td:first-child { text-align: center; font-family: 'Fraunces', serif; font-size: 12px; color: var(--teal); font-weight: 700; }
+    td:last-child  { text-align: center; white-space: nowrap; }
+
+    /* MEDICINE NAME CELL */
+    .med-cell { display: flex; align-items: center; gap: 10px; }
+    .med-avatar {
+      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(14,165,160,0.25));
+      border: 1px solid rgba(124,58,237,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .med-name { font-size: 13.5px; font-weight: 700; color: #fff; }
+
+    /* DOSAGE BADGE */
+    .dosage-badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 8px;
+      background: rgba(37,99,235,0.10); border: 1px solid rgba(37,99,235,0.2);
+      font-size: 12px; font-weight: 700; color: #93c5fd;
+    }
+
+    /* TIMING PILL */
+    .timing-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 11px; border-radius: 100px;
+      font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .t-morning   { background: rgba(245,158,11,0.12);  color: #fbbf24; }
+    .t-afternoon { background: rgba(14,165,160,0.12);  color: var(--teal); }
+    .t-night     { background: rgba(124,58,237,0.12);  color: #a78bfa; }
+    .t-default   { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.6); }
+
+    /* FREQUENCY BADGE */
+    .freq-badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 8px;
+      background: rgba(16,185,129,0.10); border: 1px solid rgba(16,185,129,0.2);
+      font-size: 12px; font-weight: 700; color: #6ee7b7;
+    }
+
+    /* DATE RANGE */
+    .date-range { display: flex; flex-direction: column; gap: 2px; }
+    .date-range-val { font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,0.75); }
+    .date-range-lbl { font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* NOTES */
+    .notes-chip {
+      display: inline-flex; max-width: 140px;
+      padding: 3px 9px; border-radius: 7px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.55);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* ACTION BUTTONS */
+    .delete-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 13px; background: rgba(220,38,38,0.08);
+      border: 1.5px solid rgba(220,38,38,0.22); border-radius: 8px;
+      font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700;
+      color: #f87171; text-decoration: none; cursor: pointer;
+      transition: all 0.18s;
+    }
+    .delete-btn:hover {
+      background: rgba(220,38,38,0.18); border-color: rgba(220,38,38,0.55);
+      color: #ef4444; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(220,38,38,0.20);
+    }
+    .edit-action-btn { background:rgba(37,99,235,0.08); border-color:rgba(37,99,235,0.22); color:#93c5fd; margin-right:6px; }
+
+    /* EMPTY STATE */
+    .empty-state { padding: 60px 20px; text-align: center; }
+    .empty-icon  { font-size: 44px; margin-bottom: 12px; opacity: 0.35; animation: floatIcon 2s ease-in-out infinite; }
+    .empty-text  { font-size: 14px; color: rgba(255,255,255,0.3); font-weight: 600; line-height: 1.6; }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* MOBILE */
+    @media (max-width: 960px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .form-card { position: static; }
+      .stats-row { grid-template-columns: repeat(2,1fr); }
+      #ecg-bg, .grid-overlay { display: none; }
+    }
+    @media (max-width: 520px) {
+      .navbar { flex-wrap: wrap; gap: 10px; }
+      .nav-actions { gap: 8px; }
+      .app-wrap { padding: 20px 14px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="ecg-bg"></canvas>
+<div class="grid-overlay"></div>
+<div class="vignette"></div>
+
+<div class="app-wrap">
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="heart-icon">❤️</div>
+      <div>
+        <div class="nav-title">Lifeline</div>
+        <div class="nav-sub">Digital Health Assistant</div>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <a href="/dashboard"    class="nav-btn nav-btn-ghost">🏠 Dashboard</a>
+      <a href="/records"      class="nav-btn nav-btn-ghost">📋 Records</a>
+      <a href="/appointments" class="nav-btn nav-btn-ghost">📅 Appointments</a>
+      <a href="/logout"       class="nav-btn nav-btn-ghost">🚪 Logout</a>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="page-tag">💊 Medicine Reminders</div>
+    <h1 class="page-title" th:text="${medicine.id != null} ? 'Edit Medicine<br>Schedule' : 'Your Medicine<br>Schedule'">Your Medicine<br>Schedule</h1>
+    <p class="page-subtitle" th:text="${medicine.id != null} ? 'Alter dosages or schedule timelines for this drug track.' : 'Track dosages, timings and courses for all your medications.'">Track dosages, timings and courses for all your medications.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">💊</div>
+      <div class="stat-val" id="statTotal">0</div>
+      <div class="stat-lbl">Total Medicines</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🌅</div>
+      <div class="stat-val" id="statMorning">0</div>
+      <div class="stat-lbl">Morning</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🌙</div>
+      <div class="stat-val" id="statNight">0</div>
+      <div class="stat-lbl">Night</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🔁</div>
+      <div class="stat-val" id="statDaily">0</div>
+      <div class="stat-lbl">Daily</div>
+    </div>
+  </div>
+
+  <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+  <div class="alert alert-error"   th:if="${error}"   th:text="${error}"></div>
+
+  <div class="content-grid">
+
+    <div class="form-card">
+      <div class="card-header">
+        <div class="card-title" th:text="${medicine.id != null} ? '✏️ Edit Medicine' : '💊 Add Medicine'">💊 Add Medicine</div>
+        <div class="card-sub" th:text="${medicine.id != null} ? 'Modify parameter values to calibrate scheduling.' : 'Enter the medication details below.'">Enter the medication details below.</div>
+      </div>
+
+      <form th:action="@{/medicines/save}" th:object="${medicine}" method="post" id="medForm" novalidate>
+
+        <input type="hidden" th:field="*{id}">
+
+        <div class="field">
+          <input type="text" id="medicineName" th:field="*{medicineName}"
+                 placeholder="Medicine name"
+                 autocomplete="off"
+                 required aria-required="true"/>
+          <label for="medicineName">Medicine Name</label>
+          <span class="f-icon">💊</span>
+        </div>
+
+        <div class="field">
+          <input type="text" id="dosage" th:field="*{dosage}"
+                 placeholder="Dosage"
+                 autocomplete="off"
+                 required aria-required="true"/>
+          <label for="dosage">Dosage (e.g. 500mg)</label>
+          <span class="f-icon">⚗️</span>
+        </div>
+
+        <div class="field-row">
+          <div class="field no-icon">
+            <select id="timing" th:field="*{timing}" required aria-required="true">
+              <option value="Morning">Morning</option>
+              <option value="Afternoon">Afternoon</option>
+              <option value="Night">Night</option>
+              <option value="Morning & Night">Morning &amp; Night</option>
+              <option value="After Meals">After Meals</option>
+            </select>
+            <label for="timing">Timing</label>
+            <span class="select-arrow">▼</span>
+          </div>
+          <div class="field no-icon">
+            <select id="frequency" th:field="*{frequency}" required aria-required="true">
+              <option value="Daily">Daily</option>
+              <option value="Weekly">Weekly</option>
+              <option value="Alternate Days">Alternate Days</option>
+              <option value="As Needed">As Needed</option>
+            </select>
+            <label for="frequency">Frequency</label>
+            <span class="select-arrow">▼</span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <input type="date" id="startDate" th:field="*{startDate}"
+                   required aria-required="true"/>
+            <label for="startDate">Start Date</label>
+            <span class="f-icon">📅</span>
+          </div>
+          <div class="field">
+            <input type="date" id="endDate" th:field="*{endDate}"/>
+            <label for="endDate">End Date</label>
+            <span class="f-icon">🏁</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <input type="text" id="notes" th:field="*{notes}"
+                 placeholder="Notes"
+                 autocomplete="off"/>
+          <label for="notes">Notes (optional)</label>
+          <span class="f-icon">📝</span>
+        </div>
+
+        <button class="submit-btn" type="submit" id="submitBtn">
+          <span class="btn-pulse"></span>
+          <span class="btn-label" th:text="${medicine.id != null} ? '💾 Update Medicine' : '💊 Add Medicine'">💊 Add Medicine</span>
+          <div class="spinner"></div>
+        </button>
+        
+        <div class="cancel-edit-container" th:if="${medicine.id != null}">
+            <a href="/medicines" class="cancel-edit-link">❌ Cancel Edit</a>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="table-card">
+      <div class="table-head">
+        <div class="table-title">📋 Medicine List</div>
+        <span class="table-count" id="medCount">0 medicines</span>
+      </div>
+
+      <div class="table-wrap">
+        <table id="medTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>💊 Medicine</th>
+              <th>⚗️ Dosage</th>
+              <th>🕐 Timing</th>
+              <th>🔁 Frequency</th>
+              <th>📅 Duration</th>
+              <th>📝 Notes</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="medBody">
+
+            <th:block th:if="${medicines != null and !#lists.isEmpty(medicines)}">
+              <tr class="data-row" th:each="medicine, stat : ${medicines}">
+
+                <td th:text="${stat.count}"></td>
+
+                <td>
+                  <div class="med-cell">
+                    <div class="med-avatar">💊</div>
+                    <div class="med-name" th:text="${medicine.medicineName}">Medicine</div>
+                  </div>
+                </td>
+
+                <td>
+                  <span class="dosage-badge" th:text="${medicine.dosage}">—</span>
+                </td>
+
+                <td>
+                  <span class="timing-pill"
+                        th:classappend="${medicine.timing == 'Morning' or medicine.timing == 'Morning &amp; Night'} ? 't-morning' :
+                                        (${medicine.timing == 'Afternoon' or medicine.timing == 'After Meals'} ? 't-afternoon' :
+                                        (${medicine.timing == 'Night'} ? 't-night' : 't-default'))"
+                        th:text="${medicine.timing}">Morning</span>
+                </td>
+
+                <td>
+                  <span class="freq-badge" th:text="${medicine.frequency}">Daily</span>
+                </td>
+
+                <td>
+                  <div class="date-range">
+                    <div class="date-range-val" th:text="${medicine.startDate}">—</div>
+                    <div class="date-range-lbl">to</div>
+                    <div class="date-range-val"
+                         th:text="${medicine.endDate != null ? medicine.endDate : 'Ongoing'}">Ongoing</div>
+                  </div>
+                </td>
+
+                <td>
+                  <span class="notes-chip"
+                        th:text="${medicine.notes != null and medicine.notes != '' ? medicine.notes : '—'}">—</span>
+                </td>
+
+                <td>
+                  <a th:href="@{/medicines/edit/{id}(id=${medicine.id})}" class="delete-btn edit-action-btn">
+                    ✏️ Edit
+                  </a>
+                  <a th:href="@{/medicines/delete/{id}(id=${medicine.id})}"
+                     onclick="return confirm('Delete this medicine?')"
+                     class="delete-btn">
+                    🗑️ Delete
+                  </a>
+                </td>
+
+              </tr>
+            </th:block>
+
+            <tr th:if="${medicines == null or #lists.isEmpty(medicines)}">
+              <td colspan="8">
+                <div class="empty-state">
+                  <div class="empty-icon">💊</div>
+                  <div class="empty-text">No medicines added yet.<br>Add your first medication using the form.</div>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* FIX 7: PERFORMANCE-HARDENED LOW GRAPHICS ECG PLANE (LINES DROPPED TO 2, SAMPLING POINTS SLICED TO 220) */
+function ecgY(t) {
+  t = t % 1;
+  if (t < 0.10) return 0;
+  if (t < 0.15) return -0.08 * Math.sin((t-0.10)/0.05 * Math.PI);
+  if (t < 0.22) return 0;
+  if (t < 0.24) return -0.15;
+  if (t < 0.26) return 1.0;
+  if (t < 0.28) return -0.25;
+  if (t < 0.30) return 0;
+  if (t < 0.45) return 0.18 * Math.sin(((t-0.30)/0.15) * Math.PI);
+  return 0;
+}
+
+const bgCanvas = document.getElementById('ecg-bg');
+if (bgCanvas && window.innerWidth > 960) {
+  const bgCtx = bgCanvas.getContext('2d');
+  bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight; });
+  
+  const BG_LINES = 2, bgPhases = [0, 0.5], bgSpeeds = [0.0025, 0.0020], bgPts = 220;
+  const bgData = Array.from({length:BG_LINES}, () => new Array(bgPts).fill(0));
+  const lineColors = ['14,255,180', '0,210,255'];
+  
+  function drawBg() {
+    const w=bgCanvas.width, h=bgCanvas.height; bgCtx.clearRect(0,0,w,h);
+    const rowH=h/BG_LINES;
+    for(let r=0; r<BG_LINES; r++){
+      bgData[r].shift(); bgData[r].push(ecgY(bgPhases[r])); bgPhases[r]+=bgSpeeds[r];
+      const midY=rowH*r+rowH*0.5, amp=rowH*0.30, col=lineColors[r];
+      function tp(){bgCtx.beginPath();for(let i=0;i<bgPts;i++){const x=(i/(bgPts-1))*w,y=midY-bgData[r][i]*amp;i===0?bgCtx.moveTo(x,y):bgCtx.lineTo(x,y);}}
+      
+      bgCtx.save(); bgCtx.shadowColor=`rgba(${col},1)`; bgCtx.shadowBlur=12;
+      const g1=bgCtx.createLinearGradient(0,0,w,0); g1.addColorStop(0,`rgba(${col},0)`); g1.addColorStop(0.3,`rgba(${col},0.4)`); g1.addColorStop(0.7,`rgba(${col},0.85)`); g1.addColorStop(1,`rgba(${col},1)`);
+      bgCtx.strokeStyle=g1; bgCtx.lineWidth=6; bgCtx.lineJoin='round'; bgCtx.lineCap='round'; tp(); bgCtx.stroke(); bgCtx.restore();
+      
+      bgCtx.save(); bgCtx.shadowColor=`rgba(${col},0.8)`; bgCtx.shadowBlur=6;
+      const g2=bgCtx.createLinearGradient(0,0,w,0); g2.addColorStop(0,`rgba(${col},0)`); g2.addColorStop(0.35,`rgba(${col},0.6)`); g2.addColorStop(1,`rgba(${col},1)`);
+      bgCtx.strokeStyle=g2; bgCtx.lineWidth=3; bgCtx.lineJoin='round'; bgCtx.lineCap='round'; tp(); bgCtx.stroke(); bgCtx.restore();
+    }
+    requestAnimationFrame(drawBg);
+  }
+  drawBg();
+}
+
+/* FLOATING LABEL DESCRIPTOR CONFIGURATORS */
+function syncInputLabelsState() {
+  document.querySelectorAll('.field input, .field select').forEach(input => {
+    if (input.value && input.value.trim() !== '') {
+      input.classList.add('filled');
+    }
+  });
+}
+window.addEventListener('DOMContentLoaded', syncInputLabelsState);
+['timing','frequency'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    if(el.value !== '') el.classList.add('filled');
+    el.addEventListener('change', function() { this.classList.toggle('filled', this.value !== ''); });
+  }
+});
+
+/* PERFORMANCE-SAFE MARKUP ATTRIBUTE COUNTERS */
+(function updateStats() {
+  const rows = document.querySelectorAll('#medBody tr.data-row');
+  let total=0, morning=0, night=0, daily=0;
+  rows.forEach(r => {
+    total++;
+    const timing = r.querySelector('.timing-pill');
+    const freq   = r.querySelector('.freq-badge');
+    if (timing) {
+      const t = timing.textContent.toLowerCase();
+      if (t.includes('morning')) morning++;
+      if (t.includes('night'))   night++;
+    }
+    if (freq && freq.textContent.toLowerCase().includes('daily')) daily++;
+  });
+  document.getElementById('statTotal').textContent   = total;
+  document.getElementById('statMorning').textContent = morning;
+  document.getElementById('statNight').textContent   = night;
+  document.getElementById('statDaily').textContent   = daily;
+  document.getElementById('medCount').textContent    = total + (total===1?' medicine':' medicines');
+})();
+
+/* FIX 6: CLEAN DETERMINISTIC SUBMISSION VALIDATOR PATTERN */
+const medForm   = document.getElementById('medForm');
+const submitBtn = document.getElementById('submitBtn');
+if (medForm && submitBtn) {
+  medForm.addEventListener('submit', (e) => {
+    const fields = medForm.querySelectorAll('[required]');
+    let valid = true;
+    fields.forEach(f => {
+      if (!f.value) { f.classList.add('invalid'); valid = false; }
+      else f.classList.remove('invalid');
+    });
+    if (!valid) { e.preventDefault(); return; }
+    submitBtn.classList.add('loading'); submitBtn.disabled = true;
+  });
+
+  medForm.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('input', () => { if (el.value) el.classList.remove('invalid'); });
+  });
+}
+
+/* RIPPLE FEEDBACK SYSTEM */
+if (submitBtn) {
+  submitBtn.addEventListener('click', function(e) {
+    const span = document.createElement('span');
+    const d = Math.max(this.offsetWidth, this.offsetHeight);
+    const rect = this.getBoundingClientRect();
+    span.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX-rect.left-d/2}px;top:${e.clientY-rect.top-d/2}px`;
+    span.classList.add('ripple'); this.appendChild(span);
+    setTimeout(()=>span.remove(), 600);
+  });
+}
+
+/* Default standard initialization parameter hooks */
+const startDatePicker = document.getElementById('startDate');
+if (startDatePicker && !startDatePicker.value) {
+  startDatePicker.value = new Date().toISOString().split('T')[0];
+}
+</script>
+</body>
+</html>
