@@ -28,7 +28,7 @@ public class MedicineController {
     private UserRepository userRepository;
 
     // =========================
-    // SHOW PAGE
+    // SHOW MEDICINES PAGE
     // =========================
 
     @GetMapping("/medicines")
@@ -42,8 +42,7 @@ public class MedicineController {
                 .findByEmail(email)
                 .orElse(null);
 
-        var medicines =
-                medicineService.getMedicinesByUser(user);
+        var medicines = medicineService.getMedicinesByUser(user);
 
         model.addAttribute(
                 "medicines",
@@ -55,7 +54,7 @@ public class MedicineController {
     }
 
     // =========================
-    // SAVE / UPDATE
+    // SAVE / UPDATE MEDICINE
     // =========================
 
     @PostMapping("/medicines/save")
@@ -64,7 +63,7 @@ public class MedicineController {
             Authentication authentication,
             RedirectAttributes redirectAttributes) {
 
-        // VALIDATION
+        // DATE VALIDATION
         if (medicine.getStartDate() == null
                 || medicine.getEndDate() == null) {
 
@@ -75,6 +74,7 @@ public class MedicineController {
             return "redirect:/medicines";
         }
 
+        // END DATE VALIDATION
         if (medicine.getEndDate()
                 .isBefore(medicine.getStartDate())) {
 
@@ -122,7 +122,7 @@ public class MedicineController {
     }
 
     // =========================
-    // EDIT
+    // EDIT MEDICINE
     // =========================
 
     @GetMapping("/medicines/edit/{id}")
@@ -161,7 +161,7 @@ public class MedicineController {
     }
 
     // =========================
-    // DELETE
+    // DELETE MEDICINE
     // =========================
 
     @GetMapping("/medicines/delete/{id}")

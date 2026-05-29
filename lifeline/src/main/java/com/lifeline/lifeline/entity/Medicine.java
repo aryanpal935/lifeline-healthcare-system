@@ -1,8 +1,7 @@
 package com.lifeline.lifeline.entity;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "medicines")
@@ -16,6 +15,8 @@ public class Medicine {
 
     private String dosage;
 
+    private String timing;
+
     private String frequency;
 
     private LocalDate startDate;
@@ -24,18 +25,14 @@ public class Medicine {
 
     private String status;
 
-    private String timing;
-
-@Column(length = 500)
-private String notes;
+    private String notes;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    // =========================
-    // GETTERS AND SETTERS
-    // =========================
+    public Medicine() {
+    }
 
     public Long getId() {
         return id;
@@ -59,6 +56,14 @@ private String notes;
 
     public void setDosage(String dosage) {
         this.dosage = dosage;
+    }
+
+    public String getTiming() {
+        return timing;
+    }
+
+    public void setTiming(String timing) {
+        this.timing = timing;
     }
 
     public String getFrequency() {
@@ -93,6 +98,14 @@ private String notes;
         this.status = status;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     public User getUser() {
         return user;
     }
@@ -100,20 +113,4 @@ private String notes;
     public void setUser(User user) {
         this.user = user;
     }
-
-    public String getTiming() {
-    return timing;
-}
-
-public void setTiming(String timing) {
-    this.timing = timing;
-}
-
-public String getNotes() {
-    return notes;
-}
-
-public void setNotes(String notes) {
-    this.notes = notes;
-}
 }

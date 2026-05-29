@@ -265,10 +265,12 @@
       font-size: 12px; font-weight: 700; color: #93c5fd;
     }
 
-    .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 100px; font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 100px; font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; width: 110px; justify-content: center; }
     .status-dot { width: 5px; height: 5px; border-radius: 50%; }
-    .s-CONFIRMED, .s-confirmed { background: var(--green-light); color: var(--green); }
-    .s-CONFIRMED .status-dot, .s-confirmed .status-dot { background: var(--green); }
+    
+    /* Normalized status case handling and unified widths */
+    .s-CONFIRMED, .s-confirmed, .s-SCHEDULED, .s-scheduled { background: var(--green-light); color: var(--green); }
+    .s-CONFIRMED .status-dot, .s-confirmed .status-dot, .s-SCHEDULED .status-dot, .s-scheduled .status-dot { background: var(--green); }
     .s-PENDING, .s-pending     { background: var(--amber-light); color: var(--amber); }
     .s-PENDING .status-dot, .s-pending .status-dot     { background: var(--amber); }
     .s-CANCELLED, .s-cancelled { background: var(--red-light);   color: var(--red); }
@@ -345,7 +347,7 @@
 
   <div class="page-header">
     <div class="page-tag">📅 Appointments</div>
-    <h1 class="page-title" th:text="${appointment.id != null} ? 'Reschedule<br>Appointment' : 'Manage Your<br>Appointments'">Manage Your<br>Appointments</h1>
+    <h1 class="page-title" th:utext="${appointment.id != null} ? 'Reschedule<br>Appointment' : 'Manage Your<br>Appointments'">Manage Your<br>Appointments</h1>
     <p class="page-subtitle" th:text="${appointment.id != null} ? 'Modify details for your upcoming clinical interaction.' : 'Schedule, track and manage all your doctor appointments.'">Schedule, track and manage all your doctor appointments.</p>
   </div>
 
@@ -531,7 +533,7 @@
 </div>
 
 <script>
-/* ── OPTIMIZED ECG ANIMATION PLANE (FIX 3 - DECREASED GPU DRAW IMPACT) ── */
+/* ── OPTIMIZED ECG ANIMATION PLANE ── */
 function ecgY(t) {
   t = t % 1;
   if (t < 0.10) return 0;
@@ -551,7 +553,6 @@ if (bgCanvas && window.innerWidth > 960) {
   bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight;
   window.addEventListener('resize', () => { bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight; });
 
-  // PERFORMANCE TWEAKS: Reduced sample slice down to 220 iterations to save CPU cycles
   const BG_LINES = 3, bgPhases = [0, 0.33, 0.66], bgSpeeds = [0.0025, 0.0020, 0.0030], bgPts = 220;
   const bgData = Array.from({length: BG_LINES}, () => new Array(bgPts).fill(0));
   const lineColors = ['14,255,180', '80,240,255', '0,210,255'];
@@ -565,7 +566,6 @@ if (bgCanvas && window.innerWidth > 960) {
       const midY = rowH * r + rowH * 0.5, amp = rowH * 0.30, col = lineColors[r];
       function tp() { bgCtx.beginPath(); for (let i = 0; i < bgPts; i++) { const x = (i / (bgPts - 1)) * w, y = midY - bgData[r][i] * amp; i === 0 ? bgCtx.moveTo(x, y) : bgCtx.lineTo(x, y); } }
       
-      // OPTIMIZATION: Dropped composite ambient raster offsets from 28 to a focused 12px blur
       bgCtx.save(); bgCtx.shadowColor = `rgba(${col},1)`; bgCtx.shadowBlur = 12;
       const g1 = bgCtx.createLinearGradient(0, 0, w, 0); g1.addColorStop(0, `rgba(${col},0)`); g1.addColorStop(0.3, `rgba(${col},0.4)`); g1.addColorStop(0.7, `rgba(${col},0.85)`); g1.addColorStop(1, `rgba(${col},1)`);
       bgCtx.strokeStyle = g1; bgCtx.lineWidth = 6; bgCtx.lineJoin = 'round'; bgCtx.lineCap = 'round'; tp(); bgCtx.stroke(); bgCtx.restore();
@@ -619,7 +619,7 @@ setTimeout(syncInputLabelsState, 100);
     const pill = r.querySelector('.status-pill');
     if (!pill) return;
     const cls = pill.className;
-    if (cls.includes('CONFIRMED') || cls.includes('confirmed')) confirmed++;
+    if (cls.includes('CONFIRMED') || cls.includes('confirmed') || cls.includes('SCHEDULED') || cls.includes('scheduled')) confirmed++;
     else if (cls.includes('PENDING') || cls.includes('pending'))   pending++;
     else if (cls.includes('CANCELLED') || cls.includes('cancelled')) cancelled++;
   });
@@ -630,7 +630,7 @@ setTimeout(syncInputLabelsState, 100);
   document.getElementById('apptCount').textContent     = total + (total === 1 ? ' appointment' : ' appointments');
 })();
 
-/* ── REFACTORED INPUT VALIDATION ENGINE (FIX 3) ── */
+/* ── REFACTORED INPUT VALIDATION ENGINE ── */
 const apptForm  = document.getElementById('apptForm');
 const submitBtn = document.getElementById('submitBtn');
 
