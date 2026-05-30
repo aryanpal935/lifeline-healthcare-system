@@ -76,6 +76,26 @@ src/main/java/com/lifeline/lifeline
 - Display Medical Data
 - Record Management System
 
+
+
+### Features Implemented
+- Add emergency contacts for emergencies
+- Store contact name, relation and phone number
+- One-click call button for quick access
+- Dashboard integration for fast viewing
+- Maximum 5 contacts allowed per user
+- Primary contact support
+- Automatic primary contact reassignment on deletion
+- Phone number validation (10 digits)
+- Contact statistics and summary cards
+
+### Dashboard Integration
+The dashboard now displays emergency contacts with:
+- Contact initials avatar
+- Relation information
+- Phone number
+- Quick call action
+- Direct navigation to full contact management page
 ---
 
 ## Workflow
@@ -106,6 +126,12 @@ src/main/java/com/lifeline/lifeline
 ### Appointment Module Screenshot
 
 ![Appointment Module](lifeline/screenshots/appointment-page.png)
+
+### Emergency Contact Management
+![Emergency Contact Page](screenshots/emergency-contact-page.png)
+
+### Dashboard Emergency Contacts Widget
+![Dashboard Emergency Contacts](screenshots/dashboard-emergency-contacts.png)
 
 ---
 
