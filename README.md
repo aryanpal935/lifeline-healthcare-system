@@ -128,10 +128,10 @@ The dashboard now displays emergency contacts with:
 ![Appointment Module](lifeline/screenshots/appointment-page.png)
 
 ### Emergency Contact Management
-![Emergency Contact Page](screenshots/emergency-contact-page.png)
+![Emergency Contact Page](lifeline/screenshots/emergency-contact-page.png)
 
 ### Dashboard Emergency Contacts Widget
-![Dashboard Emergency Contacts](screenshots/dashboard-emergency-contacts.png)
+![Dashboard Emergency Contacts](lifeline/screenshots/dashboard-emergency-contacts.png)
 
 ---
 
