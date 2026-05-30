@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -35,11 +36,7 @@
     }
 
     /* ── ECG BACKGROUND LAYERS ── */
-    #ecg-bg {
-      position: fixed; inset: 0; z-index: 0;
-      width: 100%; height: 100%; pointer-events: none;
-    }
-
+    #ecg-bg { position: fixed; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
     .grid-overlay {
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background-image:
@@ -47,21 +44,16 @@
         linear-gradient(90deg, rgba(14,165,160,0.04) 1px, transparent 1px);
       background-size: 40px 40px;
     }
-
     .vignette {
       position: fixed; inset: 0; z-index: 2; pointer-events: none;
       background: radial-gradient(ellipse at center,
-        transparent 0%,
-        rgba(4,15,24,0.55) 50%,
-        rgba(4,15,24,0.97) 100%);
+        transparent 0%, rgba(4,15,24,0.55) 50%, rgba(4,15,24,0.97) 100%);
     }
-
     .dark-shield {
       position: fixed; inset: 0; z-index: 3; pointer-events: none;
       background: rgba(4,15,24,0.52);
     }
 
-    /* ── CONTENT ── */
     .app-wrap {
       position: relative; z-index: 10;
       max-width: 1200px; margin: 0 auto;
@@ -90,7 +82,7 @@
     .nav-title { font-family: 'Fraunces', serif; font-size: 23px; color: #fff; line-height: 1; }
     .nav-sub   { font-size: 10.5px; color: var(--teal); font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; }
 
-    .nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
     .user-chip {
       display: flex; align-items: center; gap: 9px;
@@ -109,20 +101,19 @@
 
     .nav-btn {
       display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 15px; border-radius: 10px;
-      font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+      padding: 8px 14px; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: 12.5px; font-weight: 700;
       cursor: pointer; text-decoration: none; transition: all 0.18s; border: none;
     }
     .nav-btn-ghost  { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.11); }
     .nav-btn-ghost:hover  { background: rgba(255,255,255,0.12); color: #fff; }
     .nav-btn-danger { background: rgba(220,38,38,0.08); color: #f87171; border: 1px solid rgba(220,38,38,0.2); }
     .nav-btn-danger:hover { background: rgba(220,38,38,0.16); color: #ef4444; }
+    .nav-btn-sos    { background: rgba(220,38,38,0.10); color: #fca5a5; border: 1px solid rgba(220,38,38,0.25); }
+    .nav-btn-sos:hover    { background: rgba(220,38,38,0.20); color: #f87171; }
 
     /* ── PAGE HEADER ── */
-    .page-header {
-      margin-bottom: 28px;
-      animation: fadeUp 0.6s 0.08s cubic-bezier(.22,1,.36,1) both;
-    }
+    .page-header { margin-bottom: 28px; animation: fadeUp 0.6s 0.08s cubic-bezier(.22,1,.36,1) both; }
     @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
     .page-tag {
       display: inline-flex; align-items: center; gap: 5px;
@@ -141,10 +132,8 @@
       animation: fadeUp 0.6s 0.12s cubic-bezier(.22,1,.36,1) both;
     }
     .stat-card {
-      background: rgba(10,25,45,0.85);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 16px; padding: 18px 20px;
-      backdrop-filter: blur(16px);
+      background: rgba(8,20,38,0.85); border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 16px; padding: 18px 20px; backdrop-filter: blur(16px);
       position: relative; overflow: hidden;
       transition: border-color 0.2s, transform 0.18s;
     }
@@ -185,8 +174,7 @@
       font-size: 11.5px; font-weight: 700; color: var(--teal);
       padding: 5px 12px; border: 1px solid rgba(14,165,160,0.25);
       border-radius: 8px; text-decoration: none; background: none;
-      font-family: 'Nunito', sans-serif; cursor: pointer;
-      transition: all 0.18s;
+      font-family: 'Nunito', sans-serif; cursor: pointer; transition: all 0.18s;
     }
     .card-action:hover { background: rgba(14,165,160,0.10); }
 
@@ -201,7 +189,6 @@
       transition: background 0.15s, border-color 0.15s;
     }
     .item-row:hover { background: rgba(14,165,160,0.07); border-color: rgba(14,165,160,0.18); }
-
     .item-avatar {
       width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center; font-size: 17px;
@@ -209,12 +196,12 @@
     .av-teal   { background: rgba(14,165,160,0.14); border: 1px solid rgba(14,165,160,0.22); }
     .av-purple { background: rgba(124,58,237,0.14); border: 1px solid rgba(124,58,237,0.22); }
     .av-blue   { background: rgba(37,99,235,0.14);  border: 1px solid rgba(37,99,235,0.22); }
+    .av-red    { background: rgba(220,38,38,0.14);  border: 1px solid rgba(220,38,38,0.22); }
 
     .item-info { flex: 1; min-width: 0; }
     .item-name { font-size: 13.5px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .item-sub  { font-size: 11.5px; color: rgba(255,255,255,0.44); margin-top: 2px; font-weight: 600; }
 
-    /* ── STATUS PILL ── */
     .pill {
       display: inline-flex; align-items: center; gap: 4px;
       padding: 3px 10px; border-radius: 100px;
@@ -228,27 +215,6 @@
     .p-blue   { background: rgba(37,99,235,0.14);  color: #93c5fd; }
     .p-purple { background: rgba(124,58,237,0.14); color: #a78bfa; }
 
-    /* ── MEDICINE STATUS BADGE ── */
-    .med-status-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 2px 8px; border-radius: 100px;
-      font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px;
-      flex-shrink: 0;
-    }
-    .ms-active   { background: rgba(22,163,74,0.14);  color: #4ade80;  border: 1px solid rgba(22,163,74,0.22); }
-    .ms-inactive { background: rgba(100,116,139,0.14); color: #94a3b8; border: 1px solid rgba(100,116,139,0.22); }
-    .ms-completed{ background: rgba(37,99,235,0.14);  color: #93c5fd;  border: 1px solid rgba(37,99,235,0.22); }
-
-    /* ── MEDICINE DETAIL ROW ── */
-    .med-details {
-      display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 3px;
-    }
-    .med-tag {
-      display: inline-flex; align-items: center; gap: 3px;
-      font-size: 10.5px; font-weight: 700; color: rgba(255,255,255,0.44);
-    }
-    .med-tag-sep { color: rgba(255,255,255,0.15); font-size: 10px; }
-
     /* ── ADD / VIEW BUTTONS ── */
     .add-row {
       display: flex; align-items: center; justify-content: center; gap: 6px;
@@ -257,16 +223,14 @@
       border: 1px dashed rgba(14,165,160,0.30);
       border-radius: 11px; cursor: pointer;
       font-family: 'Nunito', sans-serif; font-size: 12.5px; font-weight: 700;
-      color: rgba(14,165,160,0.80); text-decoration: none;
-      transition: all 0.18s;
+      color: rgba(14,165,160,0.80); text-decoration: none; transition: all 0.18s;
     }
     .add-row:hover { background: rgba(14,165,160,0.12); border-style: solid; border-color: rgba(14,165,160,0.50); color: var(--teal); }
 
     .view-btn {
       display: flex; align-items: center; justify-content: center; gap: 6px;
       width: 100%; padding: 10px;
-      background: rgba(14,165,160,0.10);
-      border: 1px solid rgba(14,165,160,0.32);
+      background: rgba(14,165,160,0.10); border: 1px solid rgba(14,165,160,0.32);
       border-radius: 11px; cursor: pointer;
       font-family: 'Nunito', sans-serif; font-size: 12.5px; font-weight: 700;
       color: var(--teal); text-decoration: none; transition: all 0.18s;
@@ -318,52 +282,54 @@
     .vitals-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 8px; }
     .v-chip {
       background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px; padding: 11px 12px;
-      transition: background 0.15s;
+      border-radius: 12px; padding: 11px 12px; transition: background 0.15s;
     }
     .v-chip:hover { background: rgba(14,165,160,0.07); border-color: rgba(14,165,160,0.18); }
     .v-ico { font-size: 16px; margin-bottom: 5px; }
     .v-val { font-size: 13px; font-weight: 700; color: #fff; }
     .v-lbl { font-size: 9px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
 
-    /* ── MEDICINE EXPIRY ── */
-    .medicine-expiry {
-      margin-top: 5px;
-      font-size: 11.5px;
-      font-weight: 700;
-      color: #fbbf24;
+    /* ── EMERGENCY CONTACTS WIDGET ── */
+    .emg-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 14px;
+      background: rgba(220,38,38,0.04);
+      border: 1px solid rgba(220,38,38,0.10);
+      border-radius: 12px;
+      transition: background 0.15s, border-color 0.15s;
     }
+    .emg-row:hover { background: rgba(220,38,38,0.08); border-color: rgba(220,38,38,0.22); }
+    .emg-avatar {
+      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(220,38,38,0.25), rgba(240,82,82,0.15));
+      border: 1px solid rgba(220,38,38,0.30);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif; font-size: 12px; font-weight: 700;
+      color: #fca5a5; text-transform: uppercase;
+    }
+    .emg-info { flex: 1; min-width: 0; }
+    .emg-name { font-size: 13px; font-weight: 700; color: #fff; }
+    .emg-rel  { font-size: 11px; color: rgba(255,255,255,0.42); margin-top: 1px; font-weight: 600; }
+    .emg-call {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 5px 11px; border-radius: 8px;
+      background: rgba(22,163,74,0.10); border: 1px solid rgba(22,163,74,0.22);
+      font-family: 'Nunito', sans-serif; font-size: 11.5px; font-weight: 700;
+      color: #4ade80; text-decoration: none; flex-shrink: 0;
+      transition: all 0.18s;
+    }
+    .emg-call:hover { background: rgba(22,163,74,0.20); border-color: rgba(22,163,74,0.45); }
 
-    /* ── HEALTH RISK ALERTS ── */
-    .risk-alert {
-      display: flex; align-items: flex-start; gap: 12px;
-      padding: 13px 14px; border-radius: 12px; margin-bottom: 8px;
+    .add-row-red {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      width: 100%; padding: 10px; margin-top: 10px;
+      background: rgba(220,38,38,0.05);
+      border: 1px dashed rgba(220,38,38,0.25);
+      border-radius: 11px; cursor: pointer;
+      font-family: 'Nunito', sans-serif; font-size: 12.5px; font-weight: 700;
+      color: rgba(220,38,38,0.65); text-decoration: none; transition: all 0.18s;
     }
-    .risk-alert:last-child { margin-bottom: 0; }
-    .risk-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-    .risk-body { flex: 1; }
-    .risk-title   { font-size: 13px; font-weight: 800; margin-bottom: 2px; }
-    .risk-reading {
-      font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700;
-      margin-bottom: 3px; line-height: 1;
-    }
-    .risk-tip { font-size: 11px; font-weight: 600; opacity: 0.75; line-height: 1.4; }
-    .risk-crisis  { background: rgba(220,38,38,0.12);  border: 1px solid rgba(220,38,38,0.30);  color: #f87171; }
-    .risk-high    { background: rgba(234,88,12,0.12);  border: 1px solid rgba(234,88,12,0.30);  color: #fb923c; }
-    .risk-elevated{ background: rgba(217,119,6,0.12);  border: 1px solid rgba(217,119,6,0.30);  color: #fbbf24; }
-    .risk-low     { background: rgba(37,99,235,0.12);  border: 1px solid rgba(37,99,235,0.30);  color: #93c5fd; }
-
-    /* ── MEDICINE REMINDER BOX ── */
-    .reminder-box {
-      background: rgba(14,165,160,0.10);
-      border: 1px solid rgba(14,165,160,0.30);
-      color: #14e4d6;
-      padding: 12px 14px;
-      border-radius: 10px;
-      margin-bottom: 14px;
-      font-weight: 700;
-      font-size: 13px;
-    }
+    .add-row-red:hover { background: rgba(220,38,38,0.10); border-style: solid; border-color: rgba(220,38,38,0.45); color: #f87171; }
 
     /* ── MOBILE ── */
     @media (max-width: 920px) {
@@ -387,7 +353,7 @@
 
 <div class="app-wrap">
 
-  <!-- NAVBAR -->
+  <!-- ── NAVBAR ── -->
   <nav class="navbar">
     <div class="nav-brand">
       <div class="heart-icon">❤️</div>
@@ -397,6 +363,7 @@
       </div>
     </div>
     <div class="nav-right">
+      <!-- User chip -->
       <div class="user-chip" th:if="${user != null}">
         <div class="user-avatar"
              th:text="${#strings.length(user.name) >= 2}
@@ -407,13 +374,15 @@
       <a href="/records"      class="nav-btn nav-btn-ghost">📋 Records</a>
       <a href="/appointments" class="nav-btn nav-btn-ghost">📅 Appointments</a>
       <a href="/medicines"    class="nav-btn nav-btn-ghost">💊 Medicines</a>
+      <!-- ✅ NEW: Emergency Contacts link -->
+      <a href="/contacts"     class="nav-btn nav-btn-sos">🚨 Contacts</a>
       <form th:action="@{/logout}" method="post" style="margin:0;">
         <button type="submit" class="nav-btn nav-btn-danger">🚪 Logout</button>
       </form>
     </div>
   </nav>
 
-  <!-- PAGE HEADER -->
+  <!-- ── PAGE HEADER ── -->
   <div class="page-header">
     <div class="page-tag">🏠 Dashboard</div>
     <h1 class="page-title">
@@ -423,7 +392,7 @@
     <p class="page-subtitle">Here's a complete overview of your health profile.</p>
   </div>
 
-  <!-- STAT CARDS -->
+  <!-- ── STAT CARDS ── -->
   <div class="stats-row">
     <div class="stat-card" style="--accent: linear-gradient(90deg,#0ea5a0,#17c98a);">
       <div class="stat-icon">📋</div>
@@ -454,13 +423,13 @@
     </div>
   </div>
 
-  <!-- MAIN GRID -->
+  <!-- ── MAIN GRID ── -->
   <div class="main-grid">
 
-    <!-- LEFT COLUMN -->
+    <!-- ════ LEFT COLUMN ════ -->
     <div class="left-col">
 
-      <!-- APPOINTMENTS -->
+      <!-- APPOINTMENTS CARD -->
       <div class="glass-card">
         <div class="card-hdr">
           <div class="card-title">📅 Upcoming Appointments</div>
@@ -488,108 +457,66 @@
         <a href="/appointments" class="add-row">＋ Schedule Appointment</a>
       </div>
 
-      <!-- ══════════════════════════════════════════
-           MEDICINE REMINDERS  (updated section)
-           ══════════════════════════════════════════ -->
+      <!-- MEDICINES CARD -->
       <div class="glass-card">
         <div class="card-hdr">
           <div class="card-title">💊 Medicine Reminders</div>
           <a class="card-action" href="/medicines">+ Add Medicine</a>
         </div>
-
-        <!-- REMINDER BANNER -->
-        <div class="reminder-box" th:if="${medicineCount != null and medicineCount > 0}">
-          ⏰ You have
-          <span th:text="${medicineCount}"></span>
-          active medicine<span th:if="${medicineCount > 1}">s</span> scheduled today.
-        </div>
-
-        <!-- LIST — shown when medicines exist -->
         <div class="item-list" th:if="${medicines != null and !#lists.isEmpty(medicines)}">
           <div class="item-row" th:each="med : ${medicines}">
-
-            <!-- Icon -->
             <div class="item-avatar av-purple">💊</div>
-
-            <!-- Name + dosage · frequency · dates -->
             <div class="item-info">
-              <div class="item-name" th:text="${med.medicineName}">Medicine Name</div>
-              <div class="med-details">
-                <span class="med-tag" th:if="${med.dosage != null and !#strings.isEmpty(med.dosage)}">
-                  💉 <span th:text="${med.dosage}">Dosage</span>
-                </span>
-                <span class="med-tag-sep" th:if="${med.dosage != null and med.frequency != null}">·</span>
-                <span class="med-tag" th:if="${med.frequency != null and !#strings.isEmpty(med.frequency)}">
-                  🔁 <span th:text="${med.frequency}">Frequency</span>
-                </span>
-                <span class="med-tag-sep"
-                      th:if="${med.startDate != null}">·</span>
-                <span class="med-tag" th:if="${med.startDate != null}">
-                  📆 <span th:text="${#temporals.format(med.startDate,'dd MMM yyyy')}">Start</span>
-                  <span th:if="${med.endDate != null}">
-                    → <span th:text="${#temporals.format(med.endDate,'dd MMM yyyy')}">End</span>
-                  </span>
-                </span>
-              </div>
-              <!-- Notes (if present) -->
-              <div class="item-sub"
-                   th:if="${med.notes != null and !#strings.isEmpty(med.notes)}"
-                   th:text="'📝 ' + ${med.notes}"
-                   style="margin-top:4px; font-style:italic;">Notes</div>
-
-              <!-- EXPIRY COUNTDOWN -->
-              <div class="medicine-expiry"
-                   th:if="${medicineDaysLeft != null and medicineDaysLeft[med.id] != null}">
-                <span th:if="${medicineDaysLeft[med.id] > 1}">
-                  ⏳ Ends in <span th:text="${medicineDaysLeft[med.id]}"></span> days
-                </span>
-                <span th:if="${medicineDaysLeft[med.id] == 1}">
-                  ⚠ Ends tomorrow
-                </span>
-                <span th:if="${medicineDaysLeft[med.id] == 0}">
-                  ⚠ Ends today
-                </span>
-                <span th:if="${medicineDaysLeft[med.id] < 0}" style="color:#f87171;">
-                  ❌ Medicine course expired
-                </span>
-              </div>
+              <div class="item-name" th:text="${med.medicineName}">Medicine</div>
+              <div class="item-sub" th:text="${med.dosage} + ' · ' + ${med.frequency}">Dosage</div>
             </div>
-
-            <!-- Right-side badges: timing pill + status badge -->
-            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px; flex-shrink:0;">
-
-              <!-- Timing pill -->
-              <span class="pill"
-                    th:if="${med.timing != null and !#strings.isEmpty(med.timing)}"
-                    th:classappend="${med.timing == 'Morning' or med.timing == 'Morning &amp; Night'} ? 'p-amber' :
-                                    (${med.timing == 'Night'}                                         ? 'p-purple' :
-                                    (${med.timing == 'Afternoon' or med.timing == 'After Meals'}      ? 'p-teal'   : 'p-blue'))"
-                    th:text="${med.timing}">Timing</span>
-
-              <!-- Status badge -->
-              <span class="med-status-badge"
-                    th:if="${med.status != null and !#strings.isEmpty(med.status)}"
-                    th:classappend="${med.status == 'Active'}    ? 'ms-active'   :
-                                    (${med.status == 'Inactive'} ? 'ms-inactive' : 'ms-completed')"
-                    th:text="${med.status}">Status</span>
-            </div>
-
+            <span class="pill"
+                  th:classappend="${med.timing == 'Morning' or med.timing == 'Morning &amp; Night'} ? 'p-amber' :
+                                  (${med.timing == 'Night'} ? 'p-purple' :
+                                  (${med.timing == 'Afternoon' or med.timing == 'After Meals'} ? 'p-teal' : 'p-blue'))"
+                  th:text="${med.timing}">Timing</span>
           </div>
         </div>
-
-        <!-- EMPTY STATE — shown when no medicines -->
         <div class="empty-state" th:if="${medicines == null or #lists.isEmpty(medicines)}">
           <div class="empty-icon">💊</div>
           <div class="empty-text">No medicines added yet.<br>Add your first medication.</div>
         </div>
-
         <a href="/medicines" class="add-row">＋ Add Medicine</a>
       </div>
-      <!-- ══════════════════════════════════════════ -->
+
+      <!-- ✅ NEW: EMERGENCY CONTACTS WIDGET -->
+      <div class="glass-card">
+        <div class="card-hdr">
+          <div class="card-title">🚨 Emergency Contacts</div>
+          <a class="card-action" href="/contacts"
+             style="color:#f87171;border-color:rgba(220,38,38,0.25);">View All</a>
+        </div>
+
+        <div class="item-list" th:if="${emergencyContacts != null and !#lists.isEmpty(emergencyContacts)}">
+          <div class="emg-row" th:each="ec : ${emergencyContacts}">
+            <div class="emg-avatar"
+                 th:text="${#strings.length(ec.contactName) >= 2}
+                           ? ${#strings.toUpperCase(#strings.substring(ec.contactName,0,2))}
+                           : ${#strings.toUpperCase(ec.contactName)}">AB</div>
+            <div class="emg-info">
+              <div class="emg-name" th:text="${ec.contactName}">Name</div>
+              <div class="emg-rel"  th:text="${ec.relation} + ' · ' + ${ec.phoneNumber}">Relation</div>
+            </div>
+            <a class="emg-call" th:href="'tel:' + ${ec.phoneNumber}">📞 Call</a>
+          </div>
+        </div>
+
+        <div class="empty-state" th:if="${emergencyContacts == null or #lists.isEmpty(emergencyContacts)}">
+          <div class="empty-icon">🚨</div>
+          <div class="empty-text">No emergency contacts added.<br>Add someone who can be reached in an emergency.</div>
+        </div>
+
+        <a href="/contacts" class="add-row-red">＋ Add Emergency Contact</a>
+      </div>
 
     </div>
 
-    <!-- RIGHT COLUMN -->
+    <!-- ════ RIGHT COLUMN ════ -->
     <div class="right-col">
 
       <!-- BMI CARD -->
@@ -633,23 +560,6 @@
                                (${bmiCategory == 'Underweight'}  ? 'cat-underweight' :
                                (${bmiCategory == 'Overweight'}   ? 'cat-overweight'  : 'cat-obese'))"
                th:text="${bmiCategory != null ? '✓ ' + bmiCategory : '—'}">—</div>
-
-          <!-- BMI HEALTH ALERT -->
-          <div th:if="${bmiAlert != null}"
-               style="
-                 margin-top:10px;
-                 padding:10px 14px;
-                 border-radius:10px;
-                 background:rgba(220,38,38,0.12);
-                 border:1px solid rgba(220,38,38,0.30);
-                 color:#f87171;
-                 font-size:12px;
-                 font-weight:700;
-                 line-height:1.55;
-                 text-align:center;
-                 width:100%;">
-            ⚠ <span th:text="${bmiAlert}"></span>
-          </div>
           <div class="bmi-meta-row">
             <div class="bmi-meta">
               <div class="bmi-meta-val" th:text="${latestRecord.weight} + ' kg'">—</div>
@@ -663,146 +573,6 @@
         </div>
       </div>
 
-
-      <!-- HEALTH SUMMARY CARD -->
-      <div class="glass-card">
-        <div class="card-hdr">
-          <div class="card-title">📊 Health Summary</div>
-        </div>
-        <div class="item-list">
-
-          <div class="item-row">
-            <div class="item-avatar av-teal">🩸</div>
-            <div class="item-info">
-              <div class="item-name">Blood Group</div>
-            </div>
-            <span class="pill p-red"
-                  th:text="${latestRecord != null and latestRecord.bloodGroup != null ? latestRecord.bloodGroup : 'N/A'}">
-            </span>
-          </div>
-
-          <div class="item-row">
-            <div class="item-avatar av-purple">💊</div>
-            <div class="item-info">
-              <div class="item-name">Active Medicines</div>
-            </div>
-            <span class="pill p-purple" th:text="${medicineCount} ?: '0'">
-            </span>
-          </div>
-
-          <div class="item-row">
-            <div class="item-avatar av-blue">📅</div>
-            <div class="item-info">
-              <div class="item-name">Upcoming Appointments</div>
-            </div>
-            <span class="pill p-blue" th:text="${appointmentCount} ?: '0'">
-            </span>
-          </div>
-
-          <div class="item-row">
-            <div class="item-avatar av-teal">📋</div>
-            <div class="item-info">
-              <div class="item-name">Health Records</div>
-            </div>
-            <span class="pill p-teal" th:text="${recordCount} ?: '0'">
-            </span>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- HEALTH RISK DETECTION CARD -->
-      <div class="glass-card"
-           th:if="${bloodPressureRisk != null or sugarRisk != null}">
-        <div class="card-hdr">
-          <div class="card-title">⚠️ Health Risk Alerts</div>
-        </div>
-        <div class="item-list">
-
-          <!-- BLOOD PRESSURE RISK -->
-          <div class="risk-alert risk-crisis"
-               th:if="${bloodPressureRisk == 'CRISIS'}">
-            <div class="risk-icon">🚨</div>
-            <div class="risk-body">
-              <div class="risk-title">Hypertensive Crisis</div>
-              <div class="risk-reading" th:text="${bloodPressureVal}"></div>
-              <div class="risk-tip">Seek emergency medical care immediately.</div>
-            </div>
-          </div>
-
-          <div class="risk-alert risk-high"
-               th:if="${bloodPressureRisk == 'HIGH'}">
-            <div class="risk-icon">❤️</div>
-            <div class="risk-body">
-              <div class="risk-title">High Blood Pressure</div>
-              <div class="risk-reading" th:text="${bloodPressureVal}"></div>
-              <div class="risk-tip">Consult a doctor. Reduce salt and stress.</div>
-            </div>
-          </div>
-
-          <div class="risk-alert risk-elevated"
-               th:if="${bloodPressureRisk == 'ELEVATED'}">
-            <div class="risk-icon">⚡</div>
-            <div class="risk-body">
-              <div class="risk-title">Elevated Blood Pressure</div>
-              <div class="risk-reading" th:text="${bloodPressureVal}"></div>
-              <div class="risk-tip">Monitor regularly. Exercise and reduce sodium.</div>
-            </div>
-          </div>
-
-          <div class="risk-alert risk-low"
-               th:if="${bloodPressureRisk == 'LOW'}">
-            <div class="risk-icon">💧</div>
-            <div class="risk-body">
-              <div class="risk-title">Low Blood Pressure</div>
-              <div class="risk-reading" th:text="${bloodPressureVal}"></div>
-              <div class="risk-tip">Stay hydrated. Consult a doctor if dizzy.</div>
-            </div>
-          </div>
-
-          <!-- SUGAR LEVEL RISK -->
-          <div class="risk-alert risk-crisis"
-               th:if="${sugarRisk == 'DIABETIC'}">
-            <div class="risk-icon">🩸</div>
-            <div class="risk-body">
-              <div class="risk-title">Diabetic Range Detected</div>
-              <div class="risk-reading" th:text="${sugarVal} + ' mg/dL'"></div>
-              <div class="risk-tip">Consult a doctor immediately.</div>
-            </div>
-          </div>
-
-          <div class="risk-alert risk-high"
-               th:if="${sugarRisk == 'HIGH'}">
-            <div class="risk-icon">🍬</div>
-            <div class="risk-body">
-              <div class="risk-title">High Blood Sugar</div>
-              <div class="risk-reading" th:text="${sugarVal} + ' mg/dL'"></div>
-              <div class="risk-tip">Consult a doctor. Reduce sugar intake.</div>
-            </div>
-          </div>
-
-          <div class="risk-alert risk-elevated"
-               th:if="${sugarRisk == 'PREDIABETES'}">
-            <div class="risk-icon">⚠️</div>
-            <div class="risk-body">
-              <div class="risk-title">Prediabetes Risk</div>
-              <div class="risk-reading" th:text="${sugarVal} + ' mg/dL'"></div>
-              <div class="risk-tip">Improve diet and increase physical activity.</div>
-            </div>
-          </div>
-
-          <div class="risk-alert risk-low"
-               th:if="${sugarRisk == 'LOW'}">
-            <div class="risk-icon">🔻</div>
-            <div class="risk-body">
-              <div class="risk-title">Low Blood Sugar</div>
-              <div class="risk-reading" th:text="${sugarVal} + ' mg/dL'"></div>
-              <div class="risk-tip">Eat something immediately. Monitor closely.</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
       <!-- HEALTH RECORDS CARD -->
       <div class="glass-card">
         <div class="card-hdr">
@@ -885,7 +655,7 @@
 </div>
 
 <script>
-/* Time-based greeting */
+/* Time greeting */
 (function() {
   const h = new Date().getHours();
   document.getElementById('timeGreet').textContent =
