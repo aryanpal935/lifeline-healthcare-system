@@ -101,22 +101,30 @@ public class DashboardController {
                 medicineDaysLeft
             );
 
-        // =========================
-        // UPCOMING APPOINTMENTS
-        // =========================
+       // =========================
+// UPCOMING APPOINTMENTS
+// =========================
 
-        List<Appointment> appointments =
-                appointmentService.getUpcomingAppointments(user);
+List<Appointment> appointments =
+        appointmentService.getUpcomingAppointments(user);
 
-        model.addAttribute(
-                "appointments",
-                appointments
-        );
+model.addAttribute(
+        "appointments",
+        appointments
+);
 
-        model.addAttribute(
-                "appointmentCount",
-                appointments.size()
-        );
+model.addAttribute(
+        "appointmentCount",
+        appointments.size()
+);
+
+Appointment nextAppointment =
+        appointmentService.getNextAppointment(user);
+
+model.addAttribute(
+        "nextAppointment",
+        nextAppointment
+);
 
         // =========================
         // EMERGENCY CONTACTS

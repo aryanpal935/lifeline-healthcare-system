@@ -54,4 +54,17 @@ public class AppointmentService {
 
         appointmentRepository.deleteById(id);
     }
+
+    public Appointment getNextAppointment(User user) {
+
+    return appointmentRepository
+            .findByUserOrderByAppointmentDateAscAppointmentTimeAsc(user)
+            .stream()
+            .filter(appointment ->
+                    appointment.getAppointmentDate() != null &&
+                    !appointment.getAppointmentDate()
+                            .isBefore(LocalDate.now()))
+            .findFirst()
+            .orElse(null);
+}
 }

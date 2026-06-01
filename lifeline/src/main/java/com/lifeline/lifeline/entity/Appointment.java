@@ -3,7 +3,13 @@ package com.lifeline.lifeline.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "appointments")
@@ -21,7 +27,8 @@ public class Appointment {
 
     private String reason;
 
-    private String status;
+    // DEFAULT ADDED — prevents null status on new bookings
+    private String status = "PENDING";
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -29,59 +36,24 @@ public class Appointment {
 
     // ================= GETTERS & SETTERS =================
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getDoctorName() { return doctorName; }
+    public void setDoctorName(String doctorName) { this.doctorName = doctorName; }
 
-    public String getDoctorName() {
-        return doctorName;
-    }
+    public LocalDate getAppointmentDate() { return appointmentDate; }
+    public void setAppointmentDate(LocalDate appointmentDate) { this.appointmentDate = appointmentDate; }
 
-    public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
-    }
+    public LocalTime getAppointmentTime() { return appointmentTime; }
+    public void setAppointmentTime(LocalTime appointmentTime) { this.appointmentTime = appointmentTime; }
 
-    public LocalDate getAppointmentDate() {
-        return appointmentDate;
-    }
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
 
-    public void setAppointmentDate(LocalDate appointmentDate) {
-        this.appointmentDate = appointmentDate;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public LocalTime getAppointmentTime() {
-        return appointmentTime;
-    }
-
-    public void setAppointmentTime(LocalTime appointmentTime) {
-        this.appointmentTime = appointmentTime;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 }
