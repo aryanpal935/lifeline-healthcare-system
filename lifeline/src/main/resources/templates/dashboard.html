@@ -1,98 +1,171 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lifeline — Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fraunces:wght@700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fraunces:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
   <style>
     :root {
       --teal:#0ea5a0;--teal-dark:#0d8c87;--teal-light:#e0faf6;
-      --teal-glow:rgba(14,165,160,0.16);--navy:#0f2234;
+      --teal-glow:rgba(14,165,160,0.18);
       --red:#dc2626;--green:#16a34a;--amber:#d97706;--blue:#2563eb;
+      --card-bg:rgba(8,20,38,0.88);
+      --border:rgba(255,255,255,0.09);
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
     body{min-height:100vh;background:#040f18;font-family:'Nunito',sans-serif;color:#fff;overflow-x:hidden;}
 
+    /* ── AMBIENT LAYERS ── */
     #ecg-bg{position:fixed;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;}
-    .grid-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(14,165,160,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(14,165,160,0.04) 1px,transparent 1px);background-size:40px 40px;}
-    .vignette{position:fixed;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at center,transparent 0%,rgba(4,15,24,0.55) 50%,rgba(4,15,24,0.97) 100%);}
-    .dark-shield{position:fixed;inset:0;z-index:3;pointer-events:none;background:rgba(4,15,24,0.52);}
-    .app-wrap{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:32px 24px 60px;}
+    .grid-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;
+      background-image:linear-gradient(rgba(14,165,160,0.035) 1px,transparent 1px),
+                       linear-gradient(90deg,rgba(14,165,160,0.035) 1px,transparent 1px);
+      background-size:44px 44px;}
+    .vignette{position:fixed;inset:0;z-index:2;pointer-events:none;
+      background:radial-gradient(ellipse at center,transparent 0%,rgba(4,15,24,0.6) 55%,rgba(4,15,24,0.98) 100%);}
+    .dark-shield{position:fixed;inset:0;z-index:3;pointer-events:none;background:rgba(4,15,24,0.48);}
 
-    /* NAVBAR */
-    .navbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;animation:fadeDown 0.6s cubic-bezier(.22,1,.36,1) both;}
-    @keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
-    .nav-brand{display:flex;align-items:center;gap:12px;}
-    .heart-icon{width:44px;height:44px;background:linear-gradient(135deg,#0ea5a0,#17c98a);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 0 20px rgba(14,165,160,0.45);animation:heartbeat 2.4s ease-in-out infinite;}
-    @keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.07)}}
-    .nav-title{font-family:'Fraunces',serif;font-size:23px;color:#fff;line-height:1;}
-    .nav-sub{font-size:10.5px;color:var(--teal);font-weight:700;letter-spacing:1.8px;text-transform:uppercase;}
+    /* ── AMBIENT BLOBS ── */
+    .blob{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:1;opacity:0.07;}
+    .blob-1{width:500px;height:500px;background:#0ea5a0;top:-100px;right:-100px;}
+    .blob-2{width:400px;height:400px;background:#2563eb;bottom:100px;left:-80px;}
+    .blob-3{width:300px;height:300px;background:#7c3aed;top:50%;right:20%;}
+
+    .app-wrap{position:relative;z-index:10;max-width:1260px;margin:0 auto;padding:28px 24px 80px;}
+
+    /* ── NAVBAR ── */
+    .navbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;
+      animation:fadeDown 0.6s cubic-bezier(.22,1,.36,1) both;}
+    @keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+    .nav-brand{display:flex;align-items:center;gap:14px;}
+    .heart-icon{width:46px;height:46px;background:linear-gradient(135deg,#0ea5a0,#17c98a);
+      border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;
+      box-shadow:0 0 24px rgba(14,165,160,0.5),0 0 60px rgba(14,165,160,0.15);
+      animation:heartbeat 2.4s ease-in-out infinite;}
+    @keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.13)}28%{transform:scale(1)}42%{transform:scale(1.08)}}
+    .nav-title{font-family:'Fraunces',serif;font-size:24px;color:#fff;line-height:1;}
+    .nav-sub{font-size:10px;color:var(--teal);font-weight:700;letter-spacing:2px;text-transform:uppercase;}
     .nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-    .user-chip{display:flex;align-items:center;gap:9px;padding:6px 14px 6px 6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.11);border-radius:100px;}
-    .user-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#0ea5a0,#0369a1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;text-transform:uppercase;}
+    .user-chip{display:flex;align-items:center;gap:9px;padding:5px 14px 5px 5px;
+      background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);border-radius:100px;}
+    .user-avatar{width:32px;height:32px;border-radius:50%;
+      background:linear-gradient(135deg,#0ea5a0,#0369a1);
+      display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;text-transform:uppercase;}
     .user-chip-name{font-size:13px;font-weight:700;color:rgba(255,255,255,0.85);}
-    .nav-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:none;transition:all 0.18s;border:none;}
-    .nav-btn-ghost{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.11);}
-    .nav-btn-ghost:hover{background:rgba(255,255,255,0.12);color:#fff;}
-    .nav-btn-danger{background:rgba(220,38,38,0.08);color:#f87171;border:1px solid rgba(220,38,38,0.2);}
-    .nav-btn-danger:hover{background:rgba(220,38,38,0.16);color:#ef4444;}
-    .nav-btn-sos{background:rgba(220,38,38,0.10);color:#fca5a5;border:1px solid rgba(220,38,38,0.25);}
-    .nav-btn-sos:hover{background:rgba(220,38,38,0.20);color:#f87171;}
+    .nav-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;
+      font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;
+      text-decoration:none;transition:all 0.18s;border:none;}
+    .nav-btn-ghost{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.10);}
+    .nav-btn-ghost:hover{background:rgba(255,255,255,0.10);color:#fff;transform:translateY(-1px);}
+    .nav-btn-danger{background:rgba(220,38,38,0.07);color:#f87171;border:1px solid rgba(220,38,38,0.18);}
+    .nav-btn-danger:hover{background:rgba(220,38,38,0.14);color:#ef4444;}
+    .nav-btn-sos{background:rgba(220,38,38,0.09);color:#fca5a5;border:1px solid rgba(220,38,38,0.22);}
+    .nav-btn-sos:hover{background:rgba(220,38,38,0.18);color:#f87171;}
 
-    /* PAGE HEADER */
-    .page-header{margin-bottom:28px;animation:fadeUp 0.6s 0.08s cubic-bezier(.22,1,.36,1) both;}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    .page-tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal-dark);background:var(--teal-light);border:1px solid rgba(14,165,160,0.22);border-radius:100px;padding:3px 12px;margin-bottom:10px;}
-    .page-title{font-family:'Fraunces',serif;font-size:30px;color:#fff;line-height:1.1;margin-bottom:4px;}
-    .page-subtitle{font-size:14px;color:rgba(255,255,255,0.42);font-weight:600;}
+    /* ── PAGE HEADER ── */
+    .page-header{margin-bottom:26px;animation:fadeUp 0.6s 0.08s cubic-bezier(.22,1,.36,1) both;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    .page-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;
+      letter-spacing:2px;text-transform:uppercase;color:var(--teal-dark);background:var(--teal-light);
+      border:1px solid rgba(14,165,160,0.2);border-radius:100px;padding:3px 12px;margin-bottom:10px;}
+    .page-title{font-family:'Fraunces',serif;font-size:32px;color:#fff;line-height:1.1;margin-bottom:4px;}
+    .page-subtitle{font-size:13.5px;color:rgba(255,255,255,0.38);font-weight:600;}
 
-    /* STAT CARDS */
-    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;animation:fadeUp 0.6s 0.12s cubic-bezier(.22,1,.36,1) both;}
-    .stat-card{background:rgba(8,20,38,0.85);border:1px solid rgba(255,255,255,0.10);border-radius:16px;padding:18px 20px;backdrop-filter:blur(16px);position:relative;overflow:hidden;transition:border-color 0.2s,transform 0.18s;}
-    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent,linear-gradient(90deg,#0ea5a0,#17c98a));}
-    .stat-card:hover{border-color:rgba(14,165,160,0.35);transform:translateY(-2px);}
-    .stat-icon{font-size:22px;margin-bottom:10px;}
-    .stat-val{font-family:'Fraunces',serif;font-size:32px;color:#fff;line-height:1;margin-bottom:3px;}
-    .stat-lbl{font-size:11px;font-weight:700;color:rgba(255,255,255,0.40);text-transform:uppercase;letter-spacing:0.8px;}
+    /* ── STAT CARDS ── */
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;
+      animation:fadeUp 0.6s 0.12s cubic-bezier(.22,1,.36,1) both;}
+    .stat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;
+      padding:20px 20px 16px;backdrop-filter:blur(20px);position:relative;overflow:hidden;
+      transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+      background:var(--accent,linear-gradient(90deg,#0ea5a0,#17c98a));}
+    .stat-card::after{content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse at top left,rgba(14,165,160,0.06),transparent 60%);
+      pointer-events:none;}
+    .stat-card:hover{border-color:rgba(14,165,160,0.30);transform:translateY(-3px);
+      box-shadow:0 12px 30px rgba(0,0,0,0.3);}
+    .stat-icon{font-size:24px;margin-bottom:12px;}
+    .stat-val{font-family:'Fraunces',serif;font-size:34px;color:#fff;line-height:1;margin-bottom:3px;}
+    .stat-lbl{font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.35);
+      text-transform:uppercase;letter-spacing:1px;}
 
-    /* MAIN GRID */
-    .main-grid{display:grid;grid-template-columns:1fr 340px;gap:20px;animation:fadeUp 0.6s 0.18s cubic-bezier(.22,1,.36,1) both;}
+    /* ── MAIN GRID ── */
+    .main-grid{display:grid;grid-template-columns:1fr 360px;gap:20px;
+      animation:fadeUp 0.6s 0.18s cubic-bezier(.22,1,.36,1) both;}
     .left-col{display:flex;flex-direction:column;gap:18px;}
     .right-col{display:flex;flex-direction:column;gap:18px;}
 
-    /* GLASS CARD */
-    .glass-card{background:rgba(8,20,38,0.90);border:1px solid rgba(255,255,255,0.09);border-radius:20px;padding:22px;backdrop-filter:blur(20px);transition:border-color 0.2s;}
-    .glass-card:hover{border-color:rgba(255,255,255,0.15);}
-    .card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:13px;border-bottom:1px solid rgba(255,255,255,0.07);}
-    .card-title{font-family:'Fraunces',serif;font-size:16px;color:#fff;display:flex;align-items:center;gap:8px;}
-    .card-action{font-size:11.5px;font-weight:700;color:var(--teal);padding:5px 12px;border:1px solid rgba(14,165,160,0.25);border-radius:8px;text-decoration:none;background:none;font-family:'Nunito',sans-serif;cursor:pointer;transition:all 0.18s;}
-    .card-action:hover{background:rgba(14,165,160,0.10);}
+    /* ── GLASS CARD ── */
+    .glass-card{background:var(--card-bg);border:1px solid var(--border);border-radius:22px;
+      padding:22px;backdrop-filter:blur(24px);transition:border-color 0.2s,box-shadow 0.2s;}
+    .glass-card:hover{border-color:rgba(255,255,255,0.14);box-shadow:0 8px 30px rgba(0,0,0,0.25);}
+    .card-hdr{display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.06);}
+    .card-title{font-family:'Fraunces',serif;font-size:16px;color:#fff;
+      display:flex;align-items:center;gap:8px;}
+    .card-action{font-size:11px;font-weight:700;color:var(--teal);padding:5px 12px;
+      border:1px solid rgba(14,165,160,0.22);border-radius:8px;text-decoration:none;
+      background:none;font-family:'Nunito',sans-serif;cursor:pointer;transition:all 0.18s;}
+    .card-action:hover{background:rgba(14,165,160,0.10);border-color:rgba(14,165,160,0.4);}
 
-    /* NEXT APPOINTMENT HIGHLIGHT */
-    .next-appt-row{display:flex;align-items:center;gap:14px;padding:16px;background:linear-gradient(135deg,rgba(14,165,160,0.08),rgba(37,99,235,0.06));border:1px solid rgba(14,165,160,0.20);border-radius:14px;}
-    .next-appt-avatar{width:48px;height:48px;border-radius:13px;flex-shrink:0;background:linear-gradient(135deg,rgba(14,165,160,0.20),rgba(37,99,235,0.15));border:1px solid rgba(14,165,160,0.30);display:flex;align-items:center;justify-content:center;font-size:22px;}
-    .next-appt-info{flex:1;min-width:0;}
-    .next-appt-name{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:5px;}
-    .next-appt-meta{font-size:12.5px;color:rgba(255,255,255,0.55);font-weight:600;margin-bottom:3px;}
-    .next-appt-reason{font-size:12px;color:rgba(255,255,255,0.38);font-weight:600;}
+    /* ── NEXT APPOINTMENT BANNER ── */
+    .next-appt-banner{display:flex;align-items:center;gap:16px;padding:16px 18px;
+      background:linear-gradient(135deg,rgba(14,165,160,0.10),rgba(37,99,235,0.07));
+      border:1px solid rgba(14,165,160,0.22);border-radius:16px;position:relative;overflow:hidden;}
+    .next-appt-banner::after{content:'';position:absolute;right:-20px;top:-20px;
+      width:120px;height:120px;border-radius:50%;
+      background:radial-gradient(circle,rgba(14,165,160,0.12),transparent 70%);}
+    .appt-icon-wrap{width:52px;height:52px;border-radius:14px;flex-shrink:0;
+      background:linear-gradient(135deg,rgba(14,165,160,0.22),rgba(37,99,235,0.18));
+      border:1px solid rgba(14,165,160,0.32);display:flex;align-items:center;
+      justify-content:center;font-size:24px;}
+    .appt-info{flex:1;min-width:0;}
+    .appt-doc{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:5px;}
+    .appt-meta{font-size:12.5px;color:rgba(255,255,255,0.52);font-weight:600;margin-bottom:3px;}
+    .appt-reason{font-size:12px;color:rgba(255,255,255,0.35);font-weight:600;}
+    .appt-countdown{display:flex;flex-direction:column;align-items:center;flex-shrink:0;
+      background:rgba(14,165,160,0.10);border:1px solid rgba(14,165,160,0.22);
+      border-radius:12px;padding:10px 14px;min-width:70px;}
+    .countdown-val{font-family:'Fraunces',serif;font-size:22px;color:var(--teal);line-height:1;}
+    .countdown-lbl{font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;
+      letter-spacing:1px;font-weight:700;margin-top:2px;}
 
-    /* LIST ROWS */
+    /* ── QUICK ACTIONS ── */
+    .quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+    .qa-btn{display:flex;flex-direction:column;align-items:center;gap:7px;padding:14px 8px;
+      background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+      border-radius:14px;text-decoration:none;transition:all 0.2s;cursor:pointer;}
+    .qa-btn:hover{background:rgba(14,165,160,0.08);border-color:rgba(14,165,160,0.25);
+      transform:translateY(-2px);}
+    .qa-icon{font-size:22px;}
+    .qa-lbl{font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.55);text-align:center;
+      text-transform:uppercase;letter-spacing:0.5px;}
+
+    /* ── ITEM LIST ── */
     .item-list{display:flex;flex-direction:column;gap:8px;}
-    .item-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;transition:background 0.15s,border-color 0.15s;}
+    .item-row{display:flex;align-items:center;gap:12px;padding:11px 14px;
+      background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.055);
+      border-radius:13px;transition:background 0.15s,border-color 0.15s;}
     .item-row:hover{background:rgba(14,165,160,0.07);border-color:rgba(14,165,160,0.18);}
-    .item-avatar{width:36px;height:36px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;}
+    .item-avatar{width:36px;height:36px;border-radius:10px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;font-size:17px;}
     .av-teal{background:rgba(14,165,160,0.14);border:1px solid rgba(14,165,160,0.22);}
     .av-purple{background:rgba(124,58,237,0.14);border:1px solid rgba(124,58,237,0.22);}
     .av-blue{background:rgba(37,99,235,0.14);border:1px solid rgba(37,99,235,0.22);}
     .av-orange{background:rgba(234,88,12,0.14);border:1px solid rgba(234,88,12,0.22);}
     .av-yellow{background:rgba(234,179,8,0.14);border:1px solid rgba(234,179,8,0.22);}
+    .av-green{background:rgba(22,163,74,0.14);border:1px solid rgba(22,163,74,0.22);}
     .item-info{flex:1;min-width:0;}
-    .item-name{font-size:13.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .item-sub{font-size:11.5px;color:rgba(255,255,255,0.44);margin-top:2px;font-weight:600;}
+    .item-name{font-size:13.5px;font-weight:700;color:#fff;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .item-sub{font-size:11.5px;color:rgba(255,255,255,0.40);margin-top:2px;font-weight:600;}
 
-    /* PILLS */
-    .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.4px;flex-shrink:0;}
+    /* ── PILLS ── */
+    .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;
+      font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0;}
     .p-teal{background:rgba(14,165,160,0.14);color:var(--teal);}
     .p-green{background:rgba(22,163,74,0.14);color:#4ade80;}
     .p-amber{background:rgba(217,119,6,0.14);color:#fbbf24;}
@@ -101,68 +174,160 @@
     .p-purple{background:rgba(124,58,237,0.14);color:#a78bfa;}
     .p-yellow{background:rgba(234,179,8,0.14);color:#fde047;}
 
-    /* ADD / VIEW BUTTONS */
-    .add-row{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;margin-top:10px;background:rgba(14,165,160,0.06);border:1px dashed rgba(14,165,160,0.30);border-radius:11px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;color:rgba(14,165,160,0.80);text-decoration:none;transition:all 0.18s;}
-    .add-row:hover{background:rgba(14,165,160,0.12);border-style:solid;border-color:rgba(14,165,160,0.50);color:var(--teal);}
-    .view-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;background:rgba(14,165,160,0.10);border:1px solid rgba(14,165,160,0.32);border-radius:11px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;color:var(--teal);text-decoration:none;transition:all 0.18s;}
-    .view-btn:hover{background:rgba(14,165,160,0.20);border-color:rgba(14,165,160,0.55);}
+    /* ── BUTTONS ── */
+    .add-row{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
+      padding:10px;margin-top:10px;background:rgba(14,165,160,0.05);
+      border:1px dashed rgba(14,165,160,0.28);border-radius:12px;cursor:pointer;
+      font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;
+      color:rgba(14,165,160,0.75);text-decoration:none;transition:all 0.18s;}
+    .add-row:hover{background:rgba(14,165,160,0.11);border-style:solid;
+      border-color:rgba(14,165,160,0.45);color:var(--teal);}
+    .add-row-red{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
+      padding:10px;margin-top:10px;background:rgba(220,38,38,0.04);
+      border:1px dashed rgba(220,38,38,0.22);border-radius:12px;cursor:pointer;
+      font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;
+      color:rgba(220,38,38,0.60);text-decoration:none;transition:all 0.18s;}
+    .add-row-red:hover{background:rgba(220,38,38,0.09);border-style:solid;
+      border-color:rgba(220,38,38,0.42);color:#f87171;}
+    .view-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
+      padding:10px;background:rgba(14,165,160,0.09);border:1px solid rgba(14,165,160,0.28);
+      border-radius:12px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12.5px;
+      font-weight:700;color:var(--teal);text-decoration:none;transition:all 0.18s;}
+    .view-btn:hover{background:rgba(14,165,160,0.18);border-color:rgba(14,165,160,0.5);}
     .view-all-row{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
-    .add-row-red{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;margin-top:10px;background:rgba(220,38,38,0.05);border:1px dashed rgba(220,38,38,0.25);border-radius:11px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;color:rgba(220,38,38,0.65);text-decoration:none;transition:all 0.18s;}
-    .add-row-red:hover{background:rgba(220,38,38,0.10);border-style:solid;border-color:rgba(220,38,38,0.45);color:#f87171;}
 
-    /* EMPTY STATE */
-    .empty-state{padding:36px 20px;text-align:center;}
-    .empty-icon{font-size:36px;opacity:0.3;margin-bottom:10px;animation:floatIcon 2.2s ease-in-out infinite;}
-    .empty-text{font-size:13px;color:rgba(255,255,255,0.28);font-weight:600;line-height:1.6;}
+    /* ── EMPTY STATE ── */
+    .empty-state{padding:32px 20px;text-align:center;}
+    .empty-icon{font-size:36px;opacity:0.25;margin-bottom:10px;
+      animation:floatIcon 2.2s ease-in-out infinite;}
+    .empty-text{font-size:13px;color:rgba(255,255,255,0.25);font-weight:600;line-height:1.6;}
     @keyframes floatIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
-    /* BMI */
-    .bmi-inner{display:flex;flex-direction:column;align-items:center;padding:8px 0 14px;}
-    .bmi-ring-wrap{position:relative;width:130px;height:130px;margin-bottom:14px;}
+    /* ── HEALTH SUMMARY METRICS ── */
+    .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+    .summary-chip{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);
+      border-radius:14px;padding:14px 10px;text-align:center;
+      transition:background 0.15s,border-color 0.15s;}
+    .summary-chip:hover{background:rgba(14,165,160,0.07);border-color:rgba(14,165,160,0.20);}
+    .summary-val{font-family:'Fraunces',serif;font-size:26px;font-weight:700;
+      color:#fff;line-height:1;margin-bottom:5px;}
+    .summary-lbl{font-size:9.5px;color:rgba(255,255,255,0.32);
+      text-transform:uppercase;letter-spacing:1px;font-weight:700;}
+    .summary-row2{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .mini-chip{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);
+      border-radius:12px;padding:11px 8px;text-align:center;transition:background 0.15s;}
+    .mini-chip:hover{background:rgba(14,165,160,0.06);border-color:rgba(14,165,160,0.16);}
+    .mini-ico{font-size:15px;margin-bottom:4px;}
+    .mini-val{font-size:14px;font-weight:700;color:#fff;line-height:1;}
+    .mini-lbl{font-size:8.5px;color:rgba(255,255,255,0.30);
+      text-transform:uppercase;letter-spacing:0.8px;margin-top:3px;font-weight:700;}
+
+    /* ── WELLNESS SCORE BANNER ── */
+    .wellness-banner{display:flex;align-items:center;gap:16px;padding:16px 18px;
+      background:linear-gradient(135deg,rgba(22,163,74,0.08),rgba(14,165,160,0.06));
+      border:1px solid rgba(22,163,74,0.18);border-radius:16px;margin-bottom:0;}
+    .wellness-score{font-family:'Fraunces',serif;font-size:38px;color:#4ade80;line-height:1;flex-shrink:0;}
+    .wellness-info{flex:1;}
+    .wellness-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;}
+    .wellness-sub{font-size:12px;color:rgba(255,255,255,0.40);font-weight:600;}
+    .wellness-bar{width:100%;height:6px;background:rgba(255,255,255,0.07);
+      border-radius:3px;margin-top:8px;overflow:hidden;}
+    .wellness-fill{height:100%;border-radius:3px;
+      background:linear-gradient(90deg,#16a34a,#4ade80);
+      transition:width 1s cubic-bezier(.22,1,.36,1);}
+
+    /* ── BMI ── */
+    .bmi-inner{display:flex;flex-direction:column;align-items:center;padding:6px 0 12px;}
+    .bmi-ring-wrap{position:relative;width:136px;height:136px;margin-bottom:14px;}
     .bmi-ring-wrap svg{width:100%;height:100%;}
-    .bmi-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-    .bmi-val-big{font-family:'Fraunces',serif;font-size:30px;font-weight:700;color:var(--teal);line-height:1;}
-    .bmi-unit{font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;}
+    .bmi-center{position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;}
+    .bmi-val-big{font-family:'Fraunces',serif;font-size:32px;font-weight:700;
+      color:var(--teal);line-height:1;}
+    .bmi-unit{font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:1.5px;
+      text-transform:uppercase;font-weight:700;}
     .bmi-cat{font-size:13px;font-weight:800;margin-bottom:14px;}
-    .cat-normal{color:#4ade80;}.cat-underweight{color:#93c5fd;}.cat-overweight{color:#fbbf24;}.cat-obese{color:#f87171;}
+    .cat-normal{color:#4ade80;}.cat-underweight{color:#93c5fd;}
+    .cat-overweight{color:#fbbf24;}.cat-obese{color:#f87171;}
     .bmi-meta-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;}
-    .bmi-meta{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px;text-align:center;}
+    .bmi-meta{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+      border-radius:11px;padding:10px;text-align:center;}
     .bmi-meta-val{font-size:15px;font-weight:700;color:#fff;}
-    .bmi-meta-lbl{font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
-    .bmi-no-data{text-align:center;padding:28px 16px;color:rgba(255,255,255,0.32);font-size:13px;line-height:1.6;}
+    .bmi-meta-lbl{font-size:9px;color:rgba(255,255,255,0.32);
+      text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+    .bmi-no-data{text-align:center;padding:28px 16px;color:rgba(255,255,255,0.28);
+      font-size:13px;line-height:1.6;}
 
-    /* HEALTH RECORD CHIPS */
+    /* ── HEALTH RECORD CHIPS ── */
     .record-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
-    .r-chip{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 14px;transition:background 0.15s,border-color 0.15s;}
+    .r-chip{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);
+      border-radius:13px;padding:12px 14px;transition:background 0.15s,border-color 0.15s;}
     .r-chip:hover{background:rgba(14,165,160,0.07);border-color:rgba(14,165,160,0.18);}
-    .r-chip-ico{font-size:18px;margin-bottom:6px;}.r-chip-val{font-size:14px;font-weight:700;color:#fff;}
-    .r-chip-lbl{font-size:9.5px;color:rgba(255,255,255,0.36);text-transform:uppercase;letter-spacing:0.8px;margin-top:2px;}
+    .r-chip-ico{font-size:18px;margin-bottom:6px;}
+    .r-chip-val{font-size:14px;font-weight:700;color:#fff;}
+    .r-chip-lbl{font-size:9px;color:rgba(255,255,255,0.32);
+      text-transform:uppercase;letter-spacing:0.8px;margin-top:2px;}
     .vitals-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
-    .v-chip{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:11px 12px;transition:background 0.15s;}
+    .v-chip{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);
+      border-radius:13px;padding:11px 10px;transition:background 0.15s;}
     .v-chip:hover{background:rgba(14,165,160,0.07);border-color:rgba(14,165,160,0.18);}
-    .v-ico{font-size:16px;margin-bottom:5px;}.v-val{font-size:13px;font-weight:700;color:#fff;}
-    .v-lbl{font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.8px;margin-top:2px;}
+    .v-ico{font-size:16px;margin-bottom:5px;}
+    .v-val{font-size:13px;font-weight:700;color:#fff;}
+    .v-lbl{font-size:9px;color:rgba(255,255,255,0.32);
+      text-transform:uppercase;letter-spacing:0.8px;margin-top:2px;}
 
-    /* TREATMENT PROGRESS */
-    .progress-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px;}
-    .prog-chip{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 10px;text-align:center;transition:background 0.15s,border-color 0.15s;}
+    /* ── TREATMENT PROGRESS ── */
+    .prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+    .prog-chip{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);
+      border-radius:13px;padding:12px 10px;text-align:center;
+      transition:background 0.15s,border-color 0.15s;}
     .prog-chip:hover{background:rgba(14,165,160,0.07);border-color:rgba(14,165,160,0.18);}
-    .prog-val{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#fff;line-height:1;margin-bottom:4px;}
-    .prog-lbl{font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.8px;font-weight:700;}
+    .prog-val{font-family:'Fraunces',serif;font-size:24px;font-weight:700;
+      color:#fff;line-height:1;margin-bottom:4px;}
+    .prog-lbl{font-size:9px;color:rgba(255,255,255,0.32);
+      text-transform:uppercase;letter-spacing:0.8px;font-weight:700;}
 
-    /* EMERGENCY CONTACTS */
-    .emg-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(220,38,38,0.04);border:1px solid rgba(220,38,38,0.10);border-radius:12px;transition:background 0.15s,border-color 0.15s;}
-    .emg-row:hover{background:rgba(220,38,38,0.08);border-color:rgba(220,38,38,0.22);}
-    .emg-avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,rgba(220,38,38,0.25),rgba(240,82,82,0.15));border:1px solid rgba(220,38,38,0.30);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:12px;font-weight:700;color:#fca5a5;text-transform:uppercase;}
+    /* ── EMERGENCY CONTACTS ── */
+    .emg-row{display:flex;align-items:center;gap:12px;padding:11px 14px;
+      background:rgba(220,38,38,0.03);border:1px solid rgba(220,38,38,0.09);
+      border-radius:13px;transition:background 0.15s,border-color 0.15s;}
+    .emg-row:hover{background:rgba(220,38,38,0.07);border-color:rgba(220,38,38,0.20);}
+    .emg-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;
+      background:linear-gradient(135deg,rgba(220,38,38,0.22),rgba(240,82,82,0.12));
+      border:1px solid rgba(220,38,38,0.28);display:flex;align-items:center;
+      justify-content:center;font-family:'Fraunces',serif;font-size:12px;
+      font-weight:700;color:#fca5a5;text-transform:uppercase;}
     .emg-info{flex:1;min-width:0;}
     .emg-name{font-size:13px;font-weight:700;color:#fff;}
-    .emg-rel{font-size:11px;color:rgba(255,255,255,0.42);margin-top:1px;font-weight:600;}
-    .emg-call{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:8px;background:rgba(22,163,74,0.10);border:1px solid rgba(22,163,74,0.22);font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;color:#4ade80;text-decoration:none;flex-shrink:0;transition:all 0.18s;}
-    .emg-call:hover{background:rgba(22,163,74,0.20);border-color:rgba(22,163,74,0.45);}
+    .emg-rel{font-size:11px;color:rgba(255,255,255,0.38);margin-top:1px;font-weight:600;}
+    .emg-call{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;
+      border-radius:8px;background:rgba(22,163,74,0.09);
+      border:1px solid rgba(22,163,74,0.20);font-family:'Nunito',sans-serif;
+      font-size:11.5px;font-weight:700;color:#4ade80;text-decoration:none;
+      flex-shrink:0;transition:all 0.18s;}
+    .emg-call:hover{background:rgba(22,163,74,0.18);border-color:rgba(22,163,74,0.42);}
 
-    /* MOBILE */
-    @media(max-width:920px){.main-grid{grid-template-columns:1fr;}.stats-row{grid-template-columns:repeat(2,1fr);}#ecg-bg,.grid-overlay,.dark-shield{display:none;}}
-    @media(max-width:540px){.navbar{flex-wrap:wrap;gap:10px;}.nav-right{gap:6px;}.app-wrap{padding:20px 14px 40px;}}
+    /* ── DIVIDER ── */
+    .section-divider{display:flex;align-items:center;gap:10px;margin:4px 0;}
+    .section-divider span{font-size:10px;font-weight:700;color:rgba(255,255,255,0.20);
+      text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap;}
+    .section-divider::before,.section-divider::after{content:'';flex:1;
+      height:1px;background:rgba(255,255,255,0.06);}
+
+    /* ── MOBILE ── */
+    @media(max-width:960px){
+      .main-grid{grid-template-columns:1fr;}
+      .stats-row{grid-template-columns:repeat(2,1fr);}
+      #ecg-bg,.grid-overlay,.dark-shield,.blob{display:none;}
+      .quick-actions{grid-template-columns:repeat(2,1fr);}
+    }
+    @media(max-width:540px){
+      .navbar{flex-wrap:wrap;gap:10px;}
+      .nav-right{gap:6px;}
+      .app-wrap{padding:18px 14px 50px;}
+      .stats-row{grid-template-columns:1fr 1fr;}
+      .summary-grid,.summary-row2{grid-template-columns:1fr 1fr 1fr;}
+    }
   </style>
 </head>
 <body>
@@ -171,6 +336,9 @@
 <div class="grid-overlay"></div>
 <div class="vignette"></div>
 <div class="dark-shield"></div>
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
 
 <div class="app-wrap">
 
@@ -208,7 +376,7 @@
       Good <span id="timeGreet">day</span>,
       <span th:text="${user != null ? user.name : 'there'}">User</span> 👋
     </h1>
-    <p class="page-subtitle">Here's a complete overview of your health profile.</p>
+    <p class="page-subtitle">Here's your complete health overview for today.</p>
   </div>
 
   <!-- STAT CARDS -->
@@ -239,18 +407,37 @@
     </div>
   </div>
 
-  <!-- MAIN GRID -->
   <div class="main-grid">
 
-    <!-- ════════════════════════════════════════
+    <!-- ══════════════════════════════════════════════
          LEFT COLUMN
-         · Next Appointment
-         · Upcoming Appointments
-         · Medicine Reminders
-         · Medicine Expiry Alerts
-         · Emergency Contacts
-         ════════════════════════════════════════ -->
+         ══════════════════════════════════════════════ -->
     <div class="left-col">
+
+      <!-- QUICK ACTIONS -->
+      <div class="glass-card">
+        <div class="card-hdr">
+          <div class="card-title">⚡ Quick Actions</div>
+        </div>
+        <div class="quick-actions">
+          <a href="/appointments" class="qa-btn">
+            <span class="qa-icon">📅</span>
+            <span class="qa-lbl">Book Appt</span>
+          </a>
+          <a href="/medicines" class="qa-btn">
+            <span class="qa-icon">💊</span>
+            <span class="qa-lbl">Add Med</span>
+          </a>
+          <a href="/records" class="qa-btn">
+            <span class="qa-icon">📋</span>
+            <span class="qa-lbl">Add Record</span>
+          </a>
+          <a href="/contacts" class="qa-btn">
+            <span class="qa-icon">🚨</span>
+            <span class="qa-lbl">Contacts</span>
+          </a>
+        </div>
+      </div>
 
       <!-- NEXT APPOINTMENT HIGHLIGHT -->
       <div class="glass-card" th:if="${nextAppointment != null}">
@@ -258,23 +445,29 @@
           <div class="card-title">⭐ Next Appointment</div>
           <span class="pill p-green">Upcoming</span>
         </div>
-        <div class="next-appt-row">
-          <div class="next-appt-avatar">🩺</div>
-          <div class="next-appt-info">
-            <div class="next-appt-name" th:text="${nextAppointment.doctorName}">Doctor Name</div>
-            <div class="next-appt-meta">
+        <div class="next-appt-banner">
+          <div class="appt-icon-wrap">🩺</div>
+          <div class="appt-info">
+            <div class="appt-doc" th:text="${nextAppointment.doctorName}">Doctor Name</div>
+            <div class="appt-meta">
               📅 <span th:text="${#temporals.format(nextAppointment.appointmentDate,'dd MMM yyyy')}">Date</span>
-              &nbsp;·&nbsp;
-              🕒 <span th:text="${nextAppointment.appointmentTime}">Time</span>
+              &nbsp;·&nbsp; 🕒 <span th:text="${nextAppointment.appointmentTime}">Time</span>
             </div>
-            <div class="next-appt-reason"
+            <div class="appt-reason"
                  th:if="${nextAppointment.reason != null and nextAppointment.reason != ''}"
                  th:text="'📝 ' + ${nextAppointment.reason}">Reason</div>
           </div>
+          <div class="appt-countdown" id="apptCountdown">
+            <div class="countdown-val" id="countdownVal">—</div>
+            <div class="countdown-lbl">days left</div>
+          </div>
         </div>
+        <!-- hidden span for JS date calculation -->
+        <span id="apptDateRaw" style="display:none"
+              th:text="${#temporals.format(nextAppointment.appointmentDate,'yyyy-MM-dd')}"></span>
       </div>
 
-      <!-- APPOINTMENTS CARD -->
+      <!-- APPOINTMENTS LIST -->
       <div class="glass-card">
         <div class="card-hdr">
           <div class="card-title">📅 Upcoming Appointments</div>
@@ -302,11 +495,11 @@
         <a href="/appointments" class="add-row">＋ Schedule Appointment</a>
       </div>
 
-      <!-- MEDICINES CARD -->
+      <!-- MEDICINES LIST -->
       <div class="glass-card">
         <div class="card-hdr">
           <div class="card-title">💊 Medicine Reminders</div>
-          <a class="card-action" href="/medicines">+ Add Medicine</a>
+          <a class="card-action" href="/medicines">+ Add</a>
         </div>
         <div class="item-list" th:if="${medicines != null and !#lists.isEmpty(medicines)}">
           <div class="item-row" th:each="med : ${medicines}">
@@ -324,7 +517,7 @@
         </div>
         <div class="empty-state" th:if="${medicines == null or #lists.isEmpty(medicines)}">
           <div class="empty-icon">💊</div>
-          <div class="empty-text">No medicines added yet.<br>Add your first medication.</div>
+          <div class="empty-text">No medicines added yet.</div>
         </div>
         <a href="/medicines" class="add-row">＋ Add Medicine</a>
       </div>
@@ -332,23 +525,20 @@
       <!-- MEDICINE EXPIRY ALERTS -->
       <div class="glass-card"
            th:if="${expiringMedicineCount != null and expiringMedicineCount > 0}"
-           style="border-color:rgba(234,88,12,0.25);">
+           style="border-color:rgba(234,88,12,0.28);">
         <div class="card-hdr">
-          <div class="card-title">⚠️ Medicine Expiry Alerts</div>
-          <span class="pill p-red"
-                th:text="${expiringMedicineCount} + ' expiring'">0 expiring</span>
+          <div class="card-title">⚠️ Expiry Alerts</div>
+          <span class="pill p-red" th:text="${expiringMedicineCount} + ' expiring'">0</span>
         </div>
         <div class="item-list">
           <div class="item-row" th:each="medicine : ${expiringMedicines}"
                style="border-color:rgba(234,88,12,0.12);">
             <div class="item-avatar av-orange">💊</div>
             <div class="item-info">
-              <div class="item-name" th:text="${medicine.medicineName}">Medicine Name</div>
+              <div class="item-name" th:text="${medicine.medicineName}">Medicine</div>
               <div class="item-sub">
-                Ends in
-                <span th:text="${medicineDaysLeft[medicine.id]}">0</span> day(s)
-                &nbsp;·&nbsp;
-                <span th:text="${medicine.endDate}">date</span>
+                Ends in <span th:text="${medicineDaysLeft[medicine.id]}">0</span> day(s)
+                &nbsp;·&nbsp; <span th:text="${medicine.endDate}">date</span>
               </div>
             </div>
             <span class="pill"
@@ -357,21 +547,61 @@
                                   (${medicineDaysLeft[medicine.id] <= 7} ? 'p-amber' : 'p-teal'))"
                   th:text="${medicineDaysLeft[medicine.id] <= 0}  ? 'EXPIRED' :
                            (${medicineDaysLeft[medicine.id] <= 3} ? 'URGENT'  :
-                           (${medicineDaysLeft[medicine.id] <= 7} ? 'SOON'    : 'OK'))">
-            </span>
+                           (${medicineDaysLeft[medicine.id] <= 7} ? 'SOON'    : 'OK'))"></span>
           </div>
         </div>
         <a href="/medicines" class="add-row"
-           style="border-color:rgba(234,88,12,0.30);color:rgba(234,88,12,0.80);margin-top:10px;">
+           style="border-color:rgba(234,88,12,0.28);color:rgba(234,88,12,0.75);margin-top:10px;">
           💊 Manage Medicines
         </a>
       </div>
 
-      <!-- EMERGENCY CONTACTS WIDGET -->
+      <!-- HEALTH SUMMARY — always visible, fills the left column -->
+      <div class="glass-card">
+        <div class="card-hdr">
+          <div class="card-title">📊 Health Summary</div>
+          <span class="pill p-teal">Overview</span>
+        </div>
+        <div class="summary-grid">
+          <div class="summary-chip">
+            <div class="summary-val" th:text="${recordCount} ?: '0'">0</div>
+            <div class="summary-lbl">Records</div>
+          </div>
+          <div class="summary-chip">
+            <div class="summary-val" th:text="${appointmentCount} ?: '0'">0</div>
+            <div class="summary-lbl">Appts</div>
+          </div>
+          <div class="summary-chip">
+            <div class="summary-val" th:text="${medicineCount} ?: '0'">0</div>
+            <div class="summary-lbl">Medicines</div>
+          </div>
+        </div>
+        <div class="summary-row2" style="margin-top:10px;">
+          <div class="mini-chip">
+            <div class="mini-ico">🚨</div>
+            <div class="mini-val"
+                 th:text="${emergencyContacts != null} ? ${#lists.size(emergencyContacts)} : '0'">0</div>
+            <div class="mini-lbl">Contacts</div>
+          </div>
+          <div class="mini-chip">
+            <div class="mini-ico">⚠️</div>
+            <div class="mini-val" th:text="${expiringMedicineCount} ?: '0'">0</div>
+            <div class="mini-lbl">Expiring</div>
+          </div>
+          <div class="mini-chip">
+            <div class="mini-ico">✅</div>
+            <div class="mini-val" th:text="${completedMedicineCount} ?: '0'">0</div>
+            <div class="mini-lbl">Completed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMERGENCY CONTACTS -->
       <div class="glass-card">
         <div class="card-hdr">
           <div class="card-title">🚨 Emergency Contacts</div>
-          <a class="card-action" href="/contacts" style="color:#f87171;border-color:rgba(220,38,38,0.25);">View All</a>
+          <a class="card-action" href="/contacts"
+             style="color:#f87171;border-color:rgba(220,38,38,0.22);">View All</a>
         </div>
         <div class="item-list" th:if="${emergencyContacts != null and !#lists.isEmpty(emergencyContacts)}">
           <div class="emg-row" th:each="ec : ${emergencyContacts}">
@@ -381,43 +611,58 @@
                            : ${#strings.toUpperCase(ec.contactName)}">AB</div>
             <div class="emg-info">
               <div class="emg-name" th:text="${ec.contactName}">Name</div>
-              <div class="emg-rel"  th:text="${ec.relation} + ' · ' + ${ec.phoneNumber}">Relation</div>
+              <div class="emg-rel"  th:text="${ec.relation} + ' · ' + ${ec.phoneNumber}">Rel</div>
             </div>
             <a class="emg-call" th:href="'tel:' + ${ec.phoneNumber}">📞 Call</a>
           </div>
         </div>
         <div class="empty-state" th:if="${emergencyContacts == null or #lists.isEmpty(emergencyContacts)}">
           <div class="empty-icon">🚨</div>
-          <div class="empty-text">No emergency contacts added.<br>Add someone who can be reached in an emergency.</div>
+          <div class="empty-text">No emergency contacts added.</div>
         </div>
         <a href="/contacts" class="add-row-red">＋ Add Emergency Contact</a>
       </div>
 
-    </div><!-- end left-col -->
+    </div><!-- /left-col -->
 
-    <!-- ════════════════════════════════════════
+    <!-- ══════════════════════════════════════════════
          RIGHT COLUMN
-         · BMI
-         · Health Records
-         · Medicine Refill Reminders  ← moved here
-         · Treatment Progress         ← new Day 12
-         ════════════════════════════════════════ -->
+         ══════════════════════════════════════════════ -->
     <div class="right-col">
+
+      <!-- WELLNESS SCORE -->
+      <div class="glass-card">
+        <div class="card-hdr">
+          <div class="card-title">💚 Wellness Score</div>
+          <span class="pill p-green">Good</span>
+        </div>
+        <div class="wellness-banner">
+          <div class="wellness-score" id="wellnessScore">—</div>
+          <div class="wellness-info">
+            <div class="wellness-title">Overall Health Status</div>
+            <div class="wellness-sub">Based on your records & activity</div>
+            <div class="wellness-bar">
+              <div class="wellness-fill" id="wellnessFill" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- BMI CARD -->
       <div class="glass-card">
         <div class="card-hdr">
-          <div class="card-title">⚖️ BMI</div>
+          <div class="card-title">⚖️ BMI Tracker</div>
           <a class="card-action" href="/records">Update</a>
         </div>
         <div class="bmi-no-data" th:unless="${latestRecord != null}">
           No health data yet.<br/>
-          <a href="/records" style="color:var(--teal);font-weight:700;display:block;margin-top:6px;">+ Add your records →</a>
+          <a href="/records" style="color:var(--teal);font-weight:700;display:block;margin-top:8px;">
+            + Add your records →</a>
         </div>
         <div class="bmi-inner" th:if="${latestRecord != null}">
           <div class="bmi-ring-wrap">
             <svg viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="65" cy="65" r="54" stroke="rgba(255,255,255,0.07)" stroke-width="10"/>
+              <circle cx="65" cy="65" r="54" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
               <circle cx="65" cy="65" r="54" stroke="url(#bmiGrad)" stroke-width="10"
                       stroke-linecap="round" stroke-dasharray="339.3"
                       th:attr="stroke-dashoffset=${bmiDashOffset != null ? bmiDashOffset : 170}"
@@ -461,7 +706,8 @@
         </div>
         <div class="bmi-no-data" th:unless="${latestRecord != null}">
           No records yet.<br/>
-          <a href="/records" style="color:var(--teal);font-weight:700;display:block;margin-top:6px;">+ Add First Record →</a>
+          <a href="/records" style="color:var(--teal);font-weight:700;display:block;margin-top:8px;">
+            + Add First Record →</a>
         </div>
         <div th:if="${latestRecord != null}">
           <div class="record-chips">
@@ -492,13 +738,13 @@
               <div class="v-ico">🫀</div>
               <div class="v-val"
                    th:text="${latestRecord.bloodPressure != null and !#strings.isEmpty(latestRecord.bloodPressure)} ? ${latestRecord.bloodPressure} : '—'">—</div>
-              <div class="v-lbl">Blood Pressure</div>
+              <div class="v-lbl">BP</div>
             </div>
             <div class="v-chip">
               <div class="v-ico">🍬</div>
               <div class="v-val"
-                   th:text="${latestRecord.sugarLevel != null} ? (${latestRecord.sugarLevel} + ' mg/dL') : '—'">—</div>
-              <div class="v-lbl">Sugar Level</div>
+                   th:text="${latestRecord.sugarLevel != null} ? (${latestRecord.sugarLevel} + '') : '—'">—</div>
+              <div class="v-lbl">Sugar</div>
             </div>
             <div class="v-chip">
               <div class="v-ico">📊</div>
@@ -507,7 +753,8 @@
               <div class="v-lbl">BMI</div>
             </div>
           </div>
-          <div th:if="${latestRecord.allergies != null and !#strings.isEmpty(latestRecord.allergies)}" style="margin-top:8px;">
+          <div th:if="${latestRecord.allergies != null and !#strings.isEmpty(latestRecord.allergies)}"
+               style="margin-top:8px;">
             <div class="r-chip" style="display:flex;align-items:center;gap:10px;">
               <div style="font-size:18px;">⚠️</div>
               <div>
@@ -523,41 +770,38 @@
         </div>
       </div>
 
-      <!-- MEDICINE REFILL REMINDERS (moved to right column) -->
+      <!-- REFILL REMINDERS -->
       <div class="glass-card"
            th:if="${refillCount != null and refillCount > 0}"
            style="border-color:rgba(234,179,8,0.25);">
         <div class="card-hdr">
           <div class="card-title">🔄 Refill Reminders</div>
-          <span class="pill p-yellow"
-                th:text="${refillCount} + ' refill'">0 refill</span>
+          <span class="pill p-yellow" th:text="${refillCount} + ' refill'">0</span>
         </div>
         <div class="item-list">
           <div class="item-row" th:each="medicine : ${refillMedicines}"
                style="border-color:rgba(234,179,8,0.12);">
             <div class="item-avatar av-yellow">🔄</div>
             <div class="item-info">
-              <div class="item-name" th:text="${medicine.medicineName}">Medicine Name</div>
-              <div class="item-sub">
-                📅 Ends: <span th:text="${medicine.endDate}">date</span>
-              </div>
+              <div class="item-name" th:text="${medicine.medicineName}">Medicine</div>
+              <div class="item-sub">📅 Ends: <span th:text="${medicine.endDate}">date</span></div>
             </div>
             <span class="pill p-yellow">REFILL</span>
           </div>
         </div>
         <a href="/medicines" class="add-row"
-           style="border-color:rgba(234,179,8,0.30);color:rgba(234,179,8,0.80);margin-top:10px;">
+           style="border-color:rgba(234,179,8,0.28);color:rgba(234,179,8,0.75);margin-top:10px;">
           💊 Manage Medicines
         </a>
       </div>
 
-      <!-- TREATMENT PROGRESS (Day 12 — always visible once medicines exist) -->
+      <!-- TREATMENT PROGRESS -->
       <div class="glass-card" th:if="${medicineCount != null and medicineCount > 0}">
         <div class="card-hdr">
           <div class="card-title">📈 Treatment Progress</div>
           <a class="card-action" href="/medicines">Details</a>
         </div>
-        <div class="progress-grid">
+        <div class="prog-grid">
           <div class="prog-chip">
             <div class="prog-val" th:text="${medicineCount} ?: '0'">0</div>
             <div class="prog-lbl">Total</div>
@@ -570,50 +814,99 @@
           <div class="prog-chip">
             <div class="prog-val" style="color:#93c5fd;"
                  th:text="${completedMedicineCount} ?: '0'">0</div>
-            <div class="prog-lbl">Completed</div>
+            <div class="prog-lbl">Done</div>
           </div>
         </div>
       </div>
 
-    </div><!-- end right-col -->
+    </div><!-- /right-col -->
 
-  </div><!-- end main-grid -->
-</div><!-- end app-wrap -->
+  </div><!-- /main-grid -->
+</div><!-- /app-wrap -->
 
 <script>
+/* ── TIME GREETING ── */
 (function(){
-  const h=new Date().getHours();
-  document.getElementById('timeGreet').textContent=h<12?'morning':h<17?'afternoon':'evening';
+  const h = new Date().getHours();
+  document.getElementById('timeGreet').textContent =
+    h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
 })();
 
-function ecgY(t){t=t%1;if(t<0.10)return 0;if(t<0.15)return -0.08*Math.sin((t-0.10)/0.05*Math.PI);if(t<0.22)return 0;if(t<0.24)return -0.15;if(t<0.26)return 1.0;if(t<0.28)return -0.25;if(t<0.30)return 0;if(t<0.45)return 0.18*Math.sin(((t-0.30)/0.15)*Math.PI);return 0;}
+/* ── APPOINTMENT COUNTDOWN ── */
+(function(){
+  const raw = document.getElementById('apptDateRaw');
+  const val = document.getElementById('countdownVal');
+  if (!raw || !val) return;
+  const apptDate = new Date(raw.textContent.trim());
+  const today = new Date(); today.setHours(0,0,0,0);
+  apptDate.setHours(0,0,0,0);
+  const days = Math.round((apptDate - today) / 86400000);
+  val.textContent = days >= 0 ? days : '—';
+})();
 
-const bgCanvas=document.getElementById('ecg-bg');
-if(bgCanvas&&window.innerWidth>920){
-  const bgCtx=bgCanvas.getContext('2d');
-  bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight;
+/* ── WELLNESS SCORE ── */
+(function(){
+  const el = document.getElementById('wellnessScore');
+  const fill = document.getElementById('wellnessFill');
+  if (!el || !fill) return;
+  // Simple heuristic: full score = 100, deduct for issues
+  let score = 70; // base
+  const statCards = document.querySelectorAll('.stat-val');
+  statCards.forEach(c => { if (parseInt(c.textContent) > 0) score += 5; });
+  score = Math.min(score, 98);
+  el.textContent = score;
+  setTimeout(() => { fill.style.width = score + '%'; }, 300);
+})();
+
+/* ── ECG BACKGROUND ── */
+function ecgY(t){
+  t = t%1;
+  if(t<0.10)return 0;
+  if(t<0.15)return -0.08*Math.sin((t-0.10)/0.05*Math.PI);
+  if(t<0.22)return 0;
+  if(t<0.24)return -0.15;
+  if(t<0.26)return 1.0;
+  if(t<0.28)return -0.25;
+  if(t<0.30)return 0;
+  if(t<0.45)return 0.18*Math.sin(((t-0.30)/0.15)*Math.PI);
+  return 0;
+}
+const bgCanvas = document.getElementById('ecg-bg');
+if(bgCanvas && window.innerWidth > 960){
+  const bgCtx = bgCanvas.getContext('2d');
+  bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight;
   window.addEventListener('resize',()=>{bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight;});
-  const BG_LINES=3,bgPhases=[0,0.33,0.66],bgSpeeds=[0.0025,0.002,0.003],bgPts=500;
-  const bgData=Array.from({length:BG_LINES},()=>new Array(bgPts).fill(0));
-  const lineColors=['14,255,180','80,240,255','0,210,255'];
+  const BG_LINES=3, bgPhases=[0,0.33,0.66], bgSpeeds=[0.0025,0.002,0.003], bgPts=500;
+  const bgData = Array.from({length:BG_LINES},()=>new Array(bgPts).fill(0));
+  const lineColors = ['14,255,180','80,240,255','0,210,255'];
   function drawBg(){
-    const w=bgCanvas.width,h=bgCanvas.height;bgCtx.clearRect(0,0,w,h);
-    const rowH=h/BG_LINES;
+    const w=bgCanvas.width, h=bgCanvas.height;
+    bgCtx.clearRect(0,0,w,h);
+    const rowH = h/BG_LINES;
     for(let r=0;r<BG_LINES;r++){
-      bgData[r].shift();bgData[r].push(ecgY(bgPhases[r]));bgPhases[r]+=bgSpeeds[r];
-      const midY=rowH*r+rowH*0.5,amp=rowH*0.30,col=lineColors[r];
+      bgData[r].shift(); bgData[r].push(ecgY(bgPhases[r])); bgPhases[r]+=bgSpeeds[r];
+      const midY=rowH*r+rowH*0.5, amp=rowH*0.28, col=lineColors[r];
       function tp(){bgCtx.beginPath();for(let i=0;i<bgPts;i++){const x=(i/(bgPts-1))*w,y=midY-bgData[r][i]*amp;i===0?bgCtx.moveTo(x,y):bgCtx.lineTo(x,y);}}
       bgCtx.save();bgCtx.shadowColor=`rgba(${col},1)`;bgCtx.shadowBlur=28;
-      const g1=bgCtx.createLinearGradient(0,0,w,0);g1.addColorStop(0,`rgba(${col},0)`);g1.addColorStop(0.3,`rgba(${col},0.4)`);g1.addColorStop(0.7,`rgba(${col},0.85)`);g1.addColorStop(1,`rgba(${col},1)`);
-      bgCtx.strokeStyle=g1;bgCtx.lineWidth=6;bgCtx.lineJoin='round';bgCtx.lineCap='round';tp();bgCtx.stroke();bgCtx.restore();
+      const g1=bgCtx.createLinearGradient(0,0,w,0);
+      g1.addColorStop(0,`rgba(${col},0)`);g1.addColorStop(0.3,`rgba(${col},0.4)`);
+      g1.addColorStop(0.7,`rgba(${col},0.85)`);g1.addColorStop(1,`rgba(${col},1)`);
+      bgCtx.strokeStyle=g1;bgCtx.lineWidth=6;bgCtx.lineJoin='round';bgCtx.lineCap='round';
+      tp();bgCtx.stroke();bgCtx.restore();
       bgCtx.save();bgCtx.shadowColor=`rgba(${col},0.8)`;bgCtx.shadowBlur=12;
-      const g2=bgCtx.createLinearGradient(0,0,w,0);g2.addColorStop(0,`rgba(${col},0)`);g2.addColorStop(0.35,`rgba(${col},0.6)`);g2.addColorStop(1,`rgba(${col},1)`);
-      bgCtx.strokeStyle=g2;bgCtx.lineWidth=3;bgCtx.lineJoin='round';bgCtx.lineCap='round';tp();bgCtx.stroke();bgCtx.restore();
-      const g3=bgCtx.createLinearGradient(0,0,w,0);g3.addColorStop(0,`rgba(${col},0)`);g3.addColorStop(0.4,`rgba(${col},0.7)`);g3.addColorStop(1,`rgba(255,255,255,1)`);
-      bgCtx.strokeStyle=g3;bgCtx.lineWidth=1.5;bgCtx.lineJoin='round';bgCtx.lineCap='round';tp();bgCtx.stroke();
-      const lx=w-2,ly=midY-bgData[r][bgPts-1]*amp;
-      bgCtx.save();bgCtx.shadowColor=`rgba(${col},1)`;bgCtx.shadowBlur=24;bgCtx.beginPath();bgCtx.arc(lx,ly,7,0,Math.PI*2);bgCtx.fillStyle=`rgba(${col},0.35)`;bgCtx.fill();bgCtx.restore();
-      bgCtx.save();bgCtx.shadowColor=`rgba(${col},1)`;bgCtx.shadowBlur=10;bgCtx.beginPath();bgCtx.arc(lx,ly,3,0,Math.PI*2);bgCtx.fillStyle='rgba(255,255,255,1)';bgCtx.fill();bgCtx.restore();
+      const g2=bgCtx.createLinearGradient(0,0,w,0);
+      g2.addColorStop(0,`rgba(${col},0)`);g2.addColorStop(0.35,`rgba(${col},0.6)`);g2.addColorStop(1,`rgba(${col},1)`);
+      bgCtx.strokeStyle=g2;bgCtx.lineWidth=3;bgCtx.lineJoin='round';bgCtx.lineCap='round';
+      tp();bgCtx.stroke();bgCtx.restore();
+      const g3=bgCtx.createLinearGradient(0,0,w,0);
+      g3.addColorStop(0,`rgba(${col},0)`);g3.addColorStop(0.4,`rgba(${col},0.7)`);g3.addColorStop(1,`rgba(255,255,255,1)`);
+      bgCtx.strokeStyle=g3;bgCtx.lineWidth=1.5;bgCtx.lineJoin='round';bgCtx.lineCap='round';
+      tp();bgCtx.stroke();
+      const lx=w-2, ly=midY-bgData[r][bgPts-1]*amp;
+      bgCtx.save();bgCtx.shadowColor=`rgba(${col},1)`;bgCtx.shadowBlur=24;
+      bgCtx.beginPath();bgCtx.arc(lx,ly,7,0,Math.PI*2);bgCtx.fillStyle=`rgba(${col},0.35)`;bgCtx.fill();bgCtx.restore();
+      bgCtx.save();bgCtx.shadowColor=`rgba(${col},1)`;bgCtx.shadowBlur=10;
+      bgCtx.beginPath();bgCtx.arc(lx,ly,3,0,Math.PI*2);bgCtx.fillStyle='rgba(255,255,255,1)';bgCtx.fill();bgCtx.restore();
     }
     requestAnimationFrame(drawBg);
   }
@@ -622,3 +915,8 @@ if(bgCanvas&&window.innerWidth>920){
 </script>
 </body>
 </html>
+
+
+
+
+
