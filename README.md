@@ -100,8 +100,6 @@ The dashboard now displays emergency contacts with:
 
 ### Medicine Management Dashboard
 
-![Medicine Dashboard](lifeline/screenshots/medicine-dashboard.png)
-
 Features:
 - Medicine Reminders
 - Medicine Expiry Alerts
@@ -148,7 +146,7 @@ Features:
 
 
 ### Medicine Management Dashboard
-![Medicine Dashboard](lifeline/screenshots/medicine-dashboard.png)
+![Medicine Dashboard](lifeline/screenshots/medicine-expiry-alerts.png)
 
 ---
 
