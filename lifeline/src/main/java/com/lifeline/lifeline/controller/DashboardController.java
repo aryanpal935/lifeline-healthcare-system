@@ -133,7 +133,22 @@ model.addAttribute(
         expiringMedicines.size()
 );
 
+// =========================
+// MEDICINE REFILL REMINDERS
+// =========================
 
+List<Medicine> refillMedicines =
+        medicineService.getMedicinesNeedingRefill(user);
+
+model.addAttribute(
+        "refillMedicines",
+        refillMedicines
+);
+
+model.addAttribute(
+        "refillCount",
+        refillMedicines.size()
+);
 
 
        // =========================

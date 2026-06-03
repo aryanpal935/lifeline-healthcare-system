@@ -1,6 +1,7 @@
 package com.lifeline.lifeline.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,5 +70,25 @@ public List<Medicine> getActiveMedicines(User user) {
                     "ACTIVE".equalsIgnoreCase(medicine.getStatus()))
             .toList();
 }
+
+public List<Medicine> getMedicinesNeedingRefill(User user) {
+
+    return medicineRepository.findByUser(user)
+            .stream()
+            .filter(medicine -> {
+
+                if (medicine.getEndDate() == null) {
+                    return false;
+                }
+
+                long daysLeft = ChronoUnit.DAYS.between(
+                        LocalDate.now(),
+                        medicine.getEndDate());
+
+                return daysLeft >= 0 && daysLeft <= 5;
+            })
+            .toList();
+}
+
 
 }
