@@ -96,8 +96,19 @@ The dashboard now displays emergency contacts with:
 - Phone number
 - Quick call action
 - Direct navigation to full contact management page
----
 
+
+### Medicine Management Dashboard
+
+![Medicine Dashboard](lifeline/screenshots/medicine-dashboard.png)
+
+Features:
+- Medicine Reminders
+- Medicine Expiry Alerts
+- Days Remaining Calculation
+- Urgent Expiry Notifications
+
+---
 ## Workflow
 
 1. User registers or logs into the system
@@ -108,6 +119,8 @@ The dashboard now displays emergency contacts with:
 6. Users can manage and track health information
 
 ---
+
+
 
 ## Screenshots
 
@@ -132,6 +145,10 @@ The dashboard now displays emergency contacts with:
 
 ### Dashboard Emergency Contacts Widget
 ![Dashboard Emergency Contacts](lifeline/screenshots/dashboard-emergency-contacts.png)
+
+
+### Medicine Management Dashboard
+![Medicine Dashboard](lifeline/screenshots/medicine-dashboard.png)
 
 ---
 
