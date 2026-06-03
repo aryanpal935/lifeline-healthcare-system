@@ -101,6 +101,41 @@ public class DashboardController {
                 medicineDaysLeft
             );
 
+
+
+        model.addAttribute(
+        "medicineDaysLeft",
+        medicineDaysLeft
+);
+
+// =========================
+// MEDICINE EXPIRY ALERTS
+// =========================
+
+List<Medicine> expiringMedicines =
+        medicines.stream()
+                .filter(medicine -> {
+
+                    long days =
+                            medicineService.getDaysRemaining(medicine);
+
+                    return days >= 0 && days <= 7;
+                })
+                .toList();
+
+model.addAttribute(
+        "expiringMedicines",
+        expiringMedicines
+);
+
+model.addAttribute(
+        "expiringMedicineCount",
+        expiringMedicines.size()
+);
+
+
+
+
        // =========================
 // UPCOMING APPOINTMENTS
 // =========================
