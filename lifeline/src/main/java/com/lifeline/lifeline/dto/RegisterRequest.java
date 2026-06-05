@@ -1,10 +1,16 @@
 package com.lifeline.lifeline.dto;
 
+import java.time.LocalDate;
+
 public class RegisterRequest {
 
     private String name;
     private String email;
     private String password;
+
+    private LocalDate dateOfBirth;
+    private String gender;
+    private String phoneNumber;
 
     public RegisterRequest() {
     }
@@ -31,5 +37,29 @@ public class RegisterRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

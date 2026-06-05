@@ -38,6 +38,10 @@ public class UserService {
         // Set default role
         user.setRole("ROLE_USER");
 
+        user.setDateOfBirth(request.getDateOfBirth());
+user.setGender(request.getGender());
+user.setPhoneNumber(request.getPhoneNumber());
+
         // Save user in database
         userRepository.save(user);
 

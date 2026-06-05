@@ -1,7 +1,5 @@
 package com.lifeline.lifeline.controller;
 
-import jakarta.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,6 +13,8 @@ import com.lifeline.lifeline.entity.HealthRecord;
 import com.lifeline.lifeline.entity.User;
 import com.lifeline.lifeline.repository.UserRepository;
 import com.lifeline.lifeline.service.HealthRecordService;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class HealthRecordController {
@@ -74,4 +74,24 @@ public class HealthRecordController {
 
         return "redirect:/records";
     }
+
+    // EDIT RECORD PAGE
+@GetMapping("/edit/{id}")
+public String editRecord(
+        @PathVariable Long id,
+        Model model
+) {
+
+    HealthRecord record =
+            healthRecordService.getRecordById(id);
+
+    model.addAttribute(
+            "healthRecord",
+            record
+    );
+
+    return "add-record";
+}
+
+
 }

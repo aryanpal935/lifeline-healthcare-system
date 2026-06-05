@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -18,7 +17,6 @@
     html{scroll-behavior:smooth;}
     body{min-height:100vh;background:#040f18;font-family:'Nunito',sans-serif;color:#fff;overflow-x:hidden;}
 
-    /* ── AMBIENT LAYERS ── */
     #ecg-bg{position:fixed;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;}
     .grid-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;
       background-image:linear-gradient(rgba(14,165,160,0.035) 1px,transparent 1px),
@@ -27,8 +25,6 @@
     .vignette{position:fixed;inset:0;z-index:2;pointer-events:none;
       background:radial-gradient(ellipse at center,transparent 0%,rgba(4,15,24,0.6) 55%,rgba(4,15,24,0.98) 100%);}
     .dark-shield{position:fixed;inset:0;z-index:3;pointer-events:none;background:rgba(4,15,24,0.48);}
-
-    /* ── AMBIENT BLOBS ── */
     .blob{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:1;opacity:0.07;}
     .blob-1{width:500px;height:500px;background:#0ea5a0;top:-100px;right:-100px;}
     .blob-2{width:400px;height:400px;background:#2563eb;bottom:100px;left:-80px;}
@@ -36,7 +32,7 @@
 
     .app-wrap{position:relative;z-index:10;max-width:1260px;margin:0 auto;padding:28px 24px 80px;}
 
-    /* ── NAVBAR ── */
+    /* NAVBAR */
     .navbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;
       animation:fadeDown 0.6s cubic-bezier(.22,1,.36,1) both;}
     @keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
@@ -65,8 +61,8 @@
     .nav-btn-sos{background:rgba(220,38,38,0.09);color:#fca5a5;border:1px solid rgba(220,38,38,0.22);}
     .nav-btn-sos:hover{background:rgba(220,38,38,0.18);color:#f87171;}
 
-    /* ── PAGE HEADER ── */
-    .page-header{margin-bottom:26px;animation:fadeUp 0.6s 0.08s cubic-bezier(.22,1,.36,1) both;}
+    /* PAGE HEADER */
+    .page-header{margin-bottom:22px;animation:fadeUp 0.6s 0.08s cubic-bezier(.22,1,.36,1) both;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
     .page-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;
       letter-spacing:2px;text-transform:uppercase;color:var(--teal-dark);background:var(--teal-light);
@@ -74,7 +70,88 @@
     .page-title{font-family:'Fraunces',serif;font-size:32px;color:#fff;line-height:1.1;margin-bottom:4px;}
     .page-subtitle{font-size:13.5px;color:rgba(255,255,255,0.38);font-weight:600;}
 
-    /* ── STAT CARDS ── */
+    /* ── PROFILE CARD ───────────────────────── */
+    .profile-card {
+      background: linear-gradient(135deg, rgba(14,165,160,0.08), rgba(37,99,235,0.05));
+      border: 1px solid rgba(14,165,160,0.18);
+      border-radius: 20px;
+      padding: 20px 22px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(20px);
+      animation: fadeUp 0.6s 0.10s cubic-bezier(.22,1,.36,1) both;
+      position: relative; overflow: hidden;
+    }
+    .profile-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), #17c98a, transparent);
+    }
+    .profile-card::after {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(14,165,160,0.10), transparent 70%);
+      pointer-events: none;
+    }
+    .profile-top {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 18px;
+      padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .profile-avatar {
+      width: 54px; height: 54px; border-radius: 16px; flex-shrink: 0;
+      background: linear-gradient(135deg, #0ea5a0, #0369a1);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: #fff;
+      text-transform: uppercase;
+      box-shadow: 0 0 0 3px rgba(14,165,160,0.25), 0 8px 20px rgba(14,165,160,0.2);
+    }
+    .profile-name-wrap { flex: 1; min-width: 0; }
+    .profile-name {
+      font-family: 'Fraunces', serif; font-size: 19px; color: #fff;
+      margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .profile-category-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 100px;
+      font-size: 10.5px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
+    }
+    .cat-adult  { background: rgba(14,165,160,0.14); color: var(--teal); border: 1px solid rgba(14,165,160,0.25); }
+    .cat-minor  { background: rgba(37,99,235,0.14);  color: #93c5fd;     border: 1px solid rgba(37,99,235,0.25); }
+    .cat-senior { background: rgba(124,58,237,0.14); color: #a78bfa;     border: 1px solid rgba(124,58,237,0.25); }
+
+    /* birthday banner */
+    .birthday-banner {
+      margin: 0 0 16px 0;
+      padding: 20px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ffb347, #ff69b4);
+      color: white;
+      text-align: center;
+    }
+    .birthday-banner h2 { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 6px; }
+    .birthday-banner p  { font-size: 13px; opacity: 0.9; }
+
+    /* profile completion bar */
+    .profile-completion { margin-bottom: 16px; }
+    .pc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .pc-label  { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: .5px; }
+    .pc-pct    { font-size: 11px; font-weight: 800; color: var(--teal); }
+    .pc-track  { height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+    .pc-fill   { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #0ea5a0, #17c98a); transition: width 1s cubic-bezier(.22,1,.36,1); }
+
+    /* profile grid fields */
+    .profile-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+    }
+    .pf-item {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 10px 12px;
+      transition: background .15s, border-color .15s;
+    }
+    .pf-item:hover { background: rgba(14,165,160,0.07); border-color: rgba(14,165,160,0.20); }
+    .pf-lbl { font-size: 9.5px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--teal); margin-bottom: 5px; }
+    .pf-val { font-size: 14px; font-weight: 700; color: #fff; }
+    .pf-val.missing { color: rgba(255,255,255,0.25); font-style: italic; font-size: 12px; }
+
+    /* STAT CARDS */
     .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;
       animation:fadeUp 0.6s 0.12s cubic-bezier(.22,1,.36,1) both;}
     .stat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;
@@ -92,13 +169,13 @@
     .stat-lbl{font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.35);
       text-transform:uppercase;letter-spacing:1px;}
 
-    /* ── MAIN GRID ── */
+    /* MAIN GRID */
     .main-grid{display:grid;grid-template-columns:1fr 360px;gap:20px;
       animation:fadeUp 0.6s 0.18s cubic-bezier(.22,1,.36,1) both;}
     .left-col{display:flex;flex-direction:column;gap:18px;}
     .right-col{display:flex;flex-direction:column;gap:18px;}
 
-    /* ── GLASS CARD ── */
+    /* GLASS CARD */
     .glass-card{background:var(--card-bg);border:1px solid var(--border);border-radius:22px;
       padding:22px;backdrop-filter:blur(24px);transition:border-color 0.2s,box-shadow 0.2s;}
     .glass-card:hover{border-color:rgba(255,255,255,0.14);box-shadow:0 8px 30px rgba(0,0,0,0.25);}
@@ -111,7 +188,7 @@
       background:none;font-family:'Nunito',sans-serif;cursor:pointer;transition:all 0.18s;}
     .card-action:hover{background:rgba(14,165,160,0.10);border-color:rgba(14,165,160,0.4);}
 
-    /* ── NEXT APPOINTMENT BANNER ── */
+    /* NEXT APPOINTMENT */
     .next-appt-banner{display:flex;align-items:center;gap:16px;padding:16px 18px;
       background:linear-gradient(135deg,rgba(14,165,160,0.10),rgba(37,99,235,0.07));
       border:1px solid rgba(14,165,160,0.22);border-radius:16px;position:relative;overflow:hidden;}
@@ -133,7 +210,7 @@
     .countdown-lbl{font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;
       letter-spacing:1px;font-weight:700;margin-top:2px;}
 
-    /* ── QUICK ACTIONS ── */
+    /* QUICK ACTIONS */
     .quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
     .qa-btn{display:flex;flex-direction:column;align-items:center;gap:7px;padding:14px 8px;
       background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
@@ -144,7 +221,7 @@
     .qa-lbl{font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.55);text-align:center;
       text-transform:uppercase;letter-spacing:0.5px;}
 
-    /* ── ITEM LIST ── */
+    /* ITEM LIST */
     .item-list{display:flex;flex-direction:column;gap:8px;}
     .item-row{display:flex;align-items:center;gap:12px;padding:11px 14px;
       background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.055);
@@ -163,7 +240,7 @@
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .item-sub{font-size:11.5px;color:rgba(255,255,255,0.40);margin-top:2px;font-weight:600;}
 
-    /* ── PILLS ── */
+    /* PILLS */
     .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;
       font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0;}
     .p-teal{background:rgba(14,165,160,0.14);color:var(--teal);}
@@ -174,7 +251,7 @@
     .p-purple{background:rgba(124,58,237,0.14);color:#a78bfa;}
     .p-yellow{background:rgba(234,179,8,0.14);color:#fde047;}
 
-    /* ── BUTTONS ── */
+    /* BUTTONS */
     .add-row{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
       padding:10px;margin-top:10px;background:rgba(14,165,160,0.05);
       border:1px dashed rgba(14,165,160,0.28);border-radius:12px;cursor:pointer;
@@ -196,14 +273,13 @@
     .view-btn:hover{background:rgba(14,165,160,0.18);border-color:rgba(14,165,160,0.5);}
     .view-all-row{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
 
-    /* ── EMPTY STATE ── */
+    /* EMPTY STATE */
     .empty-state{padding:32px 20px;text-align:center;}
-    .empty-icon{font-size:36px;opacity:0.25;margin-bottom:10px;
-      animation:floatIcon 2.2s ease-in-out infinite;}
+    .empty-icon{font-size:36px;opacity:0.25;margin-bottom:10px;animation:floatIcon 2.2s ease-in-out infinite;}
     .empty-text{font-size:13px;color:rgba(255,255,255,0.25);font-weight:600;line-height:1.6;}
     @keyframes floatIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
-    /* ── HEALTH SUMMARY METRICS ── */
+    /* HEALTH SUMMARY */
     .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
     .summary-chip{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);
       border-radius:14px;padding:14px 10px;text-align:center;
@@ -222,7 +298,7 @@
     .mini-lbl{font-size:8.5px;color:rgba(255,255,255,0.30);
       text-transform:uppercase;letter-spacing:0.8px;margin-top:3px;font-weight:700;}
 
-    /* ── WELLNESS SCORE BANNER ── */
+    /* WELLNESS */
     .wellness-banner{display:flex;align-items:center;gap:16px;padding:16px 18px;
       background:linear-gradient(135deg,rgba(22,163,74,0.08),rgba(14,165,160,0.06));
       border:1px solid rgba(22,163,74,0.18);border-radius:16px;margin-bottom:0;}
@@ -236,7 +312,7 @@
       background:linear-gradient(90deg,#16a34a,#4ade80);
       transition:width 1s cubic-bezier(.22,1,.36,1);}
 
-    /* ── BMI ── */
+    /* BMI */
     .bmi-inner{display:flex;flex-direction:column;align-items:center;padding:6px 0 12px;}
     .bmi-ring-wrap{position:relative;width:136px;height:136px;margin-bottom:14px;}
     .bmi-ring-wrap svg{width:100%;height:100%;}
@@ -258,7 +334,7 @@
     .bmi-no-data{text-align:center;padding:28px 16px;color:rgba(255,255,255,0.28);
       font-size:13px;line-height:1.6;}
 
-    /* ── HEALTH RECORD CHIPS ── */
+    /* HEALTH RECORD CHIPS */
     .record-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
     .r-chip{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);
       border-radius:13px;padding:12px 14px;transition:background 0.15s,border-color 0.15s;}
@@ -276,7 +352,7 @@
     .v-lbl{font-size:9px;color:rgba(255,255,255,0.32);
       text-transform:uppercase;letter-spacing:0.8px;margin-top:2px;}
 
-    /* ── TREATMENT PROGRESS ── */
+    /* TREATMENT PROGRESS */
     .prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
     .prog-chip{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07);
       border-radius:13px;padding:12px 10px;text-align:center;
@@ -287,7 +363,7 @@
     .prog-lbl{font-size:9px;color:rgba(255,255,255,0.32);
       text-transform:uppercase;letter-spacing:0.8px;font-weight:700;}
 
-    /* ── EMERGENCY CONTACTS ── */
+    /* EMERGENCY CONTACTS */
     .emg-row{display:flex;align-items:center;gap:12px;padding:11px 14px;
       background:rgba(220,38,38,0.03);border:1px solid rgba(220,38,38,0.09);
       border-radius:13px;transition:background 0.15s,border-color 0.15s;}
@@ -307,26 +383,20 @@
       flex-shrink:0;transition:all 0.18s;}
     .emg-call:hover{background:rgba(22,163,74,0.18);border-color:rgba(22,163,74,0.42);}
 
-    /* ── DIVIDER ── */
-    .section-divider{display:flex;align-items:center;gap:10px;margin:4px 0;}
-    .section-divider span{font-size:10px;font-weight:700;color:rgba(255,255,255,0.20);
-      text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap;}
-    .section-divider::before,.section-divider::after{content:'';flex:1;
-      height:1px;background:rgba(255,255,255,0.06);}
-
-    /* ── MOBILE ── */
+    /* MOBILE */
     @media(max-width:960px){
       .main-grid{grid-template-columns:1fr;}
       .stats-row{grid-template-columns:repeat(2,1fr);}
       #ecg-bg,.grid-overlay,.dark-shield,.blob{display:none;}
       .quick-actions{grid-template-columns:repeat(2,1fr);}
+      .profile-grid{grid-template-columns:repeat(2,1fr);}
     }
     @media(max-width:540px){
       .navbar{flex-wrap:wrap;gap:10px;}
       .nav-right{gap:6px;}
       .app-wrap{padding:18px 14px 50px;}
       .stats-row{grid-template-columns:1fr 1fr;}
-      .summary-grid,.summary-row2{grid-template-columns:1fr 1fr 1fr;}
+      .profile-grid{grid-template-columns:1fr 1fr;}
     }
   </style>
 </head>
@@ -379,6 +449,102 @@
     <p class="page-subtitle">Here's your complete health overview for today.</p>
   </div>
 
+  <!-- ═══════════════════════════════════════
+       PROFILE CARD
+       ═══════════════════════════════════════ -->
+  <div class="profile-card" th:if="${user != null}">
+
+    <!-- ─── BIRTHDAY BANNER (server-side, no JS needed) ─── -->
+    <div class="birthday-banner" th:if="${birthdayToday}">
+      <h2>🎂 Happy Birthday <span th:text="${user.name}">User</span>!</h2>
+      <p>Wishing you good health, happiness and success.</p>
+    </div>
+
+    <!-- Avatar + name + category -->
+    <div class="profile-top">
+      <div class="profile-avatar" id="profileAvatarText">
+        <!-- initials set by JS -->
+      </div>
+      <div class="profile-name-wrap">
+        <div class="profile-name" th:text="${user.name}">User Name</div>
+        <!-- Category badge set by JS based on age -->
+        <div class="profile-category-badge cat-adult" id="profileCategoryBadge">👤 Adult</div>
+      </div>
+
+      <!-- Profile completion bar -->
+      <div class="profile-completion" style="flex:1;max-width:200px;">
+        <div class="pc-header">
+          <span class="pc-label">Profile</span>
+          <span class="pc-pct" id="profilePct">0%</span>
+        </div>
+        <div class="pc-track">
+          <div class="pc-fill" id="profileFill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile fields grid -->
+    <div class="profile-grid">
+
+      <div class="pf-item">
+        <div class="pf-lbl">📛 Name</div>
+        <div class="pf-val" th:text="${user.name}">—</div>
+      </div>
+
+      <div class="pf-item">
+        <div class="pf-lbl">🎂 Age</div>
+        <div class="pf-val" id="profileAge"
+             th:text="${user.dateOfBirth != null ? '...' : '—'}">—</div>
+      </div>
+
+      <div class="pf-item">
+        <div class="pf-lbl">⚧ Gender</div>
+        <div class="pf-val"
+             th:if="${user.gender != null and !#strings.isEmpty(user.gender)}"
+             th:text="${user.gender}">—</div>
+        <div class="pf-val missing" th:unless="${user.gender != null and !#strings.isEmpty(user.gender)}">Not set</div>
+      </div>
+
+      <div class="pf-item">
+        <div class="pf-lbl">📱 Phone</div>
+        <div class="pf-val"
+             th:if="${user.phoneNumber != null and !#strings.isEmpty(user.phoneNumber)}"
+             th:text="${user.phoneNumber}">—</div>
+        <div class="pf-val missing" th:unless="${user.phoneNumber != null and !#strings.isEmpty(user.phoneNumber)}">Not set</div>
+      </div>
+
+      <div class="pf-item">
+        <div class="pf-lbl">📅 Date of Birth</div>
+        <div class="pf-val"
+             th:if="${user.dateOfBirth != null}"
+             th:text="${#temporals.format(user.dateOfBirth, 'dd-MMM-yyyy')}">—</div>
+        <div class="pf-val missing" th:unless="${user.dateOfBirth != null}">Not set</div>
+      </div>
+
+      <!-- ─── NEXT BIRTHDAY COUNTDOWN ─── -->
+      <div class="pf-item">
+        <div class="pf-lbl">🎂 Next Birthday</div>
+        <div class="pf-val"
+             th:if="${daysUntilBirthday != null}"
+             th:text="${daysUntilBirthday + ' days'}">—</div>
+        <div class="pf-val missing" th:unless="${daysUntilBirthday != null}">Not set</div>
+      </div>
+
+    </div>
+
+    <!-- hidden DOB for JS (age calc + category badge only) -->
+    <span id="userDobRaw" style="display:none"
+          th:if="${user.dateOfBirth != null}"
+          th:text="${#temporals.format(user.dateOfBirth,'yyyy-MM-dd')}"></span>
+    <span id="userNameRaw" style="display:none" th:text="${user.name}"></span>
+
+    <!-- hidden booleans for completion % -->
+    <span id="hasGender"    style="display:none" th:text="${user.gender != null and !#strings.isEmpty(user.gender)}">false</span>
+    <span id="hasPhone"     style="display:none" th:text="${user.phoneNumber != null and !#strings.isEmpty(user.phoneNumber)}">false</span>
+    <span id="hasDob"       style="display:none" th:text="${user.dateOfBirth != null}">false</span>
+    <span id="hasRecords"   style="display:none" th:text="${recordCount != null and recordCount > 0}">false</span>
+  </div>
+
   <!-- STAT CARDS -->
   <div class="stats-row">
     <div class="stat-card" style="--accent:linear-gradient(90deg,#0ea5a0,#17c98a);">
@@ -408,34 +574,16 @@
   </div>
 
   <div class="main-grid">
-
-    <!-- ══════════════════════════════════════════════
-         LEFT COLUMN
-         ══════════════════════════════════════════════ -->
     <div class="left-col">
 
       <!-- QUICK ACTIONS -->
       <div class="glass-card">
-        <div class="card-hdr">
-          <div class="card-title">⚡ Quick Actions</div>
-        </div>
+        <div class="card-hdr"><div class="card-title">⚡ Quick Actions</div></div>
         <div class="quick-actions">
-          <a href="/appointments" class="qa-btn">
-            <span class="qa-icon">📅</span>
-            <span class="qa-lbl">Book Appt</span>
-          </a>
-          <a href="/medicines" class="qa-btn">
-            <span class="qa-icon">💊</span>
-            <span class="qa-lbl">Add Med</span>
-          </a>
-          <a href="/records" class="qa-btn">
-            <span class="qa-icon">📋</span>
-            <span class="qa-lbl">Add Record</span>
-          </a>
-          <a href="/contacts" class="qa-btn">
-            <span class="qa-icon">🚨</span>
-            <span class="qa-lbl">Contacts</span>
-          </a>
+          <a href="/appointments" class="qa-btn"><span class="qa-icon">📅</span><span class="qa-lbl">Book Appt</span></a>
+          <a href="/medicines"    class="qa-btn"><span class="qa-icon">💊</span><span class="qa-lbl">Add Med</span></a>
+          <a href="/records"      class="qa-btn"><span class="qa-icon">📋</span><span class="qa-lbl">Add Record</span></a>
+          <a href="/contacts"     class="qa-btn"><span class="qa-icon">🚨</span><span class="qa-lbl">Contacts</span></a>
         </div>
       </div>
 
@@ -448,7 +596,7 @@
         <div class="next-appt-banner">
           <div class="appt-icon-wrap">🩺</div>
           <div class="appt-info">
-            <div class="appt-doc" th:text="${nextAppointment.doctorName}">Doctor Name</div>
+            <div class="appt-doc"  th:text="${nextAppointment.doctorName}">Doctor Name</div>
             <div class="appt-meta">
               📅 <span th:text="${#temporals.format(nextAppointment.appointmentDate,'dd MMM yyyy')}">Date</span>
               &nbsp;·&nbsp; 🕒 <span th:text="${nextAppointment.appointmentTime}">Time</span>
@@ -462,7 +610,6 @@
             <div class="countdown-lbl">days left</div>
           </div>
         </div>
-        <!-- hidden span for JS date calculation -->
         <span id="apptDateRaw" style="display:none"
               th:text="${#temporals.format(nextAppointment.appointmentDate,'yyyy-MM-dd')}"></span>
       </div>
@@ -478,8 +625,7 @@
             <div class="item-avatar av-blue">📅</div>
             <div class="item-info">
               <div class="item-name" th:text="${appt.doctorName}">Doctor</div>
-              <div class="item-sub"
-                   th:text="${#temporals.format(appt.appointmentDate,'dd MMM yyyy')} + ' · ' + ${appt.appointmentTime}">Date</div>
+              <div class="item-sub" th:text="${#temporals.format(appt.appointmentDate,'dd MMM yyyy')} + ' · ' + ${appt.appointmentTime}">Date</div>
             </div>
             <span class="pill"
                   th:classappend="${appt.status == 'CONFIRMED'} ? 'p-green' :
@@ -522,7 +668,7 @@
         <a href="/medicines" class="add-row">＋ Add Medicine</a>
       </div>
 
-      <!-- MEDICINE EXPIRY ALERTS -->
+      <!-- EXPIRY ALERTS -->
       <div class="glass-card"
            th:if="${expiringMedicineCount != null and expiringMedicineCount > 0}"
            style="border-color:rgba(234,88,12,0.28);">
@@ -531,68 +677,35 @@
           <span class="pill p-red" th:text="${expiringMedicineCount} + ' expiring'">0</span>
         </div>
         <div class="item-list">
-          <div class="item-row" th:each="medicine : ${expiringMedicines}"
-               style="border-color:rgba(234,88,12,0.12);">
+          <div class="item-row" th:each="medicine : ${expiringMedicines}" style="border-color:rgba(234,88,12,0.12);">
             <div class="item-avatar av-orange">💊</div>
             <div class="item-info">
               <div class="item-name" th:text="${medicine.medicineName}">Medicine</div>
-              <div class="item-sub">
-                Ends in <span th:text="${medicineDaysLeft[medicine.id]}">0</span> day(s)
-                &nbsp;·&nbsp; <span th:text="${medicine.endDate}">date</span>
-              </div>
+              <div class="item-sub">Ends in <span th:text="${medicineDaysLeft[medicine.id]}">0</span> day(s) · <span th:text="${medicine.endDate}">date</span></div>
             </div>
             <span class="pill"
-                  th:classappend="${medicineDaysLeft[medicine.id] <= 0} ? 'p-red' :
-                                  (${medicineDaysLeft[medicine.id] <= 3} ? 'p-red' :
-                                  (${medicineDaysLeft[medicine.id] <= 7} ? 'p-amber' : 'p-teal'))"
-                  th:text="${medicineDaysLeft[medicine.id] <= 0}  ? 'EXPIRED' :
-                           (${medicineDaysLeft[medicine.id] <= 3} ? 'URGENT'  :
-                           (${medicineDaysLeft[medicine.id] <= 7} ? 'SOON'    : 'OK'))"></span>
+                  th:classappend="${medicineDaysLeft[medicine.id] <= 3} ? 'p-red' : (${medicineDaysLeft[medicine.id] <= 7} ? 'p-amber' : 'p-teal')"
+                  th:text="${medicineDaysLeft[medicine.id] <= 0} ? 'EXPIRED' : (${medicineDaysLeft[medicine.id] <= 3} ? 'URGENT' : (${medicineDaysLeft[medicine.id] <= 7} ? 'SOON' : 'OK'))"></span>
           </div>
         </div>
-        <a href="/medicines" class="add-row"
-           style="border-color:rgba(234,88,12,0.28);color:rgba(234,88,12,0.75);margin-top:10px;">
-          💊 Manage Medicines
-        </a>
+        <a href="/medicines" class="add-row" style="border-color:rgba(234,88,12,0.28);color:rgba(234,88,12,0.75);">💊 Manage Medicines</a>
       </div>
 
-      <!-- HEALTH SUMMARY — always visible, fills the left column -->
+      <!-- HEALTH SUMMARY -->
       <div class="glass-card">
         <div class="card-hdr">
           <div class="card-title">📊 Health Summary</div>
           <span class="pill p-teal">Overview</span>
         </div>
         <div class="summary-grid">
-          <div class="summary-chip">
-            <div class="summary-val" th:text="${recordCount} ?: '0'">0</div>
-            <div class="summary-lbl">Records</div>
-          </div>
-          <div class="summary-chip">
-            <div class="summary-val" th:text="${appointmentCount} ?: '0'">0</div>
-            <div class="summary-lbl">Appts</div>
-          </div>
-          <div class="summary-chip">
-            <div class="summary-val" th:text="${medicineCount} ?: '0'">0</div>
-            <div class="summary-lbl">Medicines</div>
-          </div>
+          <div class="summary-chip"><div class="summary-val" th:text="${recordCount} ?: '0'">0</div><div class="summary-lbl">Records</div></div>
+          <div class="summary-chip"><div class="summary-val" th:text="${appointmentCount} ?: '0'">0</div><div class="summary-lbl">Appts</div></div>
+          <div class="summary-chip"><div class="summary-val" th:text="${medicineCount} ?: '0'">0</div><div class="summary-lbl">Medicines</div></div>
         </div>
         <div class="summary-row2" style="margin-top:10px;">
-          <div class="mini-chip">
-            <div class="mini-ico">🚨</div>
-            <div class="mini-val"
-                 th:text="${emergencyContacts != null} ? ${#lists.size(emergencyContacts)} : '0'">0</div>
-            <div class="mini-lbl">Contacts</div>
-          </div>
-          <div class="mini-chip">
-            <div class="mini-ico">⚠️</div>
-            <div class="mini-val" th:text="${expiringMedicineCount} ?: '0'">0</div>
-            <div class="mini-lbl">Expiring</div>
-          </div>
-          <div class="mini-chip">
-            <div class="mini-ico">✅</div>
-            <div class="mini-val" th:text="${completedMedicineCount} ?: '0'">0</div>
-            <div class="mini-lbl">Completed</div>
-          </div>
+          <div class="mini-chip"><div class="mini-ico">🚨</div><div class="mini-val" th:text="${emergencyContacts != null} ? ${#lists.size(emergencyContacts)} : '0'">0</div><div class="mini-lbl">Contacts</div></div>
+          <div class="mini-chip"><div class="mini-ico">⚠️</div><div class="mini-val" th:text="${expiringMedicineCount} ?: '0'">0</div><div class="mini-lbl">Expiring</div></div>
+          <div class="mini-chip"><div class="mini-ico">✅</div><div class="mini-val" th:text="${completedMedicineCount} ?: '0'">0</div><div class="mini-lbl">Completed</div></div>
         </div>
       </div>
 
@@ -600,15 +713,12 @@
       <div class="glass-card">
         <div class="card-hdr">
           <div class="card-title">🚨 Emergency Contacts</div>
-          <a class="card-action" href="/contacts"
-             style="color:#f87171;border-color:rgba(220,38,38,0.22);">View All</a>
+          <a class="card-action" href="/contacts" style="color:#f87171;border-color:rgba(220,38,38,0.22);">View All</a>
         </div>
         <div class="item-list" th:if="${emergencyContacts != null and !#lists.isEmpty(emergencyContacts)}">
           <div class="emg-row" th:each="ec : ${emergencyContacts}">
             <div class="emg-avatar"
-                 th:text="${#strings.length(ec.contactName) >= 2}
-                           ? ${#strings.toUpperCase(#strings.substring(ec.contactName,0,2))}
-                           : ${#strings.toUpperCase(ec.contactName)}">AB</div>
+                 th:text="${#strings.length(ec.contactName) >= 2} ? ${#strings.toUpperCase(#strings.substring(ec.contactName,0,2))} : ${#strings.toUpperCase(ec.contactName)}">AB</div>
             <div class="emg-info">
               <div class="emg-name" th:text="${ec.contactName}">Name</div>
               <div class="emg-rel"  th:text="${ec.relation} + ' · ' + ${ec.phoneNumber}">Rel</div>
@@ -625,9 +735,6 @@
 
     </div><!-- /left-col -->
 
-    <!-- ══════════════════════════════════════════════
-         RIGHT COLUMN
-         ══════════════════════════════════════════════ -->
     <div class="right-col">
 
       <!-- WELLNESS SCORE -->
@@ -640,7 +747,7 @@
           <div class="wellness-score" id="wellnessScore">—</div>
           <div class="wellness-info">
             <div class="wellness-title">Overall Health Status</div>
-            <div class="wellness-sub">Based on your records & activity</div>
+            <div class="wellness-sub">Based on your records &amp; activity</div>
             <div class="wellness-bar">
               <div class="wellness-fill" id="wellnessFill" style="width:0%"></div>
             </div>
@@ -656,8 +763,7 @@
         </div>
         <div class="bmi-no-data" th:unless="${latestRecord != null}">
           No health data yet.<br/>
-          <a href="/records" style="color:var(--teal);font-weight:700;display:block;margin-top:8px;">
-            + Add your records →</a>
+          <a href="/records" style="color:var(--teal);font-weight:700;display:block;margin-top:8px;">+ Add your records →</a>
         </div>
         <div class="bmi-inner" th:if="${latestRecord != null}">
           <div class="bmi-ring-wrap">
@@ -669,8 +775,7 @@
                       transform="rotate(-90 65 65)"/>
               <defs>
                 <linearGradient id="bmiGrad" x1="0" y1="0" x2="130" y2="0">
-                  <stop offset="0%" stop-color="#0ea5a0"/>
-                  <stop offset="100%" stop-color="#17c98a"/>
+                  <stop offset="0%" stop-color="#0ea5a0"/><stop offset="100%" stop-color="#17c98a"/>
                 </linearGradient>
               </defs>
             </svg>
@@ -706,15 +811,13 @@
         </div>
         <div class="bmi-no-data" th:unless="${latestRecord != null}">
           No records yet.<br/>
-          <a href="/records" style="color:var(--teal);font-weight:700;display:block;margin-top:8px;">
-            + Add First Record →</a>
+          <a href="/records" style="color:var(--teal);font-weight:700;display:block;margin-top:8px;">+ Add First Record →</a>
         </div>
         <div th:if="${latestRecord != null}">
           <div class="record-chips">
             <div class="r-chip">
               <div class="r-chip-ico">🩸</div>
-              <div class="r-chip-val"
-                   th:text="${latestRecord.bloodGroup != null and !#strings.isEmpty(latestRecord.bloodGroup)} ? ${latestRecord.bloodGroup} : '—'">—</div>
+              <div class="r-chip-val" th:text="${latestRecord.bloodGroup != null and !#strings.isEmpty(latestRecord.bloodGroup)} ? ${latestRecord.bloodGroup} : '—'">—</div>
               <div class="r-chip-lbl">Blood Group</div>
             </div>
             <div class="r-chip">
@@ -736,25 +839,21 @@
           <div class="vitals-row">
             <div class="v-chip">
               <div class="v-ico">🫀</div>
-              <div class="v-val"
-                   th:text="${latestRecord.bloodPressure != null and !#strings.isEmpty(latestRecord.bloodPressure)} ? ${latestRecord.bloodPressure} : '—'">—</div>
+              <div class="v-val" th:text="${latestRecord.bloodPressure != null and !#strings.isEmpty(latestRecord.bloodPressure)} ? ${latestRecord.bloodPressure} : '—'">—</div>
               <div class="v-lbl">BP</div>
             </div>
             <div class="v-chip">
               <div class="v-ico">🍬</div>
-              <div class="v-val"
-                   th:text="${latestRecord.sugarLevel != null} ? (${latestRecord.sugarLevel} + '') : '—'">—</div>
+              <div class="v-val" th:text="${latestRecord.sugarLevel != null} ? (${latestRecord.sugarLevel} + '') : '—'">—</div>
               <div class="v-lbl">Sugar</div>
             </div>
             <div class="v-chip">
               <div class="v-ico">📊</div>
-              <div class="v-val"
-                   th:text="${#numbers.formatDecimal(latestRecord.weight/((latestRecord.height/100.0)*(latestRecord.height/100.0)),1,1)}">—</div>
+              <div class="v-val" th:text="${#numbers.formatDecimal(latestRecord.weight/((latestRecord.height/100.0)*(latestRecord.height/100.0)),1,1)}">—</div>
               <div class="v-lbl">BMI</div>
             </div>
           </div>
-          <div th:if="${latestRecord.allergies != null and !#strings.isEmpty(latestRecord.allergies)}"
-               style="margin-top:8px;">
+          <div th:if="${latestRecord.allergies != null and !#strings.isEmpty(latestRecord.allergies)}" style="margin-top:8px;">
             <div class="r-chip" style="display:flex;align-items:center;gap:10px;">
               <div style="font-size:18px;">⚠️</div>
               <div>
@@ -779,8 +878,7 @@
           <span class="pill p-yellow" th:text="${refillCount} + ' refill'">0</span>
         </div>
         <div class="item-list">
-          <div class="item-row" th:each="medicine : ${refillMedicines}"
-               style="border-color:rgba(234,179,8,0.12);">
+          <div class="item-row" th:each="medicine : ${refillMedicines}" style="border-color:rgba(234,179,8,0.12);">
             <div class="item-avatar av-yellow">🔄</div>
             <div class="item-info">
               <div class="item-name" th:text="${medicine.medicineName}">Medicine</div>
@@ -789,10 +887,7 @@
             <span class="pill p-yellow">REFILL</span>
           </div>
         </div>
-        <a href="/medicines" class="add-row"
-           style="border-color:rgba(234,179,8,0.28);color:rgba(234,179,8,0.75);margin-top:10px;">
-          💊 Manage Medicines
-        </a>
+        <a href="/medicines" class="add-row" style="border-color:rgba(234,179,8,0.28);color:rgba(234,179,8,0.75);margin-top:10px;">💊 Manage Medicines</a>
       </div>
 
       <!-- TREATMENT PROGRESS -->
@@ -802,121 +897,140 @@
           <a class="card-action" href="/medicines">Details</a>
         </div>
         <div class="prog-grid">
-          <div class="prog-chip">
-            <div class="prog-val" th:text="${medicineCount} ?: '0'">0</div>
-            <div class="prog-lbl">Total</div>
-          </div>
-          <div class="prog-chip">
-            <div class="prog-val" style="color:#4ade80;"
-                 th:text="${activeMedicineCount} ?: '0'">0</div>
-            <div class="prog-lbl">Active</div>
-          </div>
-          <div class="prog-chip">
-            <div class="prog-val" style="color:#93c5fd;"
-                 th:text="${completedMedicineCount} ?: '0'">0</div>
-            <div class="prog-lbl">Done</div>
-          </div>
+          <div class="prog-chip"><div class="prog-val" th:text="${medicineCount} ?: '0'">0</div><div class="prog-lbl">Total</div></div>
+          <div class="prog-chip"><div class="prog-val" style="color:#4ade80;" th:text="${activeMedicineCount} ?: '0'">0</div><div class="prog-lbl">Active</div></div>
+          <div class="prog-chip"><div class="prog-val" style="color:#93c5fd;" th:text="${completedMedicineCount} ?: '0'">0</div><div class="prog-lbl">Done</div></div>
         </div>
       </div>
 
     </div><!-- /right-col -->
-
   </div><!-- /main-grid -->
 </div><!-- /app-wrap -->
 
 <script>
-/* ── TIME GREETING ── */
+/* ── TIME GREETING ─────────────────────────── */
 (function(){
   const h = new Date().getHours();
   document.getElementById('timeGreet').textContent =
     h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
 })();
 
-/* ── APPOINTMENT COUNTDOWN ── */
+/* ── PROFILE CARD LOGIC ────────────────────── */
+(function(){
+  const dobEl   = document.getElementById('userDobRaw');
+  const nameEl  = document.getElementById('userNameRaw');
+  const avatar  = document.getElementById('profileAvatarText');
+  const badge   = document.getElementById('profileCategoryBadge');
+  const ageEl   = document.getElementById('profileAge');
+
+  // Avatar initials — first letter of first name + first letter of last name (e.g. "Aryan Pal" → "AP")
+  if (nameEl && avatar) {
+    const parts = nameEl.textContent.trim().split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) {
+      avatar.textContent = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    } else if (parts.length === 1) {
+      avatar.textContent = parts[0].slice(0, 2).toUpperCase();
+    }
+  }
+
+  // Age + category badge (birthday banner handled server-side via th:if)
+  if (dobEl && dobEl.textContent.trim()) {
+    const dob   = new Date(dobEl.textContent.trim());
+    const today = new Date();
+
+    const age = today.getFullYear() - dob.getFullYear()
+      - (today < new Date(today.getFullYear(), dob.getMonth(), dob.getDate()) ? 1 : 0);
+
+    if (ageEl) ageEl.textContent = age + ' yrs';
+
+    if (badge) {
+      if (age < 18) {
+        badge.textContent = '🧒 Minor';
+        badge.className = 'profile-category-badge cat-minor';
+      } else if (age >= 60) {
+        badge.textContent = '🧓 Senior Citizen';
+        badge.className = 'profile-category-badge cat-senior';
+      } else {
+        badge.textContent = '👤 Adult';
+        badge.className = 'profile-category-badge cat-adult';
+      }
+    }
+  }
+
+  // Profile completion %
+  const fields = [
+    true,
+    document.getElementById('hasDob')?.textContent === 'true',
+    document.getElementById('hasGender')?.textContent === 'true',
+    document.getElementById('hasPhone')?.textContent === 'true',
+    document.getElementById('hasRecords')?.textContent === 'true',
+  ];
+  const filled = fields.filter(Boolean).length;
+  const pct    = Math.round((filled / fields.length) * 100);
+  const pctEl  = document.getElementById('profilePct');
+  const fillEl = document.getElementById('profileFill');
+  if (pctEl)  pctEl.textContent = pct + '%';
+  if (fillEl) setTimeout(() => { fillEl.style.width = pct + '%'; }, 400);
+})();
+
+/* ── APPOINTMENT COUNTDOWN ─────────────────── */
 (function(){
   const raw = document.getElementById('apptDateRaw');
   const val = document.getElementById('countdownVal');
   if (!raw || !val) return;
   const apptDate = new Date(raw.textContent.trim());
-  const today = new Date(); today.setHours(0,0,0,0);
-  apptDate.setHours(0,0,0,0);
+  const today = new Date(); today.setHours(0,0,0,0); apptDate.setHours(0,0,0,0);
   const days = Math.round((apptDate - today) / 86400000);
   val.textContent = days >= 0 ? days : '—';
 })();
 
-/* ── WELLNESS SCORE ── */
+/* ── WELLNESS SCORE ────────────────────────── */
 (function(){
-  const el = document.getElementById('wellnessScore');
+  const el   = document.getElementById('wellnessScore');
   const fill = document.getElementById('wellnessFill');
   if (!el || !fill) return;
-  // Simple heuristic: full score = 100, deduct for issues
-  let score = 70; // base
-  const statCards = document.querySelectorAll('.stat-val');
-  statCards.forEach(c => { if (parseInt(c.textContent) > 0) score += 5; });
+  let score = 70;
+  document.querySelectorAll('.stat-val').forEach(c => { if (parseInt(c.textContent) > 0) score += 5; });
   score = Math.min(score, 98);
   el.textContent = score;
   setTimeout(() => { fill.style.width = score + '%'; }, 300);
 })();
 
-/* ── ECG BACKGROUND ── */
-function ecgY(t){
-  t = t%1;
-  if(t<0.10)return 0;
-  if(t<0.15)return -0.08*Math.sin((t-0.10)/0.05*Math.PI);
-  if(t<0.22)return 0;
-  if(t<0.24)return -0.15;
-  if(t<0.26)return 1.0;
-  if(t<0.28)return -0.25;
-  if(t<0.30)return 0;
-  if(t<0.45)return 0.18*Math.sin(((t-0.30)/0.15)*Math.PI);
-  return 0;
-}
-const bgCanvas = document.getElementById('ecg-bg');
-if(bgCanvas && window.innerWidth > 960){
-  const bgCtx = bgCanvas.getContext('2d');
-  bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight;
-  window.addEventListener('resize',()=>{bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight;});
-  const BG_LINES=3, bgPhases=[0,0.33,0.66], bgSpeeds=[0.0025,0.002,0.003], bgPts=500;
-  const bgData = Array.from({length:BG_LINES},()=>new Array(bgPts).fill(0));
-  const lineColors = ['14,255,180','80,240,255','0,210,255'];
-  function drawBg(){
-    const w=bgCanvas.width, h=bgCanvas.height;
-    bgCtx.clearRect(0,0,w,h);
-    const rowH = h/BG_LINES;
-    for(let r=0;r<BG_LINES;r++){
-      bgData[r].shift(); bgData[r].push(ecgY(bgPhases[r])); bgPhases[r]+=bgSpeeds[r];
-      const midY=rowH*r+rowH*0.5, amp=rowH*0.28, col=lineColors[r];
-      function tp(){bgCtx.beginPath();for(let i=0;i<bgPts;i++){const x=(i/(bgPts-1))*w,y=midY-bgData[r][i]*amp;i===0?bgCtx.moveTo(x,y):bgCtx.lineTo(x,y);}}
-      bgCtx.save();bgCtx.shadowColor=`rgba(${col},1)`;bgCtx.shadowBlur=28;
-      const g1=bgCtx.createLinearGradient(0,0,w,0);
-      g1.addColorStop(0,`rgba(${col},0)`);g1.addColorStop(0.3,`rgba(${col},0.4)`);
-      g1.addColorStop(0.7,`rgba(${col},0.85)`);g1.addColorStop(1,`rgba(${col},1)`);
-      bgCtx.strokeStyle=g1;bgCtx.lineWidth=6;bgCtx.lineJoin='round';bgCtx.lineCap='round';
-      tp();bgCtx.stroke();bgCtx.restore();
-      bgCtx.save();bgCtx.shadowColor=`rgba(${col},0.8)`;bgCtx.shadowBlur=12;
-      const g2=bgCtx.createLinearGradient(0,0,w,0);
-      g2.addColorStop(0,`rgba(${col},0)`);g2.addColorStop(0.35,`rgba(${col},0.6)`);g2.addColorStop(1,`rgba(${col},1)`);
-      bgCtx.strokeStyle=g2;bgCtx.lineWidth=3;bgCtx.lineJoin='round';bgCtx.lineCap='round';
-      tp();bgCtx.stroke();bgCtx.restore();
-      const g3=bgCtx.createLinearGradient(0,0,w,0);
-      g3.addColorStop(0,`rgba(${col},0)`);g3.addColorStop(0.4,`rgba(${col},0.7)`);g3.addColorStop(1,`rgba(255,255,255,1)`);
-      bgCtx.strokeStyle=g3;bgCtx.lineWidth=1.5;bgCtx.lineJoin='round';bgCtx.lineCap='round';
-      tp();bgCtx.stroke();
-      const lx=w-2, ly=midY-bgData[r][bgPts-1]*amp;
-      bgCtx.save();bgCtx.shadowColor=`rgba(${col},1)`;bgCtx.shadowBlur=24;
-      bgCtx.beginPath();bgCtx.arc(lx,ly,7,0,Math.PI*2);bgCtx.fillStyle=`rgba(${col},0.35)`;bgCtx.fill();bgCtx.restore();
-      bgCtx.save();bgCtx.shadowColor=`rgba(${col},1)`;bgCtx.shadowBlur=10;
-      bgCtx.beginPath();bgCtx.arc(lx,ly,3,0,Math.PI*2);bgCtx.fillStyle='rgba(255,255,255,1)';bgCtx.fill();bgCtx.restore();
+/* ── ECG BACKGROUND ────────────────────────── */
+(function(){
+  const cv = document.getElementById('ecg-bg');
+  if (!cv || window.innerWidth <= 960) return;
+  const ctx = cv.getContext('2d');
+  let W, H;
+  function resize(){ W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  function ecgY(t){ t=t%1;if(t<.10)return 0;if(t<.15)return-.08*Math.sin((t-.10)/.05*Math.PI);if(t<.22)return 0;if(t<.24)return-.15;if(t<.26)return 1;if(t<.28)return-.25;if(t<.30)return 0;if(t<.45)return.18*Math.sin((t-.30)/.15*Math.PI);return 0; }
+  const LINES=3,PTS=500,phases=[0,.33,.66],speeds=[.0025,.002,.003];
+  const bufs=Array.from({length:LINES},()=>new Array(PTS).fill(0));
+  const cols=['14,255,180','80,240,255','0,210,255'];
+  function draw(){
+    ctx.clearRect(0,0,W,H);const rH=H/LINES;
+    for(let r=0;r<LINES;r++){
+      bufs[r].shift();bufs[r].push(ecgY(phases[r]));phases[r]+=speeds[r];
+      const mY=rH*r+rH*.5,amp=rH*.28,col=cols[r];
+      const path=new Path2D();
+      for(let i=0;i<PTS;i++){const x=(i/(PTS-1))*W,y=mY-bufs[r][i]*amp;i===0?path.moveTo(x,y):path.lineTo(x,y);}
+      ctx.save();ctx.shadowColor=`rgba(${col},1)`;ctx.shadowBlur=28;
+      const g1=ctx.createLinearGradient(0,0,W,0);g1.addColorStop(0,`rgba(${col},0)`);g1.addColorStop(.3,`rgba(${col},.4)`);g1.addColorStop(.7,`rgba(${col},.85)`);g1.addColorStop(1,`rgba(${col},1)`);
+      ctx.strokeStyle=g1;ctx.lineWidth=6;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke(path);ctx.restore();
+      ctx.save();ctx.shadowColor=`rgba(${col},.8)`;ctx.shadowBlur=12;
+      const g2=ctx.createLinearGradient(0,0,W,0);g2.addColorStop(0,`rgba(${col},0)`);g2.addColorStop(.35,`rgba(${col},.6)`);g2.addColorStop(1,`rgba(${col},1)`);
+      ctx.strokeStyle=g2;ctx.lineWidth=3;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke(path);ctx.restore();
+      const g3=ctx.createLinearGradient(0,0,W,0);g3.addColorStop(0,`rgba(${col},0)`);g3.addColorStop(.4,`rgba(${col},.7)`);g3.addColorStop(1,'rgba(255,255,255,1)');
+      ctx.strokeStyle=g3;ctx.lineWidth=1.5;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke(path);
+      const lx=W-2,ly=mY-bufs[r][PTS-1]*amp;
+      ctx.save();ctx.shadowColor=`rgba(${col},1)`;ctx.shadowBlur=24;ctx.beginPath();ctx.arc(lx,ly,7,0,Math.PI*2);ctx.fillStyle=`rgba(${col},.35)`;ctx.fill();ctx.restore();
+      ctx.save();ctx.shadowColor=`rgba(${col},1)`;ctx.shadowBlur=10;ctx.beginPath();ctx.arc(lx,ly,3,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,1)';ctx.fill();ctx.restore();
     }
-    requestAnimationFrame(drawBg);
+    requestAnimationFrame(draw);
   }
-  drawBg();
-}
+  draw();
+})();
 </script>
 </body>
 </html>
-
-
-
-
-

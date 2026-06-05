@@ -1,11 +1,15 @@
 package com.lifeline.lifeline.entity;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "users")
@@ -25,22 +29,35 @@ public class User {
 
     private String role;
 
+    private LocalDate dateOfBirth;
+
+    private String gender;
+
+    private String phoneNumber;
+
     // Default Constructor
     public User() {
     }
 
     // Parameterized Constructor
-    public User(Long id, String name, String email,
-                String password, String role) {
+    public User(Long id,
+                String name,
+                String email,
+                String password,
+                String role,
+                LocalDate dateOfBirth,
+                String gender,
+                String phoneNumber) {
 
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
     }
-
-    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -81,4 +98,44 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+
+    @Transient
+public int getAge() {
+
+    if (dateOfBirth == null) {
+        return 0;
+    }
+
+    return Period.between(
+            dateOfBirth,
+            java.time.LocalDate.now()
+    ).getYears();
+}
+
+
 }

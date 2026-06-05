@@ -41,435 +41,193 @@
       position: relative;
     }
 
-    /* ── ATMOSPHERIC BACKGROUND ── */
-    .bg-layer {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
-    }
-    .blob {
-      position: absolute; border-radius: 50%;
-      filter: blur(80px); opacity: 0.18;
-    }
-    .blob-1 {
-      width: 520px; height: 520px; top: -140px; right: -80px;
-      background: radial-gradient(circle, #0bbfb8, #0369a1);
-      animation: drift1 22s ease-in-out infinite alternate;
-    }
-    .blob-2 {
-      width: 380px; height: 380px; bottom: -80px; left: -60px;
-      background: radial-gradient(circle, #06b6d4, #0bbfb8);
-      animation: drift2 17s ease-in-out infinite alternate;
-    }
-    .blob-3 {
-      width: 260px; height: 260px; top: 55%; left: 40%;
-      background: radial-gradient(circle, #0bbfb8, transparent);
-      opacity: 0.07;
-      animation: drift1 28s ease-in-out infinite alternate;
-    }
-    @keyframes drift1 {
-      from { transform: translate(0,0) scale(1); }
-      to   { transform: translate(-50px, 40px) scale(1.1); }
-    }
-    @keyframes drift2 {
-      from { transform: translate(0,0) scale(1); }
-      to   { transform: translate(60px, -30px) scale(1.08); }
-    }
+    .bg-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.18; }
+    .blob-1 { width:520px;height:520px;top:-140px;right:-80px;background:radial-gradient(circle,#0bbfb8,#0369a1);animation:drift1 22s ease-in-out infinite alternate; }
+    .blob-2 { width:380px;height:380px;bottom:-80px;left:-60px;background:radial-gradient(circle,#06b6d4,#0bbfb8);animation:drift2 17s ease-in-out infinite alternate; }
+    .blob-3 { width:260px;height:260px;top:55%;left:40%;background:radial-gradient(circle,#0bbfb8,transparent);opacity:0.07;animation:drift1 28s ease-in-out infinite alternate; }
+    @keyframes drift1 { from{transform:translate(0,0) scale(1)} to{transform:translate(-50px,40px) scale(1.1)} }
+    @keyframes drift2 { from{transform:translate(0,0) scale(1)} to{transform:translate(60px,-30px) scale(1.08)} }
 
-    .dot-grid {
-      position: fixed; inset: 0; z-index: 1; pointer-events: none;
-      background-image: radial-gradient(circle, rgba(11,191,184,0.12) 1px, transparent 1px);
-      background-size: 32px 32px;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
-    }
+    .dot-grid { position:fixed;inset:0;z-index:1;pointer-events:none;background-image:radial-gradient(circle,rgba(11,191,184,0.12) 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%); }
+    #ecg-canvas { position:fixed;inset:0;z-index:2;pointer-events:none;width:100%;height:100%; }
 
-    #ecg-canvas {
-      position: fixed; inset: 0; z-index: 2; pointer-events: none;
-      width: 100%; height: 100%;
-    }
-
-    /* ── CARD ── */
     .card {
-      position: relative; z-index: 10;
-      display: grid;
-      grid-template-columns: 290px 1fr;
-      width: min(860px, 95vw);
-      border-radius: var(--radius-card);
-      overflow: hidden;
-      box-shadow: var(--shadow-card);
-      animation: rise 0.75s cubic-bezier(.22,1,.36,1) both;
+      position:relative;z-index:10;
+      display:grid;grid-template-columns:290px 1fr;
+      width:min(860px,95vw);
+      border-radius:var(--radius-card);overflow:hidden;
+      box-shadow:var(--shadow-card);
+      animation:rise 0.75s cubic-bezier(.22,1,.36,1) both;
     }
-    @keyframes rise {
-      from { opacity:0; transform: translateY(48px) scale(0.96); }
-      to   { opacity:1; transform: translateY(0)    scale(1); }
-    }
+    @keyframes rise { from{opacity:0;transform:translateY(48px) scale(0.96)} to{opacity:1;transform:translateY(0) scale(1)} }
 
-    /* ── LEFT PANEL ── */
     .panel-l {
-      background: linear-gradient(160deg, #0d2137 0%, #071525 100%);
-      border-right: 1px solid var(--c-border);
-      padding: 44px 30px;
-      display: flex; flex-direction: column;
-      position: relative; overflow: hidden;
+      background:linear-gradient(160deg,#0d2137 0%,#071525 100%);
+      border-right:1px solid var(--c-border);
+      padding:44px 30px;
+      display:flex;flex-direction:column;
+      position:relative;overflow:hidden;
     }
-    .panel-l::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, transparent, var(--c-teal), transparent);
-    }
-    .panel-l::after {
-      content: '';
-      position: absolute; bottom: -60px; left: -60px;
-      width: 200px; height: 200px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(11,191,184,0.08), transparent 70%);
-      pointer-events: none;
-    }
+    .panel-l::before { content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--c-teal),transparent); }
+    .panel-l::after  { content:'';position:absolute;bottom:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(11,191,184,0.08),transparent 70%);pointer-events:none; }
 
-    /* Brand */
-    .brand { margin-bottom: 36px; }
-    .brand-icon {
-      width: 52px; height: 52px;
-      background: linear-gradient(135deg, var(--c-teal), #06b6d4);
-      border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 26px; margin-bottom: 18px;
-      box-shadow: 0 0 0 8px rgba(11,191,184,0.10), 0 8px 24px rgba(11,191,184,0.25);
-      animation: heartPulse 2.6s ease-in-out infinite;
-    }
-    @keyframes heartPulse {
-      0%,100% { box-shadow: 0 0 0 8px rgba(11,191,184,0.10), 0 8px 24px rgba(11,191,184,0.25); }
-      50%      { box-shadow: 0 0 0 14px rgba(11,191,184,0.05), 0 8px 32px rgba(11,191,184,0.40); }
-    }
-    .brand-name {
-      font-family: var(--font-display);
-      font-size: 30px; font-weight: 800;
-      color: var(--c-white); letter-spacing: -0.5px; margin-bottom: 4px;
-    }
-    .brand-sub {
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 2.5px; text-transform: uppercase;
-      color: var(--c-teal);
-    }
+    .brand { margin-bottom:36px; }
+    .brand-icon { width:52px;height:52px;background:linear-gradient(135deg,var(--c-teal),#06b6d4);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:18px;box-shadow:0 0 0 8px rgba(11,191,184,0.10),0 8px 24px rgba(11,191,184,0.25);animation:heartPulse 2.6s ease-in-out infinite; }
+    @keyframes heartPulse { 0%,100%{box-shadow:0 0 0 8px rgba(11,191,184,0.10),0 8px 24px rgba(11,191,184,0.25)} 50%{box-shadow:0 0 0 14px rgba(11,191,184,0.05),0 8px 32px rgba(11,191,184,0.40)} }
+    .brand-name { font-family:var(--font-display);font-size:30px;font-weight:800;color:var(--c-white);letter-spacing:-0.5px;margin-bottom:4px; }
+    .brand-sub  { font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--c-teal); }
 
-    /* Live monitor widget */
-    .monitor-card {
-      background: rgba(11,191,184,0.05);
-      border: 1px solid rgba(11,191,184,0.16);
-      border-radius: 14px;
-      padding: 14px 16px 12px;
-      margin-bottom: 18px;
-      flex: 1;
-    }
-    .monitor-head {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 10px;
-    }
-    .monitor-title {
-      font-size: 9.5px; font-weight: 700;
-      letter-spacing: 2px; text-transform: uppercase;
-      color: var(--c-teal);
-      display: flex; align-items: center; gap: 6px;
-    }
-    .live-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #17ffcc;
-      animation: liveBlink 1.1s ease-in-out infinite;
-    }
-    @keyframes liveBlink { 0%,100%{opacity:0.2;} 50%{opacity:1;} }
-    .monitor-time {
-      font-size: 9px; color: rgba(255,255,255,0.25);
-      font-family: 'Courier New', monospace;
-    }
+    .monitor-card { background:rgba(11,191,184,0.05);border:1px solid rgba(11,191,184,0.16);border-radius:14px;padding:14px 16px 12px;margin-bottom:18px;flex:1; }
+    .monitor-head { display:flex;align-items:center;justify-content:space-between;margin-bottom:10px; }
+    .monitor-title { font-size:9.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--c-teal);display:flex;align-items:center;gap:6px; }
+    .live-dot { width:6px;height:6px;border-radius:50%;background:#17ffcc;animation:liveBlink 1.1s ease-in-out infinite; }
+    @keyframes liveBlink { 0%,100%{opacity:0.2} 50%{opacity:1} }
+    .monitor-time { font-size:9px;color:rgba(255,255,255,0.25);font-family:'Courier New',monospace; }
+    #mini-ecg { width:100%;height:52px;display:block; }
+    .vitals { display:flex;gap:0;border-top:1px solid rgba(11,191,184,0.10);margin-top:10px;padding-top:10px; }
+    .vital { flex:1;text-align:center; }
+    .vital + .vital { border-left:1px solid rgba(11,191,184,0.10); }
+    .vital-val { font-family:'Courier New',monospace;font-size:16px;font-weight:700;color:var(--c-teal);display:block;line-height:1; }
+    .vital-lbl { font-size:8.5px;font-weight:600;color:rgba(255,255,255,0.30);letter-spacing:1px;text-transform:uppercase;margin-top:3px;display:block; }
+    .bpm-anim { animation:bpmBlink 0.9s ease-in-out infinite; }
+    @keyframes bpmBlink { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
-    #mini-ecg { width: 100%; height: 52px; display: block; }
+    .badges { display:flex;flex-direction:column;gap:8px;margin-bottom:20px; }
+    .badge-row { display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.055);border-radius:10px;transition:background var(--transition),border-color var(--transition); }
+    .badge-row:hover { background:rgba(11,191,184,0.06);border-color:rgba(11,191,184,0.15); }
+    .badge-ico   { font-size:15px;flex-shrink:0; }
+    .badge-info  { display:flex;flex-direction:column;gap:1px; }
+    .badge-title { font-size:11.5px;font-weight:600;color:rgba(255,255,255,0.75); }
+    .badge-desc  { font-size:9.5px;font-weight:400;color:rgba(255,255,255,0.30); }
+    .panel-l-foot { font-size:9.5px;color:rgba(255,255,255,0.18);text-align:center;margin-top:auto;padding-top:16px; }
 
-    .vitals {
-      display: flex; gap: 0;
-      border-top: 1px solid rgba(11,191,184,0.10);
-      margin-top: 10px; padding-top: 10px;
-    }
-    .vital { flex: 1; text-align: center; }
-    .vital + .vital { border-left: 1px solid rgba(11,191,184,0.10); }
-    .vital-val {
-      font-family: 'Courier New', monospace;
-      font-size: 16px; font-weight: 700;
-      color: var(--c-teal); display: block; line-height: 1;
-    }
-    .vital-lbl {
-      font-size: 8.5px; font-weight: 600;
-      color: rgba(255,255,255,0.30);
-      letter-spacing: 1px; text-transform: uppercase;
-      margin-top: 3px; display: block;
-    }
-    .bpm-anim { animation: bpmBlink 0.9s ease-in-out infinite; }
-    @keyframes bpmBlink { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+    .panel-r { background:var(--c-white);padding:44px 40px 32px;display:flex;flex-direction:column;justify-content:center; }
 
-    /* Security badges */
-    .badges { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-    .badge-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 12px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.055);
-      border-radius: 10px;
-      transition: background var(--transition), border-color var(--transition);
-    }
-    .badge-row:hover {
-      background: rgba(11,191,184,0.06);
-      border-color: rgba(11,191,184,0.15);
-    }
-    .badge-ico { font-size: 15px; flex-shrink: 0; }
-    .badge-info { display: flex; flex-direction: column; gap: 1px; }
-    .badge-title { font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,0.75); }
-    .badge-desc  { font-size: 9.5px;  font-weight: 400; color: rgba(255,255,255,0.30); }
+    .form-badge { display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(11,191,184,0.08);border:1px solid rgba(11,191,184,0.20);border-radius:100px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--c-teal-dim);margin-bottom:12px;width:fit-content; }
+    .form-badge::before { content:'';width:6px;height:6px;border-radius:50%;background:var(--c-teal);animation:blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:0.4} 50%{opacity:1} }
 
-    .panel-l-foot {
-      font-size: 9.5px; color: rgba(255,255,255,0.18);
-      text-align: center; margin-top: auto; padding-top: 16px;
-    }
+    .form-title { font-family:var(--font-display);font-size:30px;font-weight:800;color:var(--c-navy);line-height:1.15;margin-bottom:4px; }
+    .form-sub   { font-size:13px;color:#64748b;font-weight:400;margin-bottom:26px; }
 
-    /* ── RIGHT PANEL ── */
-    .panel-r {
-      background: var(--c-white);
-      padding: 44px 40px 32px;
-      display: flex; flex-direction: column; justify-content: center;
-    }
+    .alert { display:flex;align-items:flex-start;gap:8px;padding:11px 14px;border-radius:10px;font-size:13px;font-weight:500;margin-bottom:16px;line-height:1.4; }
+    .alert-success { background:var(--c-green-dim);color:#065f46;border:1px solid rgba(16,185,129,0.25); }
+    .alert-error   { background:var(--c-red-dim);color:#991b1b;border:1px solid rgba(240,82,82,0.25); }
 
-    .form-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 12px;
-      background: rgba(11,191,184,0.08);
-      border: 1px solid rgba(11,191,184,0.20);
-      border-radius: 100px;
-      font-size: 10px; font-weight: 700;
-      letter-spacing: 2px; text-transform: uppercase;
-      color: var(--c-teal-dim); margin-bottom: 12px;
-    }
-    .form-badge::before {
-      content: '';
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--c-teal);
-      animation: blink 2s ease-in-out infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
+    .field { margin-bottom:16px; }
+    .field-label { display:flex;align-items:center;justify-content:space-between;margin-bottom:6px; }
+    .field-label-text { font-size:12px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;color:#475569; }
+    .field-inline-err { font-size:11px;font-weight:600;color:var(--c-red);opacity:0;transform:translateY(-4px);transition:opacity var(--transition),transform var(--transition); }
+    .field-inline-err.show { opacity:1;transform:translateY(0); }
 
-    .form-title {
-      font-family: var(--font-display);
-      font-size: 30px; font-weight: 800;
-      color: var(--c-navy); line-height: 1.15; margin-bottom: 4px;
-    }
-    .form-sub {
-      font-size: 13px; color: #64748b;
-      font-weight: 400; margin-bottom: 26px;
-    }
-
-    /* Alerts */
-    .alert {
-      display: flex; align-items: flex-start; gap: 8px;
-      padding: 11px 14px; border-radius: 10px;
-      font-size: 13px; font-weight: 500;
-      margin-bottom: 16px; line-height: 1.4;
-    }
-    .alert-success { background: var(--c-green-dim); color: #065f46; border: 1px solid rgba(16,185,129,0.25); }
-    .alert-error   { background: var(--c-red-dim);   color: #991b1b; border: 1px solid rgba(240,82,82,0.25); }
-
-    /* ── FIELDS — TOP-LABEL PATTERN ── */
-    .field { margin-bottom: 16px; }
-
-    .field-label {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 6px;
-    }
-    .field-label-text {
-      font-size: 12px; font-weight: 700;
-      letter-spacing: 0.6px; text-transform: uppercase;
-      color: #475569;
-    }
-    .field-inline-err {
-      font-size: 11px; font-weight: 600; color: var(--c-red);
-      opacity: 0; transform: translateY(-4px);
-      transition: opacity var(--transition), transform var(--transition);
-    }
-    .field-inline-err.show { opacity: 1; transform: translateY(0); }
-
-    .input-wrap { position: relative; display: flex; align-items: center; }
-
-    .input-ico {
-      position: absolute; left: 14px;
-      font-size: 15px; line-height: 1; pointer-events: none; z-index: 1;
-      opacity: 0.45; transition: opacity var(--transition);
-    }
-    .input-wrap:focus-within .input-ico { opacity: 1; }
+    .input-wrap { position:relative;display:flex;align-items:center; }
+    .input-ico  { position:absolute;left:14px;font-size:15px;line-height:1;pointer-events:none;z-index:1;opacity:0.45;transition:opacity var(--transition); }
+    .input-wrap:focus-within .input-ico { opacity:1; }
 
     .field input {
-      width: 100%; height: 50px;
-      padding: 0 44px 0 42px;
-      border: 1.5px solid #e2e8f0;
-      border-radius: var(--radius-input);
-      background: var(--c-offwhite);
-      font-family: var(--font-body);
-      font-size: 14.5px; font-weight: 500;
-      color: #1e293b; outline: none;
-      transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
-      -webkit-appearance: none;
+      width:100%;height:50px;
+      padding:0 44px 0 42px;        /* default: room for left icon + right status */
+      border:1.5px solid #e2e8f0;border-radius:var(--radius-input);
+      background:var(--c-offwhite);
+      font-family:var(--font-body);font-size:14.5px;font-weight:500;color:#1e293b;
+      outline:none;
+      transition:border-color var(--transition),box-shadow var(--transition),background var(--transition);
+      -webkit-appearance:none;
     }
-    .field input::placeholder { color: #b0bec5; font-weight: 400; }
-    .field input:focus {
-      border-color: var(--c-teal);
-      background: #fff;
-      box-shadow: 0 0 0 4px var(--c-teal-glow);
-    }
-    .field input.is-invalid {
-      border-color: var(--c-red);
-      background: #fffafa;
-      box-shadow: 0 0 0 4px var(--c-red-dim);
-    }
-    .field input.is-valid {
-      border-color: var(--c-green);
-      background: #f0fdf8;
-      box-shadow: 0 0 0 4px var(--c-green-dim);
-    }
+    .field input::placeholder { color:#b0bec5;font-weight:400; }
+    .field input:focus         { border-color:var(--c-teal);background:#fff;box-shadow:0 0 0 4px var(--c-teal-glow); }
+    .field input.is-invalid    { border-color:var(--c-red);background:#fffafa;box-shadow:0 0 0 4px var(--c-red-dim); }
+    .field input.is-valid      { border-color:var(--c-green);background:#f0fdf8;box-shadow:0 0 0 4px var(--c-green-dim); }
 
+    /* Status icon (✅/❌) — default position */
     .status-ico {
-      position: absolute; right: 14px;
-      font-size: 14px; pointer-events: none;
-      opacity: 0; transition: opacity var(--transition);
+      position:absolute;right:14px;
+      font-size:14px;pointer-events:none;
+      opacity:0;transition:opacity var(--transition);
     }
-    .field input.is-valid   ~ .status-ico { opacity: 1; }
-    .field input.is-invalid ~ .status-ico { opacity: 1; }
+    .field input.is-valid   ~ .status-ico,
+    .field input.is-invalid ~ .status-ico { opacity:1; }
 
-    /* Password toggle */
+    /* ── PASSWORD FIELD SPECIFICS ───────────────────────────────────
+       The password wrap has TWO right-side elements:
+         • .pw-btn  (toggle eye)  — rightmost, at right:10px
+         • .status-ico            — must sit LEFT of the eye button
+       We give the password input extra right padding so typed text
+       never slides under either icon.                              */
+    #pwWrap input {
+      padding-right: 78px;   /* 30px eye-btn + 24px status + 24px gap */
+    }
+    #pwWrap .status-ico {
+      right: 46px;           /* sits just left of the 30px eye button */
+    }
     .pw-btn {
-      position: absolute; right: 14px;
-      background: none; border: none; cursor: pointer;
-      padding: 6px; font-size: 16px; line-height: 1;
-      color: #94a3b8; border-radius: 7px;
-      transition: color var(--transition), background var(--transition);
+      position:absolute;right:10px;
+      background:none;border:none;cursor:pointer;
+      padding:6px;font-size:16px;line-height:1;
+      color:#94a3b8;border-radius:7px;
+      transition:color var(--transition),background var(--transition);
+      /* fixed width so positioning is predictable */
+      width:32px;text-align:center;
     }
-    .pw-btn:hover { color: var(--c-teal-dim); background: rgba(11,191,184,0.08); }
-    .pw-btn:focus-visible { outline: 2px solid var(--c-teal); outline-offset: 2px; }
+    .pw-btn:hover { color:var(--c-teal-dim);background:rgba(11,191,184,0.08); }
+    .pw-btn:focus-visible { outline:2px solid var(--c-teal);outline-offset:2px; }
 
-    /* push status icon left when pw-toggle is present */
-    #pwWrap .status-ico { right: 44px; }
+    .forgot-row  { display:flex;justify-content:flex-end;margin:-6px 0 18px; }
+    .forgot-link { font-size:12px;font-weight:700;color:var(--c-teal-dim);text-decoration:none;padding:2px 6px;border-radius:5px;transition:background var(--transition); }
+    .forgot-link:hover { background:rgba(11,191,184,0.08); }
 
-    /* Forgot password */
-    .forgot-row {
-      display: flex; justify-content: flex-end;
-      margin: -6px 0 18px;
-    }
-    .forgot-link {
-      font-size: 12px; font-weight: 700;
-      color: var(--c-teal-dim); text-decoration: none;
-      padding: 2px 6px; border-radius: 5px;
-      transition: background var(--transition);
-    }
-    .forgot-link:hover { background: rgba(11,191,184,0.08); }
-    .forgot-link:focus-visible { outline: 2px solid var(--c-teal); outline-offset: 2px; }
+    .remember-row { display:flex;align-items:center;gap:9px;margin-bottom:20px; }
+    .remember-row input[type="checkbox"] { width:15px;height:15px;accent-color:var(--c-teal);cursor:pointer; }
+    .remember-row label { font-size:12.5px;font-weight:500;color:#64748b;cursor:pointer; }
 
-    /* Remember me */
-    .remember-row {
-      display: flex; align-items: center; gap: 9px;
-      margin-bottom: 20px;
-    }
-    .remember-row input[type="checkbox"] {
-      width: 15px; height: 15px;
-      accent-color: var(--c-teal); cursor: pointer;
-    }
-    .remember-row label {
-      font-size: 12.5px; font-weight: 500; color: #64748b; cursor: pointer;
-    }
-
-    /* ── SUBMIT BUTTON ── */
     .btn-submit {
-      width: 100%; height: 52px;
-      border: none; border-radius: var(--radius-input);
-      background: linear-gradient(135deg, #0bbfb8 0%, #0891b2 100%);
-      font-family: var(--font-body);
-      font-size: 15px; font-weight: 700;
-      color: #fff; letter-spacing: 0.3px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      position: relative; overflow: hidden;
-      box-shadow: 0 4px 16px rgba(11,191,184,0.30);
-      transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+      width:100%;height:52px;border:none;border-radius:var(--radius-input);
+      background:linear-gradient(135deg,#0bbfb8 0%,#0891b2 100%);
+      font-family:var(--font-body);font-size:15px;font-weight:700;color:#fff;letter-spacing:0.3px;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
+      position:relative;overflow:hidden;
+      box-shadow:0 4px 16px rgba(11,191,184,0.30);
+      transition:transform var(--transition),box-shadow var(--transition),opacity var(--transition);
     }
-    .btn-submit:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(11,191,184,0.40);
-    }
-    .btn-submit:active:not(:disabled) { transform: translateY(0); }
-    .btn-submit:focus-visible { outline: 3px solid var(--c-teal); outline-offset: 3px; }
-    .btn-submit:disabled { opacity: 0.70; cursor: not-allowed; }
-
-    .btn-arrow {
-      width: 22px; height: 22px;
-      background: rgba(255,255,255,0.20);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px;
-      transition: transform var(--transition);
-    }
-    .btn-submit:hover:not(:disabled) .btn-arrow { transform: translateX(3px); }
-
-    .btn-spinner {
-      width: 18px; height: 18px;
-      border: 2.5px solid rgba(255,255,255,0.35);
-      border-top-color: #fff; border-radius: 50%;
-      animation: spin 0.7s linear infinite; display: none;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .btn-submit.loading .btn-spinner { display: block; }
+    .btn-submit:hover:not(:disabled) { transform:translateY(-2px);box-shadow:0 10px 28px rgba(11,191,184,0.40); }
+    .btn-submit:active:not(:disabled){ transform:translateY(0); }
+    .btn-submit:focus-visible { outline:3px solid var(--c-teal);outline-offset:3px; }
+    .btn-submit:disabled { opacity:0.70;cursor:not-allowed; }
+    .btn-arrow  { width:22px;height:22px;background:rgba(255,255,255,0.20);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;transition:transform var(--transition); }
+    .btn-submit:hover:not(:disabled) .btn-arrow { transform:translateX(3px); }
+    .btn-spinner { width:18px;height:18px;border:2.5px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:none; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .btn-submit.loading .btn-spinner { display:block; }
     .btn-submit.loading .btn-text,
-    .btn-submit.loading .btn-arrow   { display: none; }
+    .btn-submit.loading .btn-arrow   { display:none; }
+    .ripple { position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:rippleAnim 0.6s linear forwards;pointer-events:none; }
+    @keyframes rippleAnim { to{transform:scale(5);opacity:0} }
 
-    .ripple {
-      position: absolute; border-radius: 50%;
-      background: rgba(255,255,255,0.22);
-      transform: scale(0);
-      animation: rippleAnim 0.6s linear forwards;
-      pointer-events: none;
-    }
-    @keyframes rippleAnim { to { transform: scale(5); opacity: 0; } }
+    .divider { display:flex;align-items:center;gap:12px;margin:16px 0 12px; }
+    .divider::before,.divider::after { content:'';flex:1;height:1px;background:#e2e8f0; }
+    .divider span { font-size:11px;font-weight:600;color:#94a3b8;letter-spacing:1px;text-transform:uppercase; }
 
-    /* Divider */
-    .divider {
-      display: flex; align-items: center; gap: 12px;
-      margin: 16px 0 12px;
-    }
-    .divider::before, .divider::after {
-      content: ''; flex: 1; height: 1px; background: #e2e8f0;
-    }
-    .divider span {
-      font-size: 11px; font-weight: 600; color: #94a3b8;
-      letter-spacing: 1px; text-transform: uppercase;
-    }
+    .form-foot { text-align:center;font-size:13px;font-weight:500;color:#64748b; }
+    .form-foot a { font-weight:700;color:var(--c-teal-dim);text-decoration:none;border-radius:4px;padding:1px 4px;transition:background var(--transition); }
+    .form-foot a:hover { background:rgba(11,191,184,0.08); }
 
-    .form-foot {
-      text-align: center;
-      font-size: 13px; font-weight: 500; color: #64748b;
+    @media (max-width:700px) {
+      body { align-items:flex-start;overflow-y:auto;padding:20px 0 40px; }
+      .card { grid-template-columns:1fr;width:92vw; }
+      .panel-l { padding:28px 24px 24px; }
+      .monitor-card { display:none; }
+      #ecg-canvas,.dot-grid { display:none; }
+      .panel-r { padding:28px 24px 24px; }
+      .form-title { font-size:26px; }
     }
-    .form-foot a {
-      font-weight: 700; color: var(--c-teal-dim); text-decoration: none;
-      border-radius: 4px; padding: 1px 4px;
-      transition: background var(--transition);
-    }
-    .form-foot a:hover { background: rgba(11,191,184,0.08); }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 700px) {
-      body { align-items: flex-start; overflow-y: auto; padding: 20px 0 40px; }
-      .card { grid-template-columns: 1fr; width: 92vw; }
-      .panel-l { padding: 28px 24px 24px; }
-      .monitor-card { display: none; }
-      #ecg-canvas, .dot-grid { display: none; }
-      .panel-r { padding: 28px 24px 24px; }
-      .form-title { font-size: 26px; }
-    }
-    @media (max-width: 420px) {
-      .panel-r { padding: 24px 18px 20px; }
+    @media (max-width:420px) {
+      .panel-r { padding:24px 18px 20px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Atmosphere -->
 <div class="bg-layer">
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
@@ -480,76 +238,40 @@
 
 <div class="card" role="main">
 
-  <!-- ══ LEFT PANEL ══ -->
   <aside class="panel-l" aria-label="Lifeline info">
-
     <div class="brand">
       <div class="brand-icon">❤️</div>
       <div class="brand-name">Lifeline</div>
       <div class="brand-sub">Digital Health Assistant</div>
     </div>
 
-    <!-- Live monitor -->
     <div class="monitor-card">
       <div class="monitor-head">
-        <div class="monitor-title">
-          <span class="live-dot"></span> Live Monitor
-        </div>
+        <div class="monitor-title"><span class="live-dot"></span> Live Monitor</div>
         <span class="monitor-time" id="monitorTime">--:--:--</span>
       </div>
       <canvas id="mini-ecg"></canvas>
       <div class="vitals">
-        <div class="vital">
-          <span class="vital-val bpm-anim" id="bpmVal">72</span>
-          <span class="vital-lbl">BPM</span>
-        </div>
-        <div class="vital">
-          <span class="vital-val">98%</span>
-          <span class="vital-lbl">SpO₂</span>
-        </div>
-        <div class="vital">
-          <span class="vital-val">120/80</span>
-          <span class="vital-lbl">BP</span>
-        </div>
+        <div class="vital"><span class="vital-val bpm-anim" id="bpmVal">72</span><span class="vital-lbl">BPM</span></div>
+        <div class="vital"><span class="vital-val">98%</span><span class="vital-lbl">SpO₂</span></div>
+        <div class="vital"><span class="vital-val">120/80</span><span class="vital-lbl">BP</span></div>
       </div>
     </div>
 
-    <!-- Security badges -->
     <div class="badges">
-      <div class="badge-row">
-        <span class="badge-ico">🔐</span>
-        <div class="badge-info">
-          <span class="badge-title">End-to-End Encrypted</span>
-          <span class="badge-desc">Your data is always protected</span>
-        </div>
-      </div>
-      <div class="badge-row">
-        <span class="badge-ico">🏥</span>
-        <div class="badge-info">
-          <span class="badge-title">HIPAA Compliant</span>
-          <span class="badge-desc">Healthcare-grade security</span>
-        </div>
-      </div>
-      <div class="badge-row">
-        <span class="badge-ico">☁️</span>
-        <div class="badge-info">
-          <span class="badge-title">Cloud Synced</span>
-          <span class="badge-desc">Access from any device</span>
-        </div>
-      </div>
+      <div class="badge-row"><span class="badge-ico">🔐</span><div class="badge-info"><span class="badge-title">End-to-End Encrypted</span><span class="badge-desc">Your data is always protected</span></div></div>
+      <div class="badge-row"><span class="badge-ico">🏥</span><div class="badge-info"><span class="badge-title">HIPAA Compliant</span><span class="badge-desc">Healthcare-grade security</span></div></div>
+      <div class="badge-row"><span class="badge-ico">☁️</span><div class="badge-info"><span class="badge-title">Cloud Synced</span><span class="badge-desc">Access from any device</span></div></div>
     </div>
 
     <div class="panel-l-foot">© 2025 Lifeline Health · All rights reserved</div>
   </aside>
 
-  <!-- ══ RIGHT PANEL ══ -->
   <section class="panel-r">
-
     <div class="form-badge">Secure Login</div>
     <h1 class="form-title">Welcome<br>back</h1>
     <p class="form-sub">Sign in to your health profile to continue.</p>
 
-    <!-- Thymeleaf server alerts -->
     <div class="alert alert-success" th:if="${message}"    th:text="${message}"></div>
     <div class="alert alert-error"   th:if="${error}"      th:text="${error}"></div>
     <div class="alert alert-error"   th:if="${param.error}">Invalid email or password. Please try again.</div>
@@ -565,18 +287,14 @@
         </div>
         <div class="input-wrap">
           <span class="input-ico" aria-hidden="true">✉️</span>
-          <input
-            type="email" id="email" name="username"
-            placeholder="you@example.com"
-            autocomplete="email"
-            required aria-required="true"
-            aria-describedby="emailErr"
-          />
+          <input type="email" id="email" name="username"
+                 placeholder="you@example.com" autocomplete="email"
+                 required aria-required="true" aria-describedby="emailErr"/>
           <span class="status-ico" aria-hidden="true" id="emailStatusIco"></span>
         </div>
       </div>
 
-      <!-- Password -->
+      <!-- Password — eye toggle + status icon side-by-side -->
       <div class="field" id="f-password">
         <div class="field-label">
           <span class="field-label-text">Password</span>
@@ -584,20 +302,16 @@
         </div>
         <div class="input-wrap" id="pwWrap">
           <span class="input-ico" aria-hidden="true">🔒</span>
-          <input
-            type="password" id="password" name="password"
-            placeholder="Your password"
-            autocomplete="current-password"
-            required aria-required="true"
-            aria-describedby="pwErr"
-          />
+          <input type="password" id="password" name="password"
+                 placeholder="Your password" autocomplete="current-password"
+                 required aria-required="true" aria-describedby="pwErr"/>
+          <!-- status icon sits at right:46px (left of eye btn) -->
           <span class="status-ico" aria-hidden="true" id="pwStatusIco"></span>
-          <button type="button" class="pw-btn" id="pwToggle"
-                  aria-label="Show password">👁️</button>
+          <!-- eye toggle sits at right:10px -->
+          <button type="button" class="pw-btn" id="pwToggle" aria-label="Show password">👁️</button>
         </div>
       </div>
 
-      <!-- Forgot + Remember -->
       <div class="forgot-row">
         <a href="/forgot-password" class="forgot-link">Forgot password?</a>
       </div>
@@ -612,266 +326,127 @@
         <span class="btn-arrow" aria-hidden="true">→</span>
         <div class="btn-spinner" aria-hidden="true"></div>
       </button>
-
     </form>
 
     <div class="divider"><span>or</span></div>
-
-    <div class="form-foot">
-      Don't have an account? <a href="/register">Create one →</a>
-    </div>
-
+    <div class="form-foot">Don't have an account? <a href="/register">Create one →</a></div>
   </section>
 </div>
 
 <script>
-/* ── ECG BACKGROUND ─────────────────────────── */
+/* ECG BACKGROUND */
 (function () {
   const cv = document.getElementById('ecg-canvas');
   if (!cv || window.innerWidth <= 700) return;
   const ctx = cv.getContext('2d');
   let W, H;
   function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
-
+  resize(); window.addEventListener('resize', resize);
   function ecgY(t) {
-    t = ((t % 1) + 1) % 1;
-    if (t < 0.10) return 0;
-    if (t < 0.15) return -0.08 * Math.sin((t - 0.10) / 0.05 * Math.PI);
-    if (t < 0.22) return 0;
-    if (t < 0.24) return -0.15;
-    if (t < 0.26) return 1.0;
-    if (t < 0.28) return -0.25;
-    if (t < 0.30) return 0;
-    if (t < 0.45) return 0.18 * Math.sin((t - 0.30) / 0.15 * Math.PI);
-    return 0;
+    t = ((t%1)+1)%1;
+    if(t<0.10)return 0; if(t<0.15)return -0.08*Math.sin((t-0.10)/0.05*Math.PI);
+    if(t<0.22)return 0; if(t<0.24)return -0.15; if(t<0.26)return 1.0;
+    if(t<0.28)return -0.25; if(t<0.30)return 0;
+    if(t<0.45)return 0.18*Math.sin((t-0.30)/0.15*Math.PI); return 0;
   }
-
-  const LINES = 3, PTS = 600;
-  const phases = [0, 0.33, 0.67];
-  const speeds = [0.0022, 0.0018, 0.0026];
-  const colors = ['11,191,184', '6,182,212', '56,189,248'];
-  const bufs   = Array.from({ length: LINES }, () => new Float32Array(PTS));
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    const rowH = H / LINES;
-    for (let r = 0; r < LINES; r++) {
-      bufs[r].copyWithin(0, 1);
-      bufs[r][PTS - 1] = ecgY(phases[r]);
-      phases[r] += speeds[r];
-
-      const midY = rowH * r + rowH * 0.5, amp = rowH * 0.28, col = colors[r];
-      const path = new Path2D();
-      for (let i = 0; i < PTS; i++) {
-        const x = (i / (PTS - 1)) * W, y = midY - bufs[r][i] * amp;
-        i === 0 ? path.moveTo(x, y) : path.lineTo(x, y);
-      }
-
-      ctx.save();
-      ctx.shadowColor = `rgba(${col},0.9)`; ctx.shadowBlur = 22;
-      const gA = ctx.createLinearGradient(0,0,W,0);
-      gA.addColorStop(0, `rgba(${col},0)`); gA.addColorStop(0.25, `rgba(${col},0.3)`);
-      gA.addColorStop(0.75, `rgba(${col},0.7)`); gA.addColorStop(1, `rgba(${col},0.9)`);
-      ctx.strokeStyle = gA; ctx.lineWidth = 5;
-      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-      ctx.stroke(path); ctx.restore();
-
-      const gB = ctx.createLinearGradient(0,0,W,0);
-      gB.addColorStop(0, `rgba(${col},0)`); gB.addColorStop(0.4, `rgba(${col},0.6)`);
-      gB.addColorStop(1, 'rgba(255,255,255,0.95)');
-      ctx.strokeStyle = gB; ctx.lineWidth = 1.5;
-      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-      ctx.stroke(path);
-
-      const tx = W - 2, ty = midY - bufs[r][PTS - 1] * amp;
-      ctx.save(); ctx.shadowColor = `rgba(${col},1)`; ctx.shadowBlur = 20;
-      ctx.beginPath(); ctx.arc(tx, ty, 6, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${col},0.25)`; ctx.fill(); ctx.restore();
-      ctx.beginPath(); ctx.arc(tx, ty, 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = '#fff'; ctx.fill();
+  const LINES=3,PTS=600;
+  const phases=[0,0.33,0.67],speeds=[0.0022,0.0018,0.0026];
+  const colors=['11,191,184','6,182,212','56,189,248'];
+  const bufs=Array.from({length:LINES},()=>new Float32Array(PTS));
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const rowH=H/LINES;
+    for(let r=0;r<LINES;r++){
+      bufs[r].copyWithin(0,1);bufs[r][PTS-1]=ecgY(phases[r]);phases[r]+=speeds[r];
+      const midY=rowH*r+rowH*0.5,amp=rowH*0.28,col=colors[r];
+      const path=new Path2D();
+      for(let i=0;i<PTS;i++){const x=(i/(PTS-1))*W,y=midY-bufs[r][i]*amp;i===0?path.moveTo(x,y):path.lineTo(x,y);}
+      ctx.save();ctx.shadowColor=`rgba(${col},0.9)`;ctx.shadowBlur=22;
+      const gA=ctx.createLinearGradient(0,0,W,0);
+      gA.addColorStop(0,`rgba(${col},0)`);gA.addColorStop(0.25,`rgba(${col},0.3)`);gA.addColorStop(0.75,`rgba(${col},0.7)`);gA.addColorStop(1,`rgba(${col},0.9)`);
+      ctx.strokeStyle=gA;ctx.lineWidth=5;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke(path);ctx.restore();
+      const gB=ctx.createLinearGradient(0,0,W,0);
+      gB.addColorStop(0,`rgba(${col},0)`);gB.addColorStop(0.4,`rgba(${col},0.6)`);gB.addColorStop(1,'rgba(255,255,255,0.95)');
+      ctx.strokeStyle=gB;ctx.lineWidth=1.5;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke(path);
+      const tx=W-2,ty=midY-bufs[r][PTS-1]*amp;
+      ctx.save();ctx.shadowColor=`rgba(${col},1)`;ctx.shadowBlur=20;
+      ctx.beginPath();ctx.arc(tx,ty,6,0,Math.PI*2);ctx.fillStyle=`rgba(${col},0.25)`;ctx.fill();ctx.restore();
+      ctx.beginPath();ctx.arc(tx,ty,2.5,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
     }
     requestAnimationFrame(draw);
   }
   draw();
 })();
 
-/* ── MINI ECG ───────────────────────────────── */
-(function () {
-  const mini = document.getElementById('mini-ecg');
-  if (!mini) return;
-
-  function setup() {
-    const dpr = window.devicePixelRatio || 1;
-    mini.width  = mini.offsetWidth  * dpr;
-    mini.height = mini.offsetHeight * dpr;
-    const ctx = mini.getContext('2d');
-    ctx.scale(dpr, dpr);
-    return ctx;
-  }
-  let ctx = setup();
-
-  function ecgY(t) {
-    t = ((t % 1) + 1) % 1;
-    if (t < 0.10) return 0;
-    if (t < 0.15) return -0.08 * Math.sin((t - 0.10) / 0.05 * Math.PI);
-    if (t < 0.22) return 0;
-    if (t < 0.24) return -0.15;
-    if (t < 0.26) return 1.0;
-    if (t < 0.28) return -0.25;
-    if (t < 0.30) return 0;
-    if (t < 0.45) return 0.18 * Math.sin((t - 0.30) / 0.15 * Math.PI);
-    return 0;
-  }
-
-  const MPTS = 200;
-  const mBuf = new Float32Array(MPTS);
-  let mPhase = 0, bpmTick = 0;
-
-  function drawMini() {
-    const w = mini.offsetWidth, h = mini.offsetHeight;
-    ctx.clearRect(0, 0, w, h);
-    mBuf.copyWithin(0, 1);
-    mBuf[MPTS - 1] = ecgY(mPhase);
-    mPhase += 0.0042;
-
-    const midY = h * 0.55, amp = h * 0.40;
-
-    // Fill under the line
-    const fillPath = new Path2D();
-    fillPath.moveTo(0, midY);
-    for (let i = 0; i < MPTS; i++) {
-      const x = (i / (MPTS - 1)) * w, y = midY - mBuf[i] * amp;
-      fillPath.lineTo(x, y);
-    }
-    fillPath.lineTo(w, midY); fillPath.closePath();
-    const fillGrad = ctx.createLinearGradient(0, 0, 0, h);
-    fillGrad.addColorStop(0, 'rgba(11,191,184,0.12)');
-    fillGrad.addColorStop(1, 'rgba(11,191,184,0)');
-    ctx.fillStyle = fillGrad; ctx.fill(fillPath);
-
-    // Line
-    const lineGrad = ctx.createLinearGradient(0, 0, w, 0);
-    lineGrad.addColorStop(0, 'rgba(11,191,184,0)');
-    lineGrad.addColorStop(0.3, 'rgba(11,191,184,0.5)');
-    lineGrad.addColorStop(1, 'rgba(11,191,184,1)');
-    const linePath = new Path2D();
-    for (let i = 0; i < MPTS; i++) {
-      const x = (i / (MPTS - 1)) * w, y = midY - mBuf[i] * amp;
-      i === 0 ? linePath.moveTo(x, y) : linePath.lineTo(x, y);
-    }
-    ctx.save(); ctx.shadowColor = 'rgba(11,191,184,0.8)'; ctx.shadowBlur = 8;
-    ctx.strokeStyle = lineGrad; ctx.lineWidth = 1.8;
-    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-    ctx.stroke(linePath); ctx.restore();
-
-    // Tip dot
-    const ty = midY - mBuf[MPTS - 1] * amp;
-    ctx.save(); ctx.shadowColor = '#17ffcc'; ctx.shadowBlur = 10;
-    ctx.beginPath(); ctx.arc(w - 2, ty, 3, 0, Math.PI * 2);
-    ctx.fillStyle = '#17ffcc'; ctx.fill(); ctx.restore();
-
-    // BPM flicker
-    bpmTick++;
-    if (bpmTick > 55 && mBuf[MPTS - 1] > 0.7) {
-      const el = document.getElementById('bpmVal');
-      if (el) el.textContent = 68 + Math.floor(Math.random() * 10);
-      bpmTick = 0;
-    }
+/* MINI ECG */
+(function(){
+  const mini=document.getElementById('mini-ecg');
+  if(!mini)return;
+  function setup(){const dpr=window.devicePixelRatio||1;mini.width=mini.offsetWidth*dpr;mini.height=mini.offsetHeight*dpr;const ctx=mini.getContext('2d');ctx.scale(dpr,dpr);return ctx;}
+  let ctx=setup();
+  function ecgY(t){t=((t%1)+1)%1;if(t<0.10)return 0;if(t<0.15)return -0.08*Math.sin((t-0.10)/0.05*Math.PI);if(t<0.22)return 0;if(t<0.24)return -0.15;if(t<0.26)return 1.0;if(t<0.28)return -0.25;if(t<0.30)return 0;if(t<0.45)return 0.18*Math.sin((t-0.30)/0.15*Math.PI);return 0;}
+  const MPTS=200,mBuf=new Float32Array(200);let mPhase=0,bpmTick=0;
+  function drawMini(){
+    const w=mini.offsetWidth,h=mini.offsetHeight;
+    ctx.clearRect(0,0,w,h);mBuf.copyWithin(0,1);mBuf[MPTS-1]=ecgY(mPhase);mPhase+=0.0042;
+    const midY=h*0.55,amp=h*0.40;
+    const fillPath=new Path2D();fillPath.moveTo(0,midY);
+    for(let i=0;i<MPTS;i++){fillPath.lineTo((i/(MPTS-1))*w,midY-mBuf[i]*amp);}
+    fillPath.lineTo(w,midY);fillPath.closePath();
+    const fg=ctx.createLinearGradient(0,0,0,h);fg.addColorStop(0,'rgba(11,191,184,0.12)');fg.addColorStop(1,'rgba(11,191,184,0)');
+    ctx.fillStyle=fg;ctx.fill(fillPath);
+    const lg=ctx.createLinearGradient(0,0,w,0);lg.addColorStop(0,'rgba(11,191,184,0)');lg.addColorStop(0.3,'rgba(11,191,184,0.5)');lg.addColorStop(1,'rgba(11,191,184,1)');
+    const lp=new Path2D();for(let i=0;i<MPTS;i++){const x=(i/(MPTS-1))*w,y=midY-mBuf[i]*amp;i===0?lp.moveTo(x,y):lp.lineTo(x,y);}
+    ctx.save();ctx.shadowColor='rgba(11,191,184,0.8)';ctx.shadowBlur=8;ctx.strokeStyle=lg;ctx.lineWidth=1.8;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke(lp);ctx.restore();
+    const ty=midY-mBuf[MPTS-1]*amp;ctx.save();ctx.shadowColor='#17ffcc';ctx.shadowBlur=10;ctx.beginPath();ctx.arc(w-2,ty,3,0,Math.PI*2);ctx.fillStyle='#17ffcc';ctx.fill();ctx.restore();
+    bpmTick++;if(bpmTick>55&&mBuf[MPTS-1]>0.7){const el=document.getElementById('bpmVal');if(el)el.textContent=68+Math.floor(Math.random()*10);bpmTick=0;}
     requestAnimationFrame(drawMini);
   }
   drawMini();
 })();
 
-/* ── LIVE CLOCK ─────────────────────────────── */
-(function () {
-  const el = document.getElementById('monitorTime');
-  if (!el) return;
-  function tick() {
-    const now = new Date();
-    el.textContent = now.toLocaleTimeString('en-IN', { hour12: false });
-  }
-  tick(); setInterval(tick, 1000);
+/* CLOCK */
+(function(){
+  const el=document.getElementById('monitorTime');
+  if(!el)return;
+  function tick(){el.textContent=new Date().toLocaleTimeString('en-IN',{hour12:false});}
+  tick();setInterval(tick,1000);
 })();
 
-/* ── SHOW / HIDE PASSWORD ───────────────────── */
-const pwToggle = document.getElementById('pwToggle');
-const pwInput  = document.getElementById('password');
-pwToggle.addEventListener('click', () => {
-  const vis = pwInput.type === 'password';
-  pwInput.type = vis ? 'text' : 'password';
-  pwToggle.textContent = vis ? '🙈' : '👁️';
-  pwToggle.setAttribute('aria-label', vis ? 'Hide password' : 'Show password');
+/* PASSWORD TOGGLE */
+const pwToggle=document.getElementById('pwToggle');
+const pwInput=document.getElementById('password');
+pwToggle.addEventListener('click',()=>{
+  const vis=pwInput.type==='password';
+  pwInput.type=vis?'text':'password';
+  pwToggle.textContent=vis?'🙈':'👁️';
+  pwToggle.setAttribute('aria-label',vis?'Hide password':'Show password');
 });
 
-/* ── VALIDATION ─────────────────────────────── */
-function markValid(input, errEl, icoEl) {
-  input.classList.remove('is-invalid'); input.classList.add('is-valid');
-  errEl.textContent = ''; errEl.classList.remove('show');
-  if (icoEl) icoEl.textContent = '✅';
-}
-function markInvalid(input, errEl, icoEl, msg) {
-  input.classList.add('is-invalid'); input.classList.remove('is-valid');
-  errEl.textContent = msg; errEl.classList.add('show');
-  if (icoEl) icoEl.textContent = '❌';
-}
-function clearMark(input, errEl, icoEl) {
-  input.classList.remove('is-invalid', 'is-valid');
-  errEl.textContent = ''; errEl.classList.remove('show');
-  if (icoEl) icoEl.textContent = '';
-}
+/* VALIDATION */
+function markValid(input,errEl,icoEl){input.classList.remove('is-invalid');input.classList.add('is-valid');errEl.textContent='';errEl.classList.remove('show');if(icoEl)icoEl.textContent='✅';}
+function markInvalid(input,errEl,icoEl,msg){input.classList.add('is-invalid');input.classList.remove('is-valid');errEl.textContent=msg;errEl.classList.add('show');if(icoEl)icoEl.textContent='❌';}
+function clearMark(input,errEl,icoEl){input.classList.remove('is-invalid','is-valid');errEl.textContent='';errEl.classList.remove('show');if(icoEl)icoEl.textContent='';}
 
-const emailInput = document.getElementById('email');
-const emailErr   = document.getElementById('emailErr');
-const emailIco   = document.getElementById('emailStatusIco');
-const pwErr      = document.getElementById('pwErr');
-const pwIco      = document.getElementById('pwStatusIco');
+const emailInput=document.getElementById('email');
+const emailErr=document.getElementById('emailErr');
+const emailIco=document.getElementById('emailStatusIco');
+const pwErr=document.getElementById('pwErr');
+const pwIco=document.getElementById('pwStatusIco');
 
-function validateEmail() {
-  const v = emailInput.value.trim();
-  if (!v)                                       { markInvalid(emailInput, emailErr, emailIco, 'Email is required'); return false; }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))   { markInvalid(emailInput, emailErr, emailIco, 'Enter a valid email'); return false; }
-  markValid(emailInput, emailErr, emailIco); return true;
-}
-function validatePw() {
-  const v = pwInput.value;
-  if (!v) { markInvalid(pwInput, pwErr, pwIco, 'Password is required'); return false; }
-  markValid(pwInput, pwErr, pwIco); return true;
-}
+function validateEmail(){const v=emailInput.value.trim();if(!v){markInvalid(emailInput,emailErr,emailIco,'Email is required');return false;}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){markInvalid(emailInput,emailErr,emailIco,'Enter a valid email');return false;}markValid(emailInput,emailErr,emailIco);return true;}
+function validatePw(){const v=pwInput.value;if(!v){markInvalid(pwInput,pwErr,pwIco,'Password is required');return false;}markValid(pwInput,pwErr,pwIco);return true;}
 
-emailInput.addEventListener('blur',  validateEmail);
-pwInput.addEventListener('blur',     validatePw);
+emailInput.addEventListener('blur',validateEmail);
+pwInput.addEventListener('blur',validatePw);
+emailInput.addEventListener('input',()=>{if(emailInput.classList.contains('is-invalid')&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim()))clearMark(emailInput,emailErr,emailIco);});
+pwInput.addEventListener('input',()=>{if(pwInput.classList.contains('is-invalid')&&pwInput.value)clearMark(pwInput,pwErr,pwIco);});
 
-emailInput.addEventListener('input', () => {
-  if (emailInput.classList.contains('is-invalid') && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim()))
-    clearMark(emailInput, emailErr, emailIco);
-});
-pwInput.addEventListener('input', () => {
-  if (pwInput.classList.contains('is-invalid') && pwInput.value)
-    clearMark(pwInput, pwErr, pwIco);
-});
-
-/* ── FORM SUBMIT ────────────────────────────── */
-const form      = document.getElementById('loginForm');
-const submitBtn = document.getElementById('submitBtn');
-
-form.addEventListener('submit', (e) => {
-  const ok = [validateEmail(), validatePw()].every(Boolean);
-  if (!ok) { e.preventDefault(); return; }
-  submitBtn.classList.add('loading');
-  submitBtn.disabled = true;
-});
-
-submitBtn.addEventListener('click', function (e) {
-  const s = document.createElement('span');
-  const d = Math.max(this.offsetWidth, this.offsetHeight);
-  const r = this.getBoundingClientRect();
-  s.className = 'ripple';
-  s.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;
-  this.appendChild(s);
-  setTimeout(() => s.remove(), 650);
-});
+/* SUBMIT */
+const form=document.getElementById('loginForm');
+const submitBtn=document.getElementById('submitBtn');
+form.addEventListener('submit',(e)=>{const ok=[validateEmail(),validatePw()].every(Boolean);if(!ok){e.preventDefault();return;}submitBtn.classList.add('loading');submitBtn.disabled=true;});
+submitBtn.addEventListener('click',function(e){const s=document.createElement('span'),d=Math.max(this.offsetWidth,this.offsetHeight),r=this.getBoundingClientRect();s.className='ripple';s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;this.appendChild(s);setTimeout(()=>s.remove(),650);});
 </script>
 </body>
 </html>

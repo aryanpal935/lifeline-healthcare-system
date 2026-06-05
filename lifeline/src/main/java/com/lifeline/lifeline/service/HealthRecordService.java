@@ -63,6 +63,15 @@ public class HealthRecordService {
         return "Obese";
     }
 
+
+    // GET SINGLE RECORD
+public HealthRecord getRecordById(Long id) {
+
+    return healthRecordRepository
+            .findById(id)
+            .orElse(null);
+}
+
     public void deleteRecord(Long id) {
     healthRecordRepository.deleteById(id);
 }

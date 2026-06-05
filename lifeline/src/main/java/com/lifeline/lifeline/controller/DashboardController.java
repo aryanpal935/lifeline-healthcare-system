@@ -1,5 +1,7 @@
 package com.lifeline.lifeline.controller;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,37 @@ public class DashboardController {
         model.addAttribute("user", user);
 
         // =========================
+        // BIRTHDAY MODULE
+        // =========================
+
+        boolean birthdayToday = false;
+        Long daysUntilBirthday = null;
+
+        if (user.getDateOfBirth() != null) {
+
+            LocalDate today = LocalDate.now();
+
+            birthdayToday =
+                    user.getDateOfBirth().getMonth() == today.getMonth()
+                    &&
+                    user.getDateOfBirth().getDayOfMonth() == today.getDayOfMonth();
+
+            LocalDate nextBirthday =
+                    user.getDateOfBirth()
+                        .withYear(today.getYear());
+
+            if (nextBirthday.isBefore(today)) {
+                nextBirthday = nextBirthday.plusYears(1);
+            }
+
+            daysUntilBirthday =
+                    ChronoUnit.DAYS.between(today, nextBirthday);
+        }
+
+        model.addAttribute("birthdayToday", birthdayToday);
+        model.addAttribute("daysUntilBirthday", daysUntilBirthday);
+
+        // =========================
         // HEALTH RECORDS
         // =========================
 
@@ -85,96 +118,56 @@ public class DashboardController {
                 medicines.size()
         );
 
-        Map<Long, Long> medicineDaysLeft =
-                new HashMap<>();
+        Map<Long, Long> medicineDaysLeft = new HashMap<>();
 
         for (Medicine medicine : medicines) {
-
             medicineDaysLeft.put(
                     medicine.getId(),
                     medicineService.getDaysRemaining(medicine)
             );
         }
 
-        model.addAttribute(
-                "medicineDaysLeft",
-                medicineDaysLeft
-            );
+        model.addAttribute("medicineDaysLeft", medicineDaysLeft);
 
+        // =========================
+        // MEDICINE EXPIRY ALERTS
+        // =========================
 
+        List<Medicine> expiringMedicines =
+                medicines.stream()
+                        .filter(medicine -> {
+                            long days = medicineService.getDaysRemaining(medicine);
+                            return days >= 0 && days <= 7;
+                        })
+                        .toList();
 
-        model.addAttribute(
-        "medicineDaysLeft",
-        medicineDaysLeft
-);
+        model.addAttribute("expiringMedicines", expiringMedicines);
+        model.addAttribute("expiringMedicineCount", expiringMedicines.size());
 
-// =========================
-// MEDICINE EXPIRY ALERTS
-// =========================
+        // =========================
+        // MEDICINE REFILL REMINDERS
+        // =========================
 
-List<Medicine> expiringMedicines =
-        medicines.stream()
-                .filter(medicine -> {
+        List<Medicine> refillMedicines =
+                medicineService.getMedicinesNeedingRefill(user);
 
-                    long days =
-                            medicineService.getDaysRemaining(medicine);
+        model.addAttribute("refillMedicines", refillMedicines);
+        model.addAttribute("refillCount", refillMedicines.size());
 
-                    return days >= 0 && days <= 7;
-                })
-                .toList();
+        // =========================
+        // UPCOMING APPOINTMENTS
+        // =========================
 
-model.addAttribute(
-        "expiringMedicines",
-        expiringMedicines
-);
+        List<Appointment> appointments =
+                appointmentService.getUpcomingAppointments(user);
 
-model.addAttribute(
-        "expiringMedicineCount",
-        expiringMedicines.size()
-);
+        model.addAttribute("appointments", appointments);
+        model.addAttribute("appointmentCount", appointments.size());
 
-// =========================
-// MEDICINE REFILL REMINDERS
-// =========================
+        Appointment nextAppointment =
+                appointmentService.getNextAppointment(user);
 
-List<Medicine> refillMedicines =
-        medicineService.getMedicinesNeedingRefill(user);
-
-model.addAttribute(
-        "refillMedicines",
-        refillMedicines
-);
-
-model.addAttribute(
-        "refillCount",
-        refillMedicines.size()
-);
-
-
-       // =========================
-// UPCOMING APPOINTMENTS
-// =========================
-
-List<Appointment> appointments =
-        appointmentService.getUpcomingAppointments(user);
-
-model.addAttribute(
-        "appointments",
-        appointments
-);
-
-model.addAttribute(
-        "appointmentCount",
-        appointments.size()
-);
-
-Appointment nextAppointment =
-        appointmentService.getNextAppointment(user);
-
-model.addAttribute(
-        "nextAppointment",
-        nextAppointment
-);
+        model.addAttribute("nextAppointment", nextAppointment);
 
         // =========================
         // EMERGENCY CONTACTS
@@ -183,23 +176,13 @@ model.addAttribute(
         List<EmergencyContact> emergencyContacts =
                 emergencyContactService.getContactsByUser(user);
 
-        model.addAttribute(
-                "emergencyContacts",
-                emergencyContacts
-        );
-
-        model.addAttribute(
-                "contactCount",
-                emergencyContacts.size()
-        );
+        model.addAttribute("emergencyContacts", emergencyContacts);
+        model.addAttribute("contactCount", emergencyContacts.size());
 
         EmergencyContact primaryContact =
                 emergencyContactService.getPrimaryContact(user);
 
-        model.addAttribute(
-                "primaryContact",
-                primaryContact
-        );
+        model.addAttribute("primaryContact", primaryContact);
 
         // =========================
         // BMI + HEALTH ALERTS
@@ -209,8 +192,7 @@ model.addAttribute(
                 && latestRecord.getHeight() > 0
                 && latestRecord.getWeight() > 0) {
 
-            double heightMeter =
-                    latestRecord.getHeight() / 100.0;
+            double heightMeter = latestRecord.getHeight() / 100.0;
 
             double bmi =
                     latestRecord.getWeight()
@@ -224,33 +206,19 @@ model.addAttribute(
                     Math.round(bmi * 10.0) / 10.0
             );
 
-            model.addAttribute(
-                    "bmiCategory",
-                    bmiCategory
-            );
+            model.addAttribute("bmiCategory", bmiCategory);
 
             String bmiAlert = "";
 
             if (bmi < 18.5) {
-
-                bmiAlert =
-                        "Your BMI indicates underweight. Consider improving nutrition.";
-
+                bmiAlert = "Your BMI indicates underweight. Consider improving nutrition.";
             } else if (bmi >= 25 && bmi < 30) {
-
-                bmiAlert =
-                        "Your BMI indicates overweight. Regular exercise is recommended.";
-
+                bmiAlert = "Your BMI indicates overweight. Regular exercise is recommended.";
             } else if (bmi >= 30) {
-
-                bmiAlert =
-                        "High BMI risk detected. Consult a healthcare professional.";
+                bmiAlert = "High BMI risk detected. Consult a healthcare professional.";
             }
 
-            model.addAttribute(
-                    "bmiAlert",
-                    bmiAlert
-            );
+            model.addAttribute("bmiAlert", bmiAlert);
 
             // =========================
             // BLOOD PRESSURE RISK
@@ -259,45 +227,27 @@ model.addAttribute(
             String bloodPressureRisk = null;
             String sugarRisk = null;
 
-            String bp =
-                    latestRecord.getBloodPressure();
+            String bp = latestRecord.getBloodPressure();
 
             if (bp != null && bp.contains("/")) {
 
                 try {
 
-                    String[] parts =
-                            bp.trim().split("/");
+                    String[] parts = bp.trim().split("/");
+                    int systolic  = Integer.parseInt(parts[0].trim());
+                    int diastolic = Integer.parseInt(parts[1].trim());
 
-                    int systolic =
-                            Integer.parseInt(parts[0].trim());
-
-                    int diastolic =
-                            Integer.parseInt(parts[1].trim());
-
-                    if (systolic >= 180
-                            || diastolic >= 120) {
-
+                    if (systolic >= 180 || diastolic >= 120) {
                         bloodPressureRisk = "CRISIS";
-
-                    } else if (systolic >= 140
-                            || diastolic >= 90) {
-
+                    } else if (systolic >= 140 || diastolic >= 90) {
                         bloodPressureRisk = "HIGH";
-
-                    } else if (systolic >= 130
-                            || diastolic >= 80) {
-
+                    } else if (systolic >= 130 || diastolic >= 80) {
                         bloodPressureRisk = "ELEVATED";
-
-                    } else if (systolic < 90
-                            || diastolic < 60) {
-
+                    } else if (systolic < 90 || diastolic < 60) {
                         bloodPressureRisk = "LOW";
                     }
 
                 } catch (Exception e) {
-
                     bloodPressureRisk = null;
                 }
             }
@@ -306,51 +256,29 @@ model.addAttribute(
             // SUGAR RISK
             // =========================
 
-            Double sugar =
-                    latestRecord.getSugarLevel();
+            Double sugar = latestRecord.getSugarLevel();
 
             if (sugar != null) {
-
                 if (sugar >= 200) {
-
                     sugarRisk = "DIABETIC";
-
                 } else if (sugar >= 126) {
-
                     sugarRisk = "HIGH";
-
                 } else if (sugar >= 100) {
-
                     sugarRisk = "PREDIABETES";
-
                 } else if (sugar < 70) {
-
                     sugarRisk = "LOW";
                 }
             }
 
-            model.addAttribute(
-                    "bloodPressureRisk",
-                    bloodPressureRisk
-            );
+            model.addAttribute("bloodPressureRisk", bloodPressureRisk);
+            model.addAttribute("sugarRisk", sugarRisk);
+            model.addAttribute("bloodPressureVal", latestRecord.getBloodPressure());
+            model.addAttribute("sugarVal", latestRecord.getSugarLevel());
 
-            model.addAttribute(
-                    "sugarRisk",
-                    sugarRisk
-            );
-
-            model.addAttribute(
-                    "bloodPressureVal",
-                    latestRecord.getBloodPressure()
-            );
-
-            model.addAttribute(
-                    "sugarVal",
-                    latestRecord.getSugarLevel()
-            );
         } // Closes: if (latestRecord != null ...)
 
         return "dashboard";
+
     } // Closes: dashboard(...) method
 
     @GetMapping("/records")
@@ -373,6 +301,7 @@ model.addAttribute(
         model.addAttribute("records", records);
 
         return "records";
+
     } // Closes: recordsPage(...) method
 
 } // Closes: DashboardController class
